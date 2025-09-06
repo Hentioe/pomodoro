@@ -1,0 +1,23 @@
+[tools]
+"cargo:dprint" = "latest"
+
+[tasks.setup]
+run = ["bun install"]
+
+[tasks.default]
+run = "bun run tauri dev"
+
+[tasks.format]
+run = "dprint fmt"
+
+[tasks.lint]
+run = "cd src-tauri && cargo clippy"
+
+[tasks.test]
+run = "cd src-tauri && cargo test"
+
+[tasks.clean]
+run = ["rm -rf ./dist", "rm -rf ./src-tauri/target"]
+
+[tasks.prepare]
+depends = ["format", "lint", "test"]
