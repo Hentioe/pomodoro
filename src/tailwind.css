@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  input:focus {
+    outline-offset: 0;
+  }
+}
+/* @theme {} */

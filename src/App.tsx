@@ -1,11 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createSignal } from "solid-js";
-import logo from "./assets/logo.svg";
 import "./App.css";
 
 function App() {
   const [greetMsg, setGreetMsg] = createSignal("");
-  const [name, setName] = createSignal("");
+  const [name, setName] = createSignal("鸽鸽");
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -13,37 +12,21 @@ function App() {
   }
 
   return (
-    <main class="container">
-      <h1>Welcome to Tauri + Solid111</h1>
-
-      <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={logo} class="logo solid" alt="Solid logo" />
-        </a>
+    <main class="h-full flex flex-col justify-center items-center">
+      <h1 class="text-center text-4xl font-bold">Welcome to Tauri + Solid + Tailwind CSS</h1>
+      <p class="mt-[1rem]">{greetMsg() || "你好，你叫什么名字？"}</p>
+      <div class="mt-[1rem]">
+        <div class="flex gap-[1rem]">
+          <input
+            value={name()}
+            type="text"
+            placeholder="输入名字"
+            onChange={(e) => setName(e.target.value)}
+            class="outline-2 outline-zinc-200 hover:outline-blue-200 rounded-md text-center py-1"
+          />
+          <button onClick={greet} class="px-[2rem] py-2 bg-blue-500 text-white rounded-xl cursor-pointer">确认</button>
+        </div>
       </div>
-      <p>Click on the Tauri, Vite, and Solid logos to learn more.</p>
-
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg()}</p>
     </main>
   );
 }

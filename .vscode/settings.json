@@ -1,0 +1,6 @@
+{
+  // All CSS files will be opened in Tailwind CSS mode
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}
