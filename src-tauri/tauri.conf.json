@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-app",
+  "productName": "tauri-pomodoro",
   "version": "0.1.0",
-  "identifier": "com.hentioe.tauri-app",
+  "identifier": "com.hentioe.tauri-pomodoro",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "tauri-app",
-        "width": 1080,
-        "height": 720
+        "title": "tauri-pomodoro",
+        "width": 398,
+        "height": 509,
+        "resizable": false,
+        "alwaysOnTop": true
       }
     ],
     "security": {

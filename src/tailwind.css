@@ -10,4 +10,8 @@
     outline-offset: 0;
   }
 }
-/* @theme {} */
+
+@theme {
+  --color-digit-bg: oklch(27.431% 0.02744 257.55);
+  --color-digit-fg: oklch(73.824% 0.01576 285.937);
+}

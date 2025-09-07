@@ -1,3 +1,3 @@
-# tauri-app
+# tauri-pomodoro
 
-基础的 Tauri 应用模版（SolidJS + Tailwind CSS v4）。
+番茄钟应用。
