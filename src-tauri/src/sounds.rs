@@ -8,12 +8,14 @@ static RODIO_HANDLE: LazyLock<OutputStream> = LazyLock::new(|| {
 
 pub enum Sound {
     Tick,
+    Alarm,
 }
 
 impl Sound {
     pub fn path(&self, app_handle: &AppHandle) -> PathBuf {
         let file_path = match self {
             Sound::Tick => "sounds/tick.wav",
+            Sound::Alarm => "sounds/alarm.wav",
         };
 
         app_handle
@@ -23,10 +25,14 @@ impl Sound {
     }
 
     pub fn play(&self, app_handle: &AppHandle) {
+        let volume = match self {
+            Sound::Tick => 0.2,
+            Sound::Alarm => 0.8,
+        };
         let sound_file = self.path(app_handle);
         let file = BufReader::new(File::open(sound_file).unwrap());
         let sink = rodio::Sink::connect_new(RODIO_HANDLE.mixer());
-        sink.set_volume(0.2); // 设置音量
+        sink.set_volume(volume);
         sink.append(Decoder::try_from(file).unwrap());
         sink.detach(); // 不阻塞当前线程
     }

@@ -9,6 +9,11 @@ fn tick(handle: AppHandle) {
 }
 
 #[tauri::command]
+fn done(handle: AppHandle) {
+    Sound::Alarm.play(&handle);
+}
+
+#[tauri::command]
 fn exit(handle: AppHandle) {
     handle.exit(0);
 }
@@ -17,7 +22,7 @@ fn exit(handle: AppHandle) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![tick, exit])
+        .invoke_handler(tauri::generate_handler![tick, done, exit])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

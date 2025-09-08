@@ -5,6 +5,18 @@
   height: 100vh;
 }
 
+#tomato-indicator {
+  &[data-status="working"] {
+    color: theme(--color-red-400);
+  }
+  &[data-status="short_break"] {
+    color: theme(--color-green-400);
+  }
+  &[data-status="long_break"] {
+    color: theme(--color-blue-400);
+  }
+}
+
 .clock-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
