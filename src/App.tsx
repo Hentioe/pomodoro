@@ -2,8 +2,11 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
 import { Icon } from "@iconify-icon/solid";
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import classNames from "classnames";
 import FlipClock from "./flip-clock";
+
+const appWindow = getCurrentWindow();
 
 function App() {
   const [isPlaying, setIsPlaying] = createSignal(false);
@@ -11,6 +14,7 @@ function App() {
 
   let timer: number;
   let flipClock: FlipClock;
+  let dragEl: HTMLDivElement | undefined;
 
   const handleTogglePlay = () => {
     if (isPlaying()) {
@@ -61,18 +65,27 @@ function App() {
     }
   };
 
+  const dragEvent = (e: MouseEvent) => {
+    if (e.buttons === 1) {
+      // Primary (left) button
+      appWindow.startDragging(); // Else start dragging
+    }
+  };
+
   onMount(() => {
     flipClock = new FlipClock();
     play();
+    dragEl?.addEventListener("mousedown", dragEvent);
   });
 
   onCleanup(() => {
     clearInterval(timer);
+    dragEl?.removeEventListener("mousedown", dragEvent);
   });
 
   return (
     <main class="h-full flex flex-col justify-center items-center">
-      <div class="clock-container">
+      <div class="clock-container cursor-grab" ref={dragEl}>
         <div class="digit-container" id="minute-ten">
           <div class="digit-display">0</div>
         </div>
@@ -90,7 +103,7 @@ function App() {
         </div>
       </div>
 
-      <div class="mt-[20px] h-[40px] bg-gray-600 text-zinc-300 shadow-window flex justify-center items-center px-[1rem] rounded-full gap-[20px]">
+      <div class="mt-[20px] h-[40px] bg-gray-600 text-zinc-300 shadow-window flex justify-center items-center rounded-full gap-[20px] px-[20px]">
         <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? "mingcute:pause-fill" : "mingcute:play-fill"} />
         <ControlButton onClick={restart} icon="ix:restore" />
         <ControlButton onClick={handleExit} icon="noto-v1:cross-mark" />
@@ -110,11 +123,11 @@ const ControlButton = (props: { icon: string; onClick?: () => void }) => {
     <div
       onClick={handleClick}
       class={classNames([
-        "bg-white text-gray-600 w-[26px] h-[26px] rounded-full flex justify-center items-center cursor-pointer",
+        "bg-white text-gray-600 w-[24px] h-[24px] rounded-full flex justify-center items-center cursor-pointer",
         "transition-colors hover:bg-gray-200",
       ])}
     >
-      <Icon icon={props.icon} class="text-[18px]" />
+      <Icon icon={props.icon} class="text-[16px]" />
     </div>
   );
 };
