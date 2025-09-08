@@ -14,4 +14,5 @@
 @theme {
   --color-digit-bg: oklch(27.431% 0.02744 257.55);
   --color-digit-fg: oklch(73.824% 0.01576 285.937);
+  --shadow-window: 0 8px 15px rgba(0, 0, 0, 0.4), 0 2px 5px rgba(0, 0, 0, 0.2);
 }

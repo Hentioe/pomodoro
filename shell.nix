@@ -11,5 +11,8 @@ pkgs.mkShell {
     cairo
     libsoup_3
     webkitgtk_4_1
+    alsa-lib
   ];
+
+  GIO_MODULE_DIR = "${pkgs.glib-networking}/lib/gio/modules/";
 }

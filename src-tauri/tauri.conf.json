@@ -14,9 +14,11 @@
       {
         "title": "tauri-pomodoro",
         "width": 398,
-        "height": 509,
+        "height": 629,
         "resizable": false,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "transparent": true,
+        "decorations": false
       }
     ],
     "security": {

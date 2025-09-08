@@ -27,6 +27,8 @@
   font-size: 76px;
   font-weight: theme(--font-weight-extrabold);
   color: theme(--color-digit-fg);
+  box-shadow: theme(--shadow-window);
+  overflow: hidden;
   z-index: 1;
 }
 
