@@ -1,5 +1,6 @@
 import { onCleanup, onMount } from "solid-js";
 import "./App.css";
+import { invoke } from "@tauri-apps/api/core";
 import FlipClock from "./flip-clock";
 
 function App() {
@@ -9,11 +10,13 @@ function App() {
     // 设置番茄钟总时间：25分钟（以秒为单位）
     let totalSeconds = 25 * 60;
     const flipClock = new FlipClock();
-    timer = setInterval(() => {
+    timer = setInterval(async () => {
       let minutes = Math.floor(totalSeconds / 60); // 获取分钟数
       let seconds = totalSeconds % 60; // 获取秒数
 
       flipClock.updateTime(minutes, seconds);
+      // invoke tick command
+      await invoke("tick", {});
       totalSeconds--;
       // 如果时间到达 0，重头开始
       if (totalSeconds < 0) {
