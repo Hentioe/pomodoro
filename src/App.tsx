@@ -3,8 +3,9 @@ import "./App.css";
 import { Icon } from "@iconify-icon/solid";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import classNames from "classnames";
 import FlipClock from "./flip-clock";
+import {} from "./icons";
+import classNames from "classnames";
 
 const appWindow = getCurrentWindow();
 
@@ -124,7 +125,16 @@ function App() {
   const TomatoIndicator = () => {
     return (
       <div id="tomato-indicator" data-status={status()} class="h-full rounded-full flex justify-center items-center">
-        <Icon icon="cbi:tomato" class="w-[28px] text-[28px]" />
+        <Icon
+          icon="tomato"
+          style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
+          class={classNames([
+            "w-[28px] text-[28px]",
+            { "text-red-400": status() === "working" },
+            { "text-green-400": status() !== "short_break" },
+            { "text-blue-400": status() === "long_break" },
+          ])}
+        />
       </div>
     );
   };
@@ -174,12 +184,9 @@ const ControlButton = (props: { icon: string; onClick?: () => void }) => {
   return (
     <div
       onClick={handleClick}
-      class={classNames([
-        "bg-white text-gray-600 w-[24px] h-[24px] rounded-full flex justify-center items-center cursor-pointer",
-        "transition-colors hover:bg-gray-200",
-      ])}
+      class="control-btn w-[24px] h-[24px] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
     >
-      <Icon icon={props.icon} class="text-[16px]" />
+      <Icon icon={props.icon} class="w-[16px] text-[16px]" />
     </div>
   );
 };
