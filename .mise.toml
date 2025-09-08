@@ -8,7 +8,7 @@ run = ["bun install"]
 run = "bun run tauri dev"
 
 [tasks.format]
-run = "dprint fmt"
+run = ["dprint fmt", "cd src-tauri && cargo fmt"]
 
 [tasks.lint]
 run = "cd src-tauri && cargo clippy"
