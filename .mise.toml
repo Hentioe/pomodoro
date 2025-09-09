@@ -2,7 +2,7 @@
 "cargo:dprint" = "latest"
 
 [tasks.setup]
-run = ["bun install"]
+run = ["bun install", "cd src-tauri && cargo fetch"]
 
 [tasks.default]
 run = "bun run tauri dev"
