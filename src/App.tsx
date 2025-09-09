@@ -46,10 +46,9 @@ function App() {
     clearInterval(timer);
   };
 
-  const restart = async () => {
-    pause();
+  const reset = async () => {
     setTotalSeconds(stateToTimeMap[status()]);
-    await play();
+    updateTimeDisplay();
   };
 
   const handleExit = () => {
@@ -62,10 +61,8 @@ function App() {
   };
 
   const nextTick = async () => {
-    let minutes = Math.floor(totalSeconds() / 60); // 获取分钟数
-    let seconds = totalSeconds() % 60; // 获取秒数
-
-    flipClock.updateTime(minutes, seconds);
+    // 更新时间显示
+    updateTimeDisplay();
     // invoke tick command
     await invoke("tick", {});
     setTotalSeconds(totalSeconds() - 1);
@@ -103,6 +100,13 @@ function App() {
     }
   };
 
+  const updateTimeDisplay = () => {
+    let minutes = Math.floor(totalSeconds() / 60); // 获取分钟数
+    let seconds = totalSeconds() % 60; // 获取秒数
+
+    flipClock.updateTime(minutes, seconds);
+  };
+
   const dragEvent = (e: MouseEvent) => {
     if (e.buttons === 1) {
       // Primary (left) button
@@ -112,7 +116,7 @@ function App() {
 
   onMount(() => {
     flipClock = new FlipClock();
-    // play();
+    updateTimeDisplay();
     dragEl?.addEventListener("mousedown", dragEvent);
   });
 
@@ -166,7 +170,7 @@ function App() {
         </div>
         <div class="flex items-center gap-[20px] px-[10px]">
           <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? "mingcute:pause-fill" : "mingcute:play-fill"} />
-          <ControlButton onClick={restart} icon="ix:restore" />
+          <ControlButton onClick={reset} icon="ix:restore" />
           <ControlButton onClick={handleExit} icon="noto-v1:cross-mark" />
         </div>
       </div>
