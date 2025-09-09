@@ -17,9 +17,9 @@ const stateToTimeMap: Record<PomodoroState, number> = {
 };
 
 function App() {
-  const [status, setStatus] = createSignal<PomodoroState>("working");
+  const [state, setState] = createSignal<PomodoroState>("working");
   const [cycle, setCycle] = createSignal(0);
-  const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[status()]);
+  const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[state()]);
   const [isPlaying, setIsPlaying] = createSignal(false);
 
   let timer: number;
@@ -47,7 +47,7 @@ function App() {
   };
 
   const reset = async () => {
-    setTotalSeconds(stateToTimeMap[status()]);
+    setTotalSeconds(stateToTimeMap[state()]);
     updateTimeDisplay();
   };
 
@@ -69,33 +69,31 @@ function App() {
     // 如果时间到达 0，进入下一个状态
     if (totalSeconds() < 0) {
       clearInterval(timer);
-      // 等待 3 秒
-      await invoke("done", {});
-      await new Promise((resolve) => setTimeout(resolve, 3000));
       pause();
 
-      switch (status()) {
+      switch (state()) {
         case "short_break":
           if (cycle() < 3) {
             setCycle(cycle() + 1); // 完成一个番茄周期
           }
-          setStatus("working");
+          setState("working");
           break;
         case "long_break":
-          setStatus("working");
+          setState("working");
           setCycle(0); // 重置周期计数
           break;
 
         default:
           if (cycle() === 3) { // 周期已达 3 次，进入长休息
-            setStatus("long_break");
+            setState("long_break");
           } else {
-            setStatus("short_break");
+            setState("short_break");
           }
           break;
       }
+      await invoke("done", { nextState: state() });
 
-      setTotalSeconds(stateToTimeMap[status()]);
+      setTotalSeconds(stateToTimeMap[state()]);
       play();
     }
   };
@@ -128,15 +126,15 @@ function App() {
   // 番茄指示器
   const TomatoIndicator = () => {
     return (
-      <div id="tomato-indicator" data-status={status()} class="h-full rounded-full flex justify-center items-center">
+      <div id="tomato-indicator" data-state={state()} class="h-full rounded-full flex justify-center items-center">
         <Icon
           icon="tomato"
           style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
           class={classNames([
             "w-[28px] text-[28px]",
-            { "text-red-400": status() === "working" },
-            { "text-green-400": status() !== "short_break" },
-            { "text-blue-400": status() === "long_break" },
+            { "text-red-400": state() === "working" },
+            { "text-green-400": state() === "short_break" },
+            { "text-blue-400": state() === "long_break" },
           ])}
         />
       </div>

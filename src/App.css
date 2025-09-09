@@ -8,13 +8,13 @@
 #tomato-indicator {
   transform: rotate(-8deg);
 
-  &[data-status="working"] {
+  &[data-state="working"] {
     color: theme(--color-red-400);
   }
-  &[data-status="short_break"] {
+  &[data-state="short_break"] {
     color: theme(--color-green-400);
   }
-  &[data-status="long_break"] {
+  &[data-state="long_break"] {
     color: theme(--color-blue-400);
   }
 }

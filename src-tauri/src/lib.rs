@@ -1,5 +1,8 @@
+use std::time::Duration;
+
 use crate::sounds::Sound;
 use tauri::AppHandle;
+use tokio::time::sleep;
 
 mod sounds;
 
@@ -9,8 +12,18 @@ fn tick(handle: AppHandle) {
 }
 
 #[tauri::command]
-fn done(handle: AppHandle) {
+async fn done(handle: AppHandle, next_state: String) {
     Sound::Alarm.play(&handle);
+    sleep(Duration::from_secs(Sound::Alarm.duration_secs())).await;
+    let state_sound = match next_state.as_str() {
+        "working" => Sound::WorkingAlert,
+        "short_break" => Sound::ShortBreakAlert,
+        "long_break" => Sound::LongBreakAlert,
+        _ => panic!("unknown state"),
+    };
+
+    state_sound.play(&handle);
+    sleep(Duration::from_secs(state_sound.duration_secs())).await;
 }
 
 #[tauri::command]
