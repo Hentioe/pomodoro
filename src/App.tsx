@@ -170,7 +170,7 @@ function App() {
         </div>
         <div class="flex items-center gap-[20px] px-[10px]">
           <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? "mingcute:pause-fill" : "mingcute:play-fill"} />
-          <ControlButton onClick={reset} icon="ix:restore" />
+          <ControlButton onClick={reset} icon="humbleicons:refresh" />
           <ControlButton onClick={handleExit} icon="noto-v1:cross-mark" />
         </div>
       </div>
