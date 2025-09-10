@@ -1,101 +1,53 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
 import { Icon } from "@iconify-icon/solid";
-import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import FlipClock from "./flip-clock";
 import {} from "./icons";
-import classNames from "classnames";
+import { info } from "@tauri-apps/plugin-log";
+import {
+  exit,
+  next,
+  onPomodoroUpdated,
+  pause,
+  play,
+  PomodoroPhase,
+  PomodoroState,
+  reset,
+} from "tauri-plugin-backend-api";
 
 const appWindow = getCurrentWindow();
 
 // 状态到时间的映射
-const stateToTimeMap: Record<PomodoroState, number> = {
-  "working": 25 * 60, // 25分钟
+const stateToTimeMap: Record<PomodoroPhase, number> = {
+  "focus": 25 * 60, // 25分钟
   "short_break": 5 * 60, // 5分钟
   "long_break": 15 * 60, // 15分钟
 };
 
 function App() {
-  const [state, setState] = createSignal<PomodoroState>("working");
-  const [cycle, setCycle] = createSignal(0);
-  const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[state()]);
+  const [phase, setPhase] = createSignal<PomodoroPhase>("focus");
+  const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[phase()]);
   const [isPlaying, setIsPlaying] = createSignal(false);
 
-  let timer: number;
   let flipClock: FlipClock;
   let dragEl: HTMLDivElement | undefined;
 
-  const handleTogglePlay = () => {
+  const handleTogglePlay = async () => {
     if (isPlaying()) {
-      pause();
+      await pause();
     } else {
-      play();
+      info("Play button clicked, starting play function");
+      await play();
     }
   };
 
-  const play = async () => {
-    if (isPlaying()) return;
-    setIsPlaying(true);
-    await createTimer();
+  const handleNext = async () => {
+    await next();
   };
 
-  const pause = () => {
-    if (!isPlaying()) return;
-    setIsPlaying(false);
-    clearInterval(timer);
-  };
-
-  const reset = async () => {
-    setTotalSeconds(stateToTimeMap[state()]);
-    updateTimeDisplay();
-  };
-
-  const handleExit = () => {
-    invoke("exit", {});
-  };
-
-  const createTimer = async () => {
-    await nextTick();
-    timer = setInterval(nextTick, 1000);
-  };
-
-  const nextTick = async () => {
-    // 更新时间显示
-    updateTimeDisplay();
-    // invoke tick command
-    await invoke("tick", {});
-    setTotalSeconds(totalSeconds() - 1);
-    // 如果时间到达 0，进入下一个状态
-    if (totalSeconds() < 0) {
-      clearInterval(timer);
-      pause();
-
-      switch (state()) {
-        case "short_break":
-          if (cycle() < 3) {
-            setCycle(cycle() + 1); // 完成一个番茄周期
-          }
-          setState("working");
-          break;
-        case "long_break":
-          setState("working");
-          setCycle(0); // 重置周期计数
-          break;
-
-        default:
-          if (cycle() === 3) { // 周期已达 3 次，进入长休息
-            setState("long_break");
-          } else {
-            setState("short_break");
-          }
-          break;
-      }
-      await invoke("done", { nextState: state() });
-
-      setTotalSeconds(stateToTimeMap[state()]);
-      play();
-    }
+  const handleExit = async () => {
+    await exit();
   };
 
   const updateTimeDisplay = () => {
@@ -112,61 +64,74 @@ function App() {
     }
   };
 
-  onMount(() => {
+  const onUpdated = (data: PomodoroState) => {
+    setPhase(data.phase);
+    setTotalSeconds(data.remainingSeconds);
+    setIsPlaying(data.isPlaying);
+    updateTimeDisplay();
+  };
+
+  onMount(async () => {
     flipClock = new FlipClock();
     updateTimeDisplay();
+    // 判断系统是否是 Android
+    if (navigator.userAgent.indexOf("Android") > -1) {
+      await onPomodoroUpdated(onUpdated);
+    }
     dragEl?.addEventListener("mousedown", dragEvent);
   });
 
   onCleanup(() => {
-    clearInterval(timer);
     dragEl?.removeEventListener("mousedown", dragEvent);
   });
 
   // 番茄指示器
   const TomatoIndicator = () => {
     return (
-      <div id="tomato-indicator" data-state={state()} class="h-full rounded-full flex justify-center items-center">
+      <div
+        id="tomato-indicator"
+        data-state={phase()}
+        onClick={handleNext}
+        class="h-full rounded-full flex justify-center items-center"
+      >
         <Icon
           icon="tomato"
           style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
-          class={classNames([
-            "w-[28px] text-[28px]",
-            { "text-red-400": state() === "working" },
-            { "text-green-400": state() === "short_break" },
-            { "text-blue-400": state() === "long_break" },
-          ])}
+          data-state={phase()}
+          class="w-[2.25rem] text-[2.25rem] transition-colors duration-800"
         />
       </div>
     );
   };
 
   return (
-    <main class="h-full flex flex-col justify-center items-center">
-      <div class="clock-container cursor-grab" ref={dragEl}>
-        <div class="digit-container" id="minute-ten">
-          <div class="digit-display">0</div>
-        </div>
+    <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] pb-[2rem]">
+      <div class="flex-1 flex w-full items-center">
+        <div class="clock-container cursor-grab" ref={dragEl}>
+          <div class="digit-container" id="minute-ten">
+            <div class="digit-display">0</div>
+          </div>
 
-        <div class="digit-container" id="minute-one">
-          <div class="digit-display">0</div>
-        </div>
+          <div class="digit-container" id="minute-one">
+            <div class="digit-display">0</div>
+          </div>
 
-        <div class="digit-container" id="second-ten">
-          <div class="digit-display">0</div>
-        </div>
+          <div class="digit-container" id="second-ten">
+            <div class="digit-display">0</div>
+          </div>
 
-        <div class="digit-container" id="second-one">
-          <div class="digit-display">0</div>
+          <div class="digit-container" id="second-one">
+            <div class="digit-display">0</div>
+          </div>
         </div>
       </div>
 
-      <div class="mt-[20px] h-[40px] bg-gray-700 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[10px]">
-        <div class="flex items-center gap-[10px]">
+      <div class="mt-[1rem] h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]">
+        <div class="flex items-center gap-[1.25rem]">
           <TomatoIndicator />
-          <div class="w-[1px] h-[20px] bg-gray-500" />
+          <div class="w-[1px] h-[1.25rem] bg-gray-500" />
         </div>
-        <div class="flex items-center gap-[20px] px-[10px]">
+        <div class="flex items-center gap-[1.25rem] pl-[1.25rem]">
           <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? "mingcute:pause-fill" : "mingcute:play-fill"} />
           <ControlButton onClick={reset} icon="humbleicons:refresh" />
           <ControlButton onClick={handleExit} icon="noto-v1:cross-mark" />
@@ -186,9 +151,9 @@ const ControlButton = (props: { icon: string; onClick?: () => void }) => {
   return (
     <div
       onClick={handleClick}
-      class="control-btn w-[24px] h-[24px] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
+      class="control-btn w-[2rem] h-[2rem] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
     >
-      <Icon icon={props.icon} class="w-[16px] text-[16px]" />
+      <Icon icon={props.icon} class="w-[1.25rem] text-[1.25rem]" />
     </div>
   );
 };
