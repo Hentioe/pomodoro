@@ -105,7 +105,7 @@ function App() {
   };
 
   return (
-    <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] pb-[2rem]">
+    <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
       <div class="flex-1 flex w-full items-center">
         <div class="clock-container cursor-grab" ref={dragEl}>
           <div class="digit-container" id="minute-ten">
@@ -126,7 +126,7 @@ function App() {
         </div>
       </div>
 
-      <div class="mt-[1rem] h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]">
+      <div class="absolute bottom-[2rem] z-10 h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]">
         <div class="flex items-center gap-[1.25rem]">
           <TomatoIndicator />
           <div class="w-[1px] h-[1.25rem] bg-gray-500" />
