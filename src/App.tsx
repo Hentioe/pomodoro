@@ -5,6 +5,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import FlipClock from "./flip-clock";
 import {} from "./icons";
 import { info } from "@tauri-apps/plugin-log";
+import classNames from "classnames";
 import {
   exit,
   next,
@@ -29,6 +30,7 @@ function App() {
   const [phase, setPhase] = createSignal<PomodoroPhase>("focus");
   const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[phase()]);
   const [isPlaying, setIsPlaying] = createSignal(false);
+  const [loaded, setLoaded] = createSignal(false);
 
   let flipClock: FlipClock;
   let dragEl: HTMLDivElement | undefined;
@@ -79,6 +81,7 @@ function App() {
       await onPomodoroUpdated(onUpdated);
     }
     dragEl?.addEventListener("mousedown", dragEvent);
+    setLoaded(true);
   });
 
   onCleanup(() => {
@@ -126,7 +129,13 @@ function App() {
         </div>
       </div>
 
-      <div class="absolute bottom-[2rem] z-10 h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]">
+      <div
+        class={classNames([
+          "absolute bottom-[-3.5rem] z-10 h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]",
+          "transition-all duration-700",
+          { "bottom-[2rem]": loaded() },
+        ])}
+      >
         <div class="flex items-center gap-[1.25rem]">
           <TomatoIndicator />
           <div class="w-[1px] h-[1.25rem] bg-gray-500" />
