@@ -42,7 +42,6 @@ class PomodoroService : Service() {
     private val CHANNEL_ID = "PomodoroChannel"
     private var toast: Toast? = null
     private val scope = MainScope()
-    private var toggleIcon = R.drawable.ic_pause // 默认图标
     private var timerJob: Job? = null // 暴露 Job 以便取消
     private var isTimerRunning = false
     private val soundManager = SoundManager(this) // 声音管理器（封装音频）
@@ -51,7 +50,9 @@ class PomodoroService : Service() {
             phase = PomodoroPhase.FOCUS,
             remainingSeconds = PomodoroPhase.FOCUS.seconds,
             isPlaying = false,
-            cycleCount = 0)
+            cycleCount = 0) // 默认状态
+    private var toggleIcon =
+        if (state.isPlaying) R.drawable.ic_pause else R.drawable.ic_play // 默认图标
 
     inner class LocalBinder : Binder() {
         fun getService(): PomodoroService = this@PomodoroService
@@ -285,13 +286,14 @@ class PomodoroService : Service() {
         // 设置图标
         notificationLayout.setImageViewResource(R.id.notification_toggle, toggleIcon)
         notificationLayoutExpanded.setImageViewResource(R.id.notification_toggle, toggleIcon)
-        // 如果状态是暂停，则显示 notification_close 图标（修改 visibility）
-        if (!state.isPlaying) {
-            notificationLayout.setViewVisibility(R.id.notification_close, 1) // VISIBLE
-            notificationLayoutExpanded.setViewVisibility(R.id.notification_close, 1) // VISIBLE
-        } else {
+        if (state.isPlaying) {
+            // 如果状态是播放，则不显示 close 图标
             notificationLayout.setViewVisibility(R.id.notification_close, 8) // GONE
             notificationLayoutExpanded.setViewVisibility(R.id.notification_close, 8) // GONE
+        } else {
+            // 如果状态是暂停，则显示 close 图标
+            notificationLayout.setViewVisibility(R.id.notification_close, 1) // VISIBLE
+            notificationLayoutExpanded.setViewVisibility(R.id.notification_close, 1) // VISIBLE
         }
         // 创建切换图标的点击事件
         val toggleIntent = Intent(this, this::class.java).apply { action = ACTION_TOGGLE }
