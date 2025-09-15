@@ -16,6 +16,7 @@ import {
   PomodoroState,
   reset,
 } from "tauri-plugin-backend-api";
+import Header from "./layouts/Header";
 
 const appWindow = getCurrentWindow();
 
@@ -95,7 +96,7 @@ function App() {
         id="tomato-indicator"
         data-state={phase()}
         onClick={handleNext}
-        class="h-full rounded-full flex justify-center items-center"
+        class="h-full rounded-full flex justify-centwhite text-blacker items-center"
       >
         <Icon
           icon="tomato"
@@ -109,6 +110,7 @@ function App() {
 
   return (
     <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
+      <Header />
       <div class="flex-1 flex w-full items-center">
         <div class="clock-container cursor-grab" ref={dragEl}>
           <div class="digit-container" id="minute-ten">
