@@ -155,6 +155,7 @@ class PomodoroService : Service() {
         state.isPlaying = false
         toggleIcon = R.drawable.ic_play // 播放图标
         updatePomodoroState(state) // 更新状态
+        updateNotification() // 更新通知
     }
 
     fun resetTimer() {
