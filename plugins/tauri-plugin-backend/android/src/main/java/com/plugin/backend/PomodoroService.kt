@@ -50,7 +50,7 @@ class PomodoroService : Service() {
         PomodoroState(
             phase = PomodoroPhase.FOCUS,
             remainingSeconds = PomodoroPhase.FOCUS.seconds,
-            isPlaying = true,
+            isPlaying = false,
             cycleCount = 0)
 
     inner class LocalBinder : Binder() {
