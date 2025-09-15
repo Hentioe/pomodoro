@@ -6,11 +6,15 @@ with (import <nixpkgs>) {
 };
 let
   androidComposition = androidenv.composeAndroidPackages {
-    platformVersions = [ "34" "35" "36" ];
-    buildToolsVersions = [ "35.0.0" ];
+    platformVersions = [
+      "34"
+      "35"
+      "36"
+    ];
+    buildToolsVersions = [ "36.0.0" ];
     cmakeVersions = [ "4.1.0" ];
     includeNDK = true;
-    ndkVersion = "27.3.13750724";
+    ndkVersion = "28.2.13676358"; # 此版本号需要和 build.gradle.kts 中的 ndkVersion 保持一致
     abiVersions = [
       "x86_64"
       "arm64-v8a"
@@ -41,13 +45,19 @@ stdenv.mkDerivation {
   ANDROID_NDK_ROOT = "${androidSdk}/libexec/android-sdk/ndk-bundle"; # Tauri 需要此变量
   ANDROID_NDK_HOME = "${androidSdk}/libexec/android-sdk/ndk-bundle"; # Rust 需要此变量
 
+  # NDK 构建工具版本
+  NDK_TOOLCHAINS_VERSION = "35";
+  # SDK 构建工具版本
+  SDK_BUILD_TOOLS_VERSION = "36.0.0";
+  # 修复前端网络故障
   GIO_MODULE_DIR = "${pkgs.glib-networking}/lib/gio/modules/";
 
+  # 指定工具位置
   shellHook = ''
-    export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android35-clang"
-    export CARGO_TARGET_AARCH64_LINUX_ANDROID_RUSTFLAGS="-L $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/35"
-    export CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android35-clang"
-    export CARGO_TARGET_X86_64_LINUX_ANDROID_RUSTFLAGS="-L $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/35"
-    export GRADLE_OPTS="-Dorg.gradle.project.android.aapt2FromMavenOverride=$ANDROID_SDK_ROOT/build-tools/35.0.0/aapt2"
+    export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android$NDK_TOOLCHAINS_VERSION-clang"
+    export CARGO_TARGET_AARCH64_LINUX_ANDROID_RUSTFLAGS="-L $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/$NDK_TOOLCHAINS_VERSION"
+    export CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android$NDK_TOOLCHAINS_VERSION-clang"
+    export CARGO_TARGET_X86_64_LINUX_ANDROID_RUSTFLAGS="-L $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/$NDK_TOOLCHAINS_VERSION"
+    export GRADLE_OPTS="-Dorg.gradle.project.android.aapt2FromMavenOverride=$ANDROID_SDK_ROOT/build-tools/$SDK_BUILD_TOOLS_VERSION/aapt2"
   '';
 }

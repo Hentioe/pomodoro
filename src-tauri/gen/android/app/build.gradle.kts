@@ -17,16 +17,16 @@ val tauriProperties =
   }
 
 android {
-  buildToolsVersion = "35.0.0"
-  ndkVersion = "27.3.13750724"
+  buildToolsVersion = "36.0.0"
+  ndkVersion = "28.2.13676358"
   externalNativeBuild { cmake { version = "4.1.0" } }
-  compileSdk = 35
+  compileSdk = 36
   namespace = "dev.hentioe.tauripomodoro"
   defaultConfig {
     manifestPlaceholders["usesCleartextTraffic"] = "false"
     applicationId = "dev.hentioe.tauripomodoro"
     minSdk = 30
-    targetSdk = 35
+    targetSdk = 34
     versionCode = tauriProperties.getProperty("tauri.android.versionCode", "1").toInt()
     versionName = tauriProperties.getProperty("tauri.android.versionName", "1.0")
   }
