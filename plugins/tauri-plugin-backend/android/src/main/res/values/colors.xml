@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="focus">#e15252</color>
+  <color name="short_break">#4a95e0</color>
+  <color name="long_break">#65c26a</color>
+  <color name="icon_foreground">#333333</color> <!-- 80% -->
+  <color name="icon_background">#26000000</color> <!-- 黑色 15% 透明度 -->
+</resources>

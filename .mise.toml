@@ -1,0 +1,41 @@
+[tools]
+"cargo:dprint" = "latest"
+
+[tasks.setup]
+depends = ["plugin-setup"]
+run = ["bun install", "cd src-tauri && cargo fetch"]
+
+[tasks.default]
+run = "bun run tauri dev"
+
+[tasks.format]
+depends = ["plugin-format"]
+run = ["dprint fmt", "cd src-tauri && cargo fmt", "cd src-tauri/gen/android && ./gradlew ktlintFormat"]
+
+[tasks.plugin-setup]
+dir = "plugins/tauri-plugin-backend"
+run = ["bun install", "bun run build"]
+
+[tasks.plugin-format]
+dir = "plugins/tauri-plugin-backend"
+run = ["cargo fmt", "cd android && ktfmt --kotlinlang-style ."]
+
+[tasks.plugin-prepare]
+depends = ["plugin-format"]
+dir = "plugins/tauri-plugin-backend"
+run = ["cargo fmt", "cargo clippy", "cargo test"]
+
+[tasks.android-dev]
+run = "bun run tauri android dev"
+
+[tasks.lint]
+run = "cd src-tauri && cargo clippy"
+
+[tasks.test]
+run = "cd src-tauri && cargo test"
+
+[tasks.clean]
+run = ["rm -rf ./dist", "rm -rf ./src-tauri/target"]
+
+[tasks.prepare]
+depends = ["plugin-prepare", "format", "lint", "test"]

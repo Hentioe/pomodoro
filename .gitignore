@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.direnv/
+# In production, please track bun.lock
+bun.lock
