@@ -315,6 +315,7 @@ class PomodoroService : Service() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT) // 默认优先级
             .setContentIntent(pendingIntent) // 打开应用主界面
             .setShowWhen(false) // 不显示时间戳
+            .setOnlyAlertOnce(true) // 避免影响屏幕熄灭
             .build()
     }
 
