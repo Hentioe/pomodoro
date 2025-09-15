@@ -160,13 +160,13 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     @Command
     fun play(invoke: Invoke) {
+        checkPermission()
         if (service != null && isServiceRunning()) {
             // 如果 service 不为空，且服务正在运行
             Log.i(LOG_TAG, "Resuming playback")
             service?.startTimer()
         } else {
             Log.i(LOG_TAG, "Starting and binding to service")
-            checkPermission()
             // 启动并绑定服务
             startAndBindService()
         }
