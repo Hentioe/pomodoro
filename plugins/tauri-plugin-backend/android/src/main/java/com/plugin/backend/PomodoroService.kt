@@ -319,7 +319,7 @@ class PomodoroService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setCustomContentView(notificationLayout) // 自定义视图
             .setCustomBigContentView(notificationLayoutExpanded) // 自定义展开视图
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_notification)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT) // 默认优先级
             .setContentIntent(pendingIntent) // 打开应用主界面
             .setShowWhen(false) // 不显示时间戳
