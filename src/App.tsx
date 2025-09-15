@@ -1,9 +1,7 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
-import { Icon } from "@iconify-icon/solid";
+import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import FlipClock from "./flip-clock";
-import {} from "./icons";
 import { info } from "@tauri-apps/plugin-log";
 import classNames from "classnames";
 import {
@@ -16,6 +14,8 @@ import {
   PomodoroState,
   reset,
 } from "tauri-plugin-backend-api";
+import FlipClock from "./flip-clock";
+import icons from "./icons";
 import Header from "./layouts/Header";
 
 const appWindow = getCurrentWindow();
@@ -96,13 +96,13 @@ function App() {
         id="tomato-indicator"
         data-state={phase()}
         onClick={handleNext}
-        class="h-full rounded-full flex justify-centwhite text-blacker items-center"
+        class="h-full rounded-full flex justify-center white text-black items-center"
       >
         <Icon
           icon="tomato"
           style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
           data-state={phase()}
-          class="w-[2.25rem] text-[2.25rem] transition-colors duration-800"
+          class="w-[2.25rem] h-[2.25rem] text-[2.25rem] transition-colors duration-800"
         />
       </div>
     );
@@ -143,16 +143,16 @@ function App() {
           <div class="w-[1px] h-[1.25rem] bg-gray-500" />
         </div>
         <div class="flex items-center gap-[1.25rem] pl-[1.25rem]">
-          <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? "mingcute:pause-fill" : "mingcute:play-fill"} />
-          <ControlButton onClick={reset} icon="humbleicons:refresh" />
-          <ControlButton onClick={handleExit} icon="noto-v1:cross-mark" />
+          <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? icons.Pause : icons.Play} />
+          <ControlButton onClick={reset} icon={icons.Reset} />
+          <ControlButton onClick={handleExit} icon={icons.Close} />
         </div>
       </div>
     </main>
   );
 }
 
-const ControlButton = (props: { icon: string; onClick?: () => void }) => {
+const ControlButton = (props: { icon: string | IconifyIcon; onClick?: () => void }) => {
   const handleClick = () => {
     if (props.onClick) {
       props.onClick();
@@ -164,7 +164,7 @@ const ControlButton = (props: { icon: string; onClick?: () => void }) => {
       onClick={handleClick}
       class="control-btn w-[2rem] h-[2rem] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
     >
-      <Icon icon={props.icon} class="w-[1.25rem] text-[1.25rem]" />
+      <Icon icon={props.icon} class="w-[1.25rem] h-[1.25rem] text-[1.25rem]" />
     </div>
   );
 };

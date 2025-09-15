@@ -13,6 +13,10 @@
   "license": "MIT",
   "dependencies": {
     "@iconify-icon/solid": "^3.0.0",
+    "@iconify-icons/humbleicons": "^1.2.4",
+    "@iconify-icons/mingcute": "^1.2.9",
+    "@iconify-icons/noto-v1": "^1.2.5",
+    "@iconify-icons/tdesign": "^1.2.0",
     "@tauri-apps/api": "^2.8.0",
     "@tauri-apps/plugin-log": "^2.7.0",
     "@tauri-apps/plugin-opener": "^2.5.0",

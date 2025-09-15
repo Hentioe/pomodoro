@@ -1,4 +1,10 @@
 import { addIcon } from "@iconify-icon/solid";
+import Reset from "@iconify-icons/humbleicons/refresh";
+import Pause from "@iconify-icons/mingcute/pause-fill";
+import Play from "@iconify-icons/mingcute/play-fill";
+import Volume from "@iconify-icons/mingcute/volume-line";
+import Close from "@iconify-icons/noto-v1/cross-mark";
+import Setting from "@iconify-icons/tdesign/setting";
 
 addIcon(
   "tomato",
@@ -40,4 +46,13 @@ addIcon(
   },
 );
 
-export {};
+export default {
+  Tomato: "tomato",
+  AlarmNews: "alarm-news",
+  Pause,
+  Play,
+  Reset,
+  Close,
+  Volume,
+  Setting,
+};
