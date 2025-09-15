@@ -10,6 +10,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.webkit.WebView
 import android.widget.Toast
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
@@ -34,13 +35,20 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     private var isBound = false
 
     companion object {
-        val logTag = "tauripomodoro:Plugin"
+        const val LOG_TAG = "tauripomodoro:Plugin"
+    }
+
+    override fun load(webView: WebView) {
+        super.load(webView)
+        Log.i(LOG_TAG, "Plugin loaded")
+        // 预启动并绑定服务
+        startAndBindService(PomodoroService.ACTION_PRE_START)
     }
 
     private val connection =
         object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                Log.i(logTag, "Service connected")
+                Log.i(LOG_TAG, "Service connected")
                 val binder = service as PomodoroService.LocalBinder
                 this@Plugin.service = binder.getService()
                 this@Plugin.service?.registerCallback(this@Plugin)
@@ -48,7 +56,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
-                Log.i(logTag, "Service disconnected")
+                Log.i(LOG_TAG, "Service disconnected")
                 isBound = false
                 service = null
             }
@@ -58,45 +66,43 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         activity.application.registerActivityLifecycleCallbacks(
             object : ActivityLifecycleCallbacks {
                 override fun onActivityStarted(activity: Activity) {
-                    Log.d(logTag, "onActivityStarted")
+                    Log.d(LOG_TAG, "onActivityStarted")
                     if (!isBound && isServiceRunning()) {
-                        Log.i(logTag, "Binding to running service")
+                        Log.i(LOG_TAG, "Binding to running service")
                         val intent = Intent(activity, PomodoroService::class.java)
                         bindService(intent)
                     }
                 }
 
                 override fun onActivityStopped(activity: Activity) {
-                    Log.d(logTag, "onActivityStopped")
+                    Log.d(LOG_TAG, "onActivityStopped")
                     if (isBound && isServiceRunning()) {
-                        Log.i(logTag, "Unbinding from service")
+                        Log.i(LOG_TAG, "Unbinding from service")
                         unbindService()
                     }
                 }
 
-                // 实现所有必要的方法（即使为空）
-                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    Log.d(logTag, "onActivityCreated")
-                }
-
                 override fun onActivityResumed(activity: Activity) {
-                    Log.d(logTag, "onActivityResumed")
+                    Log.d(LOG_TAG, "onActivityResumed")
                     val state = service?.state()
                     if (state != null) {
-                        Log.i(logTag, "Pushing current state to frontend")
+                        Log.i(LOG_TAG, "Pushing current state to frontend")
                         onPomodoroStateUpdated(state)
                     }
                 }
 
-                override fun onActivityPaused(activity: Activity) {}
-
                 override fun onActivityDestroyed(activity: Activity) {
-                    Log.d(logTag, "onActivityDestroyed")
+                    Log.d(LOG_TAG, "onActivityDestroyed")
                     // 停止服务
                     val intent = Intent(activity, PomodoroService::class.java)
                     activity.stopService(intent)
                     System.exit(0) // 确保应用完全退出
                 }
+
+                // 实现所有必要的方法（即使为空）
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+
+                override fun onActivityPaused(activity: Activity) {}
 
                 override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             })
@@ -110,6 +116,13 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     private fun bindService(intent: Intent) {
         activity.bindService(intent, connection, 0)
+    }
+
+    private fun startAndBindService(action: String = PomodoroService.ACTION_START_AND_BIND) {
+        val intent = Intent(activity, PomodoroService::class.java)
+        intent.action = action
+        bindService(intent)
+        activity.startForegroundService(intent) // 确保服务启动
     }
 
     private fun unbindService() {
@@ -128,7 +141,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         event.put("cycleCount", state.cycleCount)
         trigger("pomodoro_updated", event)
 
-        Log.d(logTag, "Pomodoro state pushed: $state")
+        Log.d(LOG_TAG, "Pomodoro state pushed: $state")
     }
 
     private fun checkPermission() {
@@ -149,14 +162,13 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     fun play(invoke: Invoke) {
         if (service != null && isServiceRunning()) {
             // 如果 service 不为空，且服务正在运行
-            Log.i(logTag, "Resuming playback")
+            Log.i(LOG_TAG, "Resuming playback")
             service?.startTimer()
         } else {
-            Log.i(logTag, "Starting and binding to service")
+            Log.i(LOG_TAG, "Starting and binding to service")
             checkPermission()
-            val intent = Intent(activity, PomodoroService::class.java)
-            bindService(intent)
-            activity.startForegroundService(intent) // 确保服务启动
+            // 启动并绑定服务
+            startAndBindService()
         }
 
         invoke.resolve()
@@ -164,7 +176,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     @Command
     fun pause(invoke: Invoke) {
-        Log.i(logTag, "Pausing playback")
+        Log.i(LOG_TAG, "Pausing playback")
         service?.stopTimer()
 
         invoke.resolve()
@@ -172,7 +184,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     @Command
     fun reset(invoke: Invoke) {
-        Log.i(logTag, "Resetting playback")
+        Log.i(LOG_TAG, "Resetting playback")
         service?.resetTimer()
 
         invoke.resolve()
@@ -180,7 +192,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     @Command
     fun next(invoke: Invoke) {
-        Log.i(logTag, "Skipping to next phase")
+        Log.i(LOG_TAG, "Skipping to next phase")
         service?.skipToNextPhase()
 
         invoke.resolve()
@@ -205,7 +217,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
 
     @Command
     fun exit(invoke: Invoke) {
-        Log.i(logTag, "Exiting application")
+        Log.i(LOG_TAG, "Exiting application")
         // 停止服务
         val intent = Intent(activity, PomodoroService::class.java)
         activity.stopService(intent)

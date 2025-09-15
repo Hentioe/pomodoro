@@ -30,6 +30,8 @@ enum class PomodoroPhase(val value: String, val seconds: Int) {
 class PomodoroService : Service() {
     companion object {
         const val LOG_TAG = "tauripomodoro:PomodoroService"
+        const val ACTION_START_AND_BIND = "ACTION_START_AND_BIND"
+        const val ACTION_PRE_START = "ACTION_PRE_START"
         const val ACTION_TOGGLE = "ACTION_TOGGLE"
         const val ACTION_CLOSE = "ACTION_CLOSE"
     }
@@ -62,8 +64,6 @@ class PomodoroService : Service() {
         createNotificationChannel()
         // 初始化音频
         soundManager.initialize()
-        // 启动定时器
-        startTimer()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -95,7 +95,14 @@ class PomodoroService : Service() {
                 // 停止服务
                 stopSelf()
             }
-            else -> {
+            ACTION_START_AND_BIND -> {
+                startForeground(
+                    NOTIFICATION_ID,
+                    buildNotification(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+                startTimer() // 启动计时器
+            }
+            ACTION_PRE_START -> {
                 startForeground(
                     NOTIFICATION_ID,
                     buildNotification(),
