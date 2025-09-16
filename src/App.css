@@ -1,4 +1,5 @@
 @import "./tailwind.css";
+@import "./styles/components.css";
 
 #root {
   width: 100vw;

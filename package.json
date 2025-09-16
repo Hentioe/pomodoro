@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ark-ui/solid": "^5.24.1",
     "@iconify-icon/solid": "^3.0.0",
     "@iconify-icons/humbleicons": "^1.2.4",
     "@iconify-icons/mingcute": "^1.2.9",
