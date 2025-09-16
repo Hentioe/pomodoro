@@ -1,11 +1,9 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
-import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getIdentifier, getVersion } from "@tauri-apps/api/app";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { fetch } from "@tauri-apps/plugin-http";
 import { debug, error, info } from "@tauri-apps/plugin-log";
-import classNames from "classnames";
 import {
   exit,
   next,
@@ -17,7 +15,7 @@ import {
   reset,
 } from "tauri-plugin-backend-api";
 import FlipClock from "./flip-clock";
-import icons from "./icons";
+import Controller from "./layouts/Controls";
 import Header from "./layouts/Header";
 
 const appWindow = getCurrentWindow();
@@ -48,12 +46,12 @@ function App() {
     }
   };
 
-  const handleNext = async () => {
-    await next();
-  };
-
+  const handleNext = async () => await next();
+  const handleReset = async () => await reset();
   const handleExit = async () => {
     await exit();
+    // 确认退出需要返回 true
+    return true;
   };
 
   const updateTimeDisplay = () => {
@@ -119,25 +117,6 @@ function App() {
     dragEl?.removeEventListener("mousedown", dragEvent);
   });
 
-  // 番茄指示器
-  const TomatoIndicator = () => {
-    return (
-      <div
-        id="tomato-indicator"
-        data-state={phase()}
-        onClick={handleNext}
-        class="h-full rounded-full flex justify-center white text-black items-center"
-      >
-        <Icon
-          icon="tomato"
-          style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
-          data-state={phase()}
-          class="w-[2.25rem] h-[2.25rem] text-[2.25rem] transition-colors duration-800"
-        />
-      </div>
-    );
-  };
-
   return (
     <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
       <Header update={update()} />
@@ -161,42 +140,17 @@ function App() {
         </div>
       </div>
 
-      <div
-        class={classNames([
-          "absolute bottom-[-3.5rem] z-10 h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]",
-          "transition-all duration-700",
-          { "bottom-[2rem]": loaded() },
-        ])}
-      >
-        <div class="flex items-center gap-[1.25rem]">
-          <TomatoIndicator />
-          <div class="w-[1px] h-[1.25rem] bg-gray-500" />
-        </div>
-        <div class="flex items-center gap-[1.25rem] pl-[1.25rem]">
-          <ControlButton onClick={handleTogglePlay} icon={isPlaying() ? icons.Pause : icons.Play} />
-          <ControlButton onClick={reset} icon={icons.Reset} />
-          <ControlButton onClick={handleExit} icon={icons.Close} />
-        </div>
-      </div>
+      <Controller
+        loaded={loaded()}
+        phase={phase()}
+        isPlaying={isPlaying()}
+        onTogglePlay={handleTogglePlay}
+        onNext={handleNext}
+        onReset={handleReset}
+        onExit={handleExit}
+      />
     </main>
   );
 }
-
-const ControlButton = (props: { icon: string | IconifyIcon; onClick?: () => void }) => {
-  const handleClick = () => {
-    if (props.onClick) {
-      props.onClick();
-    }
-  };
-
-  return (
-    <div
-      onClick={handleClick}
-      class="control-btn w-[2rem] h-[2rem] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
-    >
-      <Icon icon={props.icon} class="w-[1.25rem] h-[1.25rem] text-[1.25rem]" />
-    </div>
-  );
-};
 
 export default App;
