@@ -23,6 +23,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri = { version = "2", features = [] }
 tauri-plugin-backend = { path = "../plugins/tauri-plugin-backend" }
+tauri-plugin-http = "2"
 tauri-plugin-log = "2.7.0"
 tauri-plugin-opener = "2.5.0"
 tokio = { version = "1", features = ["time"] }

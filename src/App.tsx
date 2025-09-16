@@ -1,8 +1,10 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
+import { getIdentifier, getVersion } from "@tauri-apps/api/app";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { info } from "@tauri-apps/plugin-log";
+import { fetch } from "@tauri-apps/plugin-http";
+import { debug, error, info } from "@tauri-apps/plugin-log";
 import classNames from "classnames";
 import {
   exit,
@@ -32,6 +34,7 @@ function App() {
   const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[phase()]);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [loaded, setLoaded] = createSignal(false);
+  const [update, setUpdate] = createSignal<Update | undefined>(undefined);
 
   let flipClock: FlipClock;
   let dragEl: HTMLDivElement | undefined;
@@ -83,6 +86,33 @@ function App() {
     }
     dragEl?.addEventListener("mousedown", dragEvent);
     setLoaded(true);
+
+    const resp = await fetch("https://pomodoro.hentioe.dev/api/update/check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        app_id: await getIdentifier(),
+        platform: "android",
+        channel: "dev",
+        version: await getVersion(),
+        architecture: "aarch64",
+      }),
+    });
+
+    const updateInfo = await resp.json() as Api.Error | Api.Success<Update>;
+    if (updateInfo.success) {
+      const update = updateInfo.payload;
+      if (update.available) {
+        info(`New version available: ${update.latest}`);
+        setUpdate(updateInfo.payload);
+      } else {
+        debug("Check for updates: no updates available");
+      }
+    } else {
+      error("Check for updates failed: " + updateInfo.message);
+    }
   });
 
   onCleanup(() => {
@@ -110,7 +140,7 @@ function App() {
 
   return (
     <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
-      <Header />
+      <Header update={update()} />
       <div class="flex-1 flex w-full items-center">
         <div class="clock-container cursor-grab" ref={dragEl}>
           <div class="digit-container" id="minute-ten">
