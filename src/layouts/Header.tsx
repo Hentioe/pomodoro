@@ -5,14 +5,23 @@ import { Dialog } from "../components";
 import Rodio from "../components/Rodio";
 import icons from "../icons";
 
-const MusicOptions: RodioOption[] = [
+const TickOptions: RodioOption[] = [
   { label: "无", value: "none" },
   { label: "指针", value: "pointer" },
   { label: "心电", value: "ecg" },
   { label: "钟摆", value: "pendulum" },
+  { label: "蔡徐坤", value: "kun" },
 ];
 
+// const BackgroundOptions: RodioOption[] = [
+//   { label: "无", value: "none" },
+//   { label: "白噪音", value: "white-noise" },
+//   { label: "森林", value: "forest" },
+//   { label: "雨声", value: "rain" }
+// ];
+
 export default (props: { update?: Update }) => {
+  const [tickSound, setTickSound] = createSignal("pointer");
   const [musicDialogOpen, setMusicDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
   const handleClickUpdate = async () => {
@@ -29,7 +38,8 @@ export default (props: { update?: Update }) => {
   const MusicDialog = () => {
     return (
       <Dialog title="音乐" open={musicDialogOpen} setOpen={setMusicDialogOpen}>
-        <Rodio label="滴答声" value="pointer" options={MusicOptions} />
+        <Rodio label="滴答声" value={tickSound()} options={TickOptions} onValueChange={setTickSound} />
+        {/* <Rodio label="背景声" value="none" options={BackgroundOptions} /> */}
       </Dialog>
     );
   };
