@@ -1,10 +1,16 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { createSignal, Show } from "solid-js";
+import { createStore } from "solid-js/store";
 import { Dialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
 import icons from "../icons";
+
+type VolumeType = "tick" | "alarm" | "prompt" | "background";
+type Volumes = {
+  [key in VolumeType]: number;
+};
 
 const TickOptions: RodioOption[] = [
   { label: "无", value: "none" },
@@ -23,13 +29,25 @@ const TickOptions: RodioOption[] = [
 
 export default (props: { update?: Update }) => {
   const [tickSound, setTickSound] = createSignal("pointer");
+  const [volumes, setVolumes] = createStore<Volumes>({
+    tick: 0.4,
+    alarm: 0.8,
+    prompt: 0.6,
+    background: 0.5,
+  });
   const [musicDialogOpen, setMusicDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
+
   const handleClickUpdate = async () => {
     const url = props.update?.download?.[0].url;
     if (url) {
       await openUrl(url);
     }
+  };
+
+  const handleVolumeChange = (type: VolumeType, value: number) => {
+    console.log(type, value);
+    setVolumes(type, value);
   };
 
   const Version = () => {
@@ -49,10 +67,14 @@ export default (props: { update?: Update }) => {
     return (
       <Dialog title="音量调整" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
         <div class="flex flex-col gap-[1rem]">
-          <Slider label="滴答音" value={0.4} />
-          <Slider label="闹铃音" value={0.8} />
-          <Slider label="提示音" value={0.6} />
-          <Slider label="背景音" value={0.5} />
+          <Slider label="滴答音" value={volumes.tick} onValueChangeEnd={(v) => handleVolumeChange("tick", v)} />
+          <Slider label="闹铃音" value={volumes.alarm} onValueChangeEnd={(v) => handleVolumeChange("alarm", v)} />
+          <Slider label="提示音" value={volumes.prompt} onValueChangeEnd={(v) => handleVolumeChange("prompt", v)} />
+          <Slider
+            label="背景音"
+            value={volumes.background}
+            onValueChangeEnd={(v) => handleVolumeChange("background", v)}
+          />
         </div>
       </Dialog>
     );

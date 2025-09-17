@@ -27,19 +27,7 @@
   height: var(--slider-thumb-size);
   border-radius: 50%;
   background: white;
-  box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 10px;
-}
-
-[data-scope="slider"][data-part="thumb"]:focus-visible {
-  box-shadow: rgb(0 0 0 / 22%) 0px 0px 0px 5px;
-}
-
-[data-scope="slider"][data-part="thumb"]:hover:not([data-disabled]) {
-  background-color: rgb(245, 242, 255);
-}
-
-[data-scope="slider"][data-part="thumb"][data-disabled] {
-  background-color: lightgray;
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 4px;
 }
 
 [data-scope="slider"] .control-area {
@@ -58,7 +46,7 @@
 }
 
 [data-scope="slider"][data-part="track"] {
-  background: rgba(0, 0, 0, 0.2);
+  background: theme(--color-zinc-300);
   border-radius: 9999px;
 }
 
