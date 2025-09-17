@@ -3,6 +3,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { createSignal, Show } from "solid-js";
 import { Dialog } from "../components";
 import Rodio from "../components/Rodio";
+import Slider from "../components/Slider";
 import icons from "../icons";
 
 const TickOptions: RodioOption[] = [
@@ -37,17 +38,22 @@ export default (props: { update?: Update }) => {
 
   const MusicDialog = () => {
     return (
-      <Dialog title="音乐" open={musicDialogOpen} setOpen={setMusicDialogOpen}>
-        <Rodio label="滴答声" value={tickSound()} options={TickOptions} onValueChange={setTickSound} />
-        {/* <Rodio label="背景声" value="none" options={BackgroundOptions} /> */}
+      <Dialog title="声音切换" open={musicDialogOpen} setOpen={setMusicDialogOpen}>
+        <Rodio label="滴答音" value={tickSound()} options={TickOptions} onValueChange={setTickSound} />
+        {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
       </Dialog>
     );
   };
 
   const VolumeDialog = () => {
     return (
-      <Dialog title="音量" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
-        我是音量弹窗
+      <Dialog title="音量调整" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
+        <div class="flex flex-col gap-[1rem]">
+          <Slider label="滴答音" value={0.4} />
+          <Slider label="闹铃音" value={0.8} />
+          <Slider label="提示音" value={0.6} />
+          <Slider label="背景音" value={0.5} />
+        </div>
       </Dialog>
     );
   };
