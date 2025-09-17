@@ -1,0 +1,61 @@
+[data-scope="radio-group"] {
+  &[data-part="root"] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &[data-part="label"] {
+    font-size: 1.05rem;
+    font-weight: theme(--font-weight-medium);
+    color: theme(--color-zinc-700);
+
+    &[data-disabled] {
+      opacity: 0.4;
+    }
+  }
+
+  &[data-part="item"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &[data-disabled] {
+      cursor: not-allowed;
+    }
+  }
+
+  &[data-part="item-control"] {
+    height: 1.25rem;
+    width: 1.25rem;
+    border: solid 2px theme(--color-zinc-500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* &[data-focus] { } */
+    &[data-hover] {
+      border: solid 2px theme(--color-red-300);
+    }
+
+    /* 中心圆 */
+    &::after {
+      content: "";
+      display: none;
+      width: 0.65rem;
+      height: 0.65rem;
+      background-color: theme(--color-red-400);
+      border-radius: 50%;
+    }
+
+    &[data-state="checked"] {
+      border-color: theme(--color-red-400);
+
+      &::after {
+        display: initial;
+      }
+    }
+  }
+}

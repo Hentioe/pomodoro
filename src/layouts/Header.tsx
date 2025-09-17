@@ -2,10 +2,18 @@ import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { createSignal, Show } from "solid-js";
 import { Dialog } from "../components";
+import Rodio from "../components/Rodio";
 import icons from "../icons";
 
+const MusicOptions: RodioOption[] = [
+  { label: "无", value: "none" },
+  { label: "指针", value: "pointer" },
+  { label: "心电", value: "ecg" },
+  { label: "钟摆", value: "pendulum" },
+];
+
 export default (props: { update?: Update }) => {
-  const [settingDialogOpen, setSettingDialogOpen] = createSignal(false);
+  const [musicDialogOpen, setMusicDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
   const handleClickUpdate = async () => {
     const url = props.update?.download?.[0].url;
@@ -18,10 +26,10 @@ export default (props: { update?: Update }) => {
     return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">内测版</p>;
   };
 
-  const SettingDialog = () => {
+  const MusicDialog = () => {
     return (
-      <Dialog title="设置" open={settingDialogOpen} setOpen={setSettingDialogOpen}>
-        我是设置弹窗
+      <Dialog title="音乐" open={musicDialogOpen} setOpen={setMusicDialogOpen}>
+        <Rodio label="滴答声" value="pointer" options={MusicOptions} />
       </Dialog>
     );
   };
@@ -50,10 +58,10 @@ export default (props: { update?: Update }) => {
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
           <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
-          <NavIcon icon={icons.Setting} onClick={() => setSettingDialogOpen(true)} />
+          <NavIcon icon="tabler:music" onClick={() => setMusicDialogOpen(true)} />
         </div>
       </header>
-      <SettingDialog />
+      <MusicDialog />
       <VolumeDialog />
     </>
   );
