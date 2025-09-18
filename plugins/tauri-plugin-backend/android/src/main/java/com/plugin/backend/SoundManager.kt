@@ -7,6 +7,8 @@ import android.media.SoundPool
 // 音频类型枚举
 enum class SoundType(val path: String, val durationSeconds: Float, val defaultVolume: Float) {
     TICK("sounds/tick.wav", 0.0f, 0.5f),
+    TICK_TENSION("sounds/ticks/tension.wav", 0.0f, 0.5f),
+    TICK_VINTAGE("sounds/ticks/vintage.wav", 0.0f, 0.5f),
     ALARM("sounds/alarm.wav", 3.5f, 0.8f),
     LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.wav", 2.0f, 0.8f),
     SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.wav", 2.0f, 0.8f),

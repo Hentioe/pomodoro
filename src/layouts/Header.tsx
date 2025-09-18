@@ -15,8 +15,8 @@ type Volumes = {
 const TickOptions: RodioOption[] = [
   { label: "无", value: "none" },
   { label: "指针", value: "pointer" },
-  { label: "心电", value: "ecg" },
-  { label: "钟摆", value: "pendulum" },
+  { label: "紧张", value: "tension" },
+  { label: "复古", value: "vintage" },
   { label: "蔡徐坤", value: "kun" },
 ];
 
@@ -35,7 +35,7 @@ export default (props: { update?: Update }) => {
     prompt: 0.6,
     background: 0.5,
   });
-  const [musicDialogOpen, setMusicDialogOpen] = createSignal(false);
+  const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
 
   const handleClickUpdate = async () => {
@@ -56,7 +56,7 @@ export default (props: { update?: Update }) => {
 
   const MusicDialog = () => {
     return (
-      <Dialog title="声音切换" open={musicDialogOpen} setOpen={setMusicDialogOpen}>
+      <Dialog title="声音选择" open={soundDialogOpen} setOpen={setSoundDialogOpen}>
         <Rodio label="滴答音" value={tickSound()} options={TickOptions} onValueChange={setTickSound} />
         {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
       </Dialog>
@@ -65,7 +65,7 @@ export default (props: { update?: Update }) => {
 
   const VolumeDialog = () => {
     return (
-      <Dialog title="音量调整" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
+      <Dialog title="音量大小" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
         <div class="flex flex-col gap-[1rem]">
           <Slider label="滴答音" value={volumes.tick} onValueChangeEnd={(v) => handleVolumeChange("tick", v)} />
           <Slider label="闹铃音" value={volumes.alarm} onValueChangeEnd={(v) => handleVolumeChange("alarm", v)} />
@@ -96,7 +96,7 @@ export default (props: { update?: Update }) => {
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
           <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
-          <NavIcon icon="tabler:music" onClick={() => setMusicDialogOpen(true)} />
+          <NavIcon icon="tabler:music" onClick={() => setSoundDialogOpen(true)} />
         </div>
       </header>
       <MusicDialog />

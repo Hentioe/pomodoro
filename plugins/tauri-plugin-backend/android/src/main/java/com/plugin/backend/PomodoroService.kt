@@ -128,7 +128,7 @@ class PomodoroService : Service() {
                         updateNotification() // 更新通知
 
                         delay(1000L) // 延迟 1 秒
-                        soundManager.play(SoundType.TICK) // 播放滴答声
+                        soundManager.play(SoundType.TICK_TENSION) // 播放滴答声
                         state.remainingSeconds -= 1 // 减少剩余时间
                     } else if (state.isPlaying) {
                         Log.d(LOG_TAG, "Phase: ${state.phase.value} ended")
