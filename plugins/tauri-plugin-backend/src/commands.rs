@@ -38,6 +38,15 @@ pub(crate) async fn next<R: Runtime>(app: AppHandle<R>) -> Result<()> {
 }
 
 #[command]
+#[allow(non_snake_case)]
+pub(crate) async fn previewSound<R: Runtime>(
+    app: AppHandle<R>,
+    payload: PreviewSoundRequest,
+) -> Result<()> {
+    app.backend().preview_sound(payload)
+}
+
+#[command]
 pub(crate) async fn exit<R: Runtime>(app: AppHandle<R>) -> Result<()> {
     app.backend().exit()
 }

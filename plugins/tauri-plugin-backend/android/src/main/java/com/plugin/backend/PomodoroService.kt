@@ -36,6 +36,7 @@ class PomodoroService : Service() {
         const val ACTION_CLOSE = "ACTION_CLOSE"
     }
 
+    val soundManager = SoundManager(this) // 声音管理器（封装音频）
     private val binder = LocalBinder()
     private var callback: WeakReference<ServiceCallback>? = null // 使用弱引用持有回调
     private val NOTIFICATION_ID = 1
@@ -44,7 +45,6 @@ class PomodoroService : Service() {
     private val scope = MainScope()
     private var timerJob: Job? = null // 暴露 Job 以便取消
     private var isTimerRunning = false
-    private val soundManager = SoundManager(this) // 声音管理器（封装音频）
     private var state =
         PomodoroState(
             phase = PomodoroPhase.FOCUS,

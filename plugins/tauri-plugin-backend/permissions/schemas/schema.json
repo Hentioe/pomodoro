@@ -355,6 +355,18 @@
           "markdownDescription": "Denies the play command without any pre-configured scope."
         },
         {
+          "description": "Enables the previewSound command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-previewSound",
+          "markdownDescription": "Enables the previewSound command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the previewSound command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-previewSound",
+          "markdownDescription": "Denies the previewSound command without any pre-configured scope."
+        },
+        {
           "description": "Enables the registerListener command without any pre-configured scope.",
           "type": "string",
           "const": "allow-registerListener",
@@ -391,10 +403,10 @@
           "markdownDescription": "Denies the toast command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-registerListener`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-registerListener`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-registerListener`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-registerListener`"
         }
       ]
     }

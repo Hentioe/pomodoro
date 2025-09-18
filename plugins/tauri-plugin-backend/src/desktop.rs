@@ -40,6 +40,10 @@ impl<R: Runtime> AndroidBackend<R> {
         Ok(())
     }
 
+    pub fn preview_sound(&self, _payload: PreviewSoundRequest) -> crate::Result<()> {
+        Ok(())
+    }
+
     pub fn exit(&self) -> crate::Result<()> {
         Ok(())
     }

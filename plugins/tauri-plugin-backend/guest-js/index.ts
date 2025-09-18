@@ -32,6 +32,28 @@ export async function next(): Promise<void> {
   await invoke("plugin:backend|next");
 }
 
+export type SoundName =
+  | "pointer_tick"
+  | "tension_tick"
+  | "vintage_tick"
+  | "kun_tick"
+  | "none";
+
+export type SoundDefaultName =
+  | "tick_default"
+  | "alarm_default"
+  | "prompt_default"
+  | "background_default";
+
+export async function previewSound(name: SoundName | SoundDefaultName, volume?: number): Promise<void> {
+  await invoke<{ name: SoundName | SoundDefaultName; volume?: number }>("plugin:backend|previewSound", {
+    payload: {
+      name,
+      volume,
+    },
+  });
+}
+
 export async function exit(): Promise<void> {
   await invoke("plugin:backend|exit");
 }

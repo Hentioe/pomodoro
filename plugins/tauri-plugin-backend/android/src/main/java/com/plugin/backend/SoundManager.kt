@@ -60,21 +60,14 @@ class SoundManager(private val context: Context) {
     }
 
     // 播放指定音频（默认使用该音频的音量）
-    fun play(
-        type: SoundType,
-        loop: Int = 0,
-        rate: Float = 1.0f,
-        leftVolume: Float? = null,
-        rightVolume: Float? = null
-    ) {
+    fun play(type: SoundType, volume: Float? = null) {
         if (!isLoaded) {
             // 可选：日志或延迟播放
             return
         }
         val resource = sounds[type] ?: return
-        val volume = leftVolume ?: resource.type.defaultVolume
-        val rightVol = rightVolume ?: volume // 默认 stereo 相同
-        soundPool?.play(resource.soundId, volume, rightVol, 1, loop, rate)
+        val volume = volume ?: resource.type.defaultVolume
+        soundPool?.play(resource.soundId, volume, volume, 1, 0, 1.0f)
     }
 
     // 停止所有播放

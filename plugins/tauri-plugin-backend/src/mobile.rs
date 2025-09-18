@@ -53,6 +53,12 @@ impl<R: Runtime> AndroidBackend<R> {
         self.0.run_mobile_plugin("next", ()).map_err(Into::into)
     }
 
+    pub fn preview_sound(&self, payload: PreviewSoundRequest) -> crate::Result<()> {
+        self.0
+            .run_mobile_plugin("previewSound", payload)
+            .map_err(Into::into)
+    }
+
     pub fn exit(&self) -> crate::Result<()> {
         self.0.run_mobile_plugin("exit", ()).map_err(Into::into)
     }

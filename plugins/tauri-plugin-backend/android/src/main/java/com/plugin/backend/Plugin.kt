@@ -29,6 +29,12 @@ class ToastArgs {
     var message: String = ""
 }
 
+@InvokeArg
+class previewSoundArgs {
+    var name: String = ""
+    var volume: Float? = null
+}
+
 @TauriPlugin
 class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback {
     private var service: PomodoroService? = null
@@ -159,6 +165,23 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     }
 
     @Command
+    fun ping(invoke: Invoke) {
+        val args = invoke.parseArgs(PingArgs::class.java)
+
+        val ret = JSObject()
+        ret.put("value", args.value)
+        invoke.resolve(ret)
+    }
+
+    @Command
+    fun toast(invoke: Invoke) {
+        val args = invoke.parseArgs(ToastArgs::class.java)
+
+        Toast.makeText(activity, args.message, Toast.LENGTH_SHORT).show()
+        invoke.resolve()
+    }
+
+    @Command
     fun play(invoke: Invoke) {
         checkPermission()
         if (service != null && isServiceRunning()) {
@@ -199,19 +222,22 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     }
 
     @Command
-    fun ping(invoke: Invoke) {
-        val args = invoke.parseArgs(PingArgs::class.java)
+    fun previewSound(invoke: Invoke) {
+        Log.i(LOG_TAG, "Previewing sound")
+        val args = invoke.parseArgs(previewSoundArgs::class.java)
+        val soundType: SoundType? =
+            when (args.name) {
+                "pointer_tick" -> SoundType.TICK
+                "tension_tick" -> SoundType.TICK_TENSION
+                "vintage_tick" -> SoundType.TICK_VINTAGE
+                else -> null
+            }
 
-        val ret = JSObject()
-        ret.put("value", args.value)
-        invoke.resolve(ret)
-    }
+        if (soundType != null) {
+            service?.soundManager?.play(soundType, args.volume)
+            Log.i(LOG_TAG, "Previewing sound: ${args.name}")
+        }
 
-    @Command
-    fun toast(invoke: Invoke) {
-        val args = invoke.parseArgs(ToastArgs::class.java)
-
-        Toast.makeText(activity, args.message, Toast.LENGTH_SHORT).show()
         invoke.resolve()
     }
 

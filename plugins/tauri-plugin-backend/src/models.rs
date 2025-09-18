@@ -17,3 +17,10 @@ pub struct PingResponse {
 pub struct ToastRequest {
     pub message: String,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PreviewSoundRequest {
+    pub name: String,
+    pub volume: Option<f32>,
+}

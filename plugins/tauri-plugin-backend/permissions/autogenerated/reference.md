@@ -11,6 +11,7 @@ Default permissions for the plugin
 - `allow-reset`
 - `allow-next`
 - `allow-exit`
+- `allow-previewSound`
 - `allow-registerListener`
 
 ## Permission Table
@@ -148,6 +149,32 @@ Enables the play command without any pre-configured scope.
 <td>
 
 Denies the play command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`backend:allow-previewSound`
+
+</td>
+<td>
+
+Enables the previewSound command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`backend:deny-previewSound`
+
+</td>
+<td>
+
+Denies the previewSound command without any pre-configured scope.
 
 </td>
 </tr>
