@@ -403,10 +403,22 @@
           "markdownDescription": "Denies the toast command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-registerListener`",
+          "description": "Enables the writeSettings command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-writeSettings",
+          "markdownDescription": "Enables the writeSettings command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the writeSettings command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-writeSettings",
+          "markdownDescription": "Denies the writeSettings command without any pre-configured scope."
+        },
+        {
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-writeSettings`\n- `allow-registerListener`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-registerListener`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`\n- `allow-toast`\n- `allow-play`\n- `allow-pause`\n- `allow-reset`\n- `allow-next`\n- `allow-exit`\n- `allow-previewSound`\n- `allow-writeSettings`\n- `allow-registerListener`"
         }
       ]
     }

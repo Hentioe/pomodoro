@@ -24,3 +24,12 @@ pub struct PreviewSoundRequest {
     pub name: String,
     pub volume: Option<f32>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WriteSettingsRequest {
+    pub tick_sound: Option<String>,
+    pub tick_volume: Option<f32>,
+    pub alarm_volume: Option<f32>,
+    pub prompt_volume: Option<f32>,
+}

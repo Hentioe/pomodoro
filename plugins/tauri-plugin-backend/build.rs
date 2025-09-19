@@ -7,6 +7,7 @@ const COMMANDS: &[&str] = &[
     "next",
     "exit",
     "previewSound",
+    "writeSettings",
     "registerListener",
 ];
 

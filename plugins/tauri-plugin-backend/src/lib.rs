@@ -43,6 +43,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             commands::reset,
             commands::next,
             commands::previewSound,
+            commands::writeSettings,
             commands::exit
         ])
         .setup(|app, api| {

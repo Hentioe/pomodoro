@@ -12,6 +12,7 @@ Default permissions for the plugin
 - `allow-next`
 - `allow-exit`
 - `allow-previewSound`
+- `allow-writeSettings`
 - `allow-registerListener`
 
 ## Permission Table
@@ -253,6 +254,32 @@ Enables the toast command without any pre-configured scope.
 <td>
 
 Denies the toast command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`backend:allow-writeSettings`
+
+</td>
+<td>
+
+Enables the writeSettings command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`backend:deny-writeSettings`
+
+</td>
+<td>
+
+Denies the writeSettings command without any pre-configured scope.
 
 </td>
 </tr>

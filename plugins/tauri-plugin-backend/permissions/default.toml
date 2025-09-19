@@ -9,5 +9,6 @@ permissions = [
   "allow-next",
   "allow-exit",
   "allow-previewSound",
+  "allow-writeSettings",
   "allow-registerListener",
 ]

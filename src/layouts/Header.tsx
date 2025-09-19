@@ -1,8 +1,15 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { createSignal, Show } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import { createStore } from "solid-js/store";
-import { previewSound, SoundDefaultName, SoundName } from "tauri-plugin-backend-api";
+import {
+  onSettingsUpdated,
+  ping,
+  previewSound,
+  SoundDefaultName,
+  SoundName,
+  writeSettings,
+} from "tauri-plugin-backend-api";
 import { Dialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
@@ -17,7 +24,7 @@ const TickOptions: RodioOption[] = [
   { label: "指针", value: "pointer_tick" },
   { label: "心电", value: "tension_tick" },
   { label: "钟摆", value: "vintage_tick" },
-  { label: "蔡徐坤", value: "kun_tick" },
+  // { label: "蔡徐坤", value: "kun_tick" },
 ];
 
 // const BackgroundOptions: RodioOption[] = [
@@ -27,13 +34,26 @@ const TickOptions: RodioOption[] = [
 //   { label: "雨声", value: "rain" }
 // ];
 
+const DEFAULT_TICK_SOUND: SoundName = "pointer_tick";
+const DEFAULT_TICK_VOLUME = 0.5;
+const DEFAULT_ALARM_VOLUME = 0.8;
+const DEFAULT_PROMPT_VOLUME = 0.8;
+const DEFAULT_BACKGROUND_VOLUME = 0.6;
+
 export default (props: { update?: Update }) => {
-  const [tickSound, setTickSound] = createSignal("pointer_tick");
+  const [tickSound, setTickSound] = createSignal<SoundName>(DEFAULT_TICK_SOUND);
+  const [editingTickSound, setEditingTickSound] = createSignal<SoundName>(DEFAULT_TICK_SOUND);
   const [volumes, setVolumes] = createStore<Volumes>({
-    tick_default: 0.4,
-    alarm_default: 0.8,
-    prompt_default: 0.6,
-    background_default: 0.5,
+    tick_default: DEFAULT_TICK_VOLUME,
+    alarm_default: DEFAULT_ALARM_VOLUME,
+    prompt_default: DEFAULT_PROMPT_VOLUME,
+    background_default: DEFAULT_BACKGROUND_VOLUME,
+  });
+  const [editingVolumes, setEditingVolumes] = createStore<Volumes>({
+    tick_default: DEFAULT_TICK_VOLUME,
+    alarm_default: DEFAULT_ALARM_VOLUME,
+    prompt_default: DEFAULT_PROMPT_VOLUME,
+    background_default: DEFAULT_BACKGROUND_VOLUME,
   });
   const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
@@ -46,12 +66,41 @@ export default (props: { update?: Update }) => {
   };
 
   const handleTickSoundChange = async (value: string) => {
-    setTickSound(value);
-    await previewSound(value as SoundName, 1.0);
+    const editing = value as SoundName;
+    setEditingTickSound(editing);
+    await previewSound(editing, 1.0);
   };
 
   const handleVolumeChange = (type: SoundDefaultName, value: number) => {
-    setVolumes(type, value);
+    setEditingVolumes(type, value);
+    // 预览当前大小的声音
+    previewSound(type, value);
+  };
+
+  const handleVolumeConfirm = async () => {
+    await writeSettings({
+      tickVolume: editingVolumes.tick_default,
+      alarmVolume: editingVolumes.alarm_default,
+      promptVolume: editingVolumes.prompt_default,
+    });
+
+    return true;
+  };
+
+  const handleVolumeCancel = () => {
+    setEditingVolumes("tick_default", volumes.tick_default);
+    setEditingVolumes("alarm_default", volumes.alarm_default);
+    setEditingVolumes("prompt_default", volumes.prompt_default);
+  };
+
+  const handleTickSoundConfirm = async () => {
+    await writeSettings({ tickSound: editingTickSound() });
+
+    return true;
+  };
+
+  const handleTickSoundCancel = () => {
+    setEditingTickSound(tickSound());
   };
 
   const Version = () => {
@@ -60,37 +109,74 @@ export default (props: { update?: Update }) => {
 
   const MusicDialog = () => {
     return (
-      <Dialog title="声音选择" open={soundDialogOpen} setOpen={setSoundDialogOpen}>
-        <Rodio label="滴答音" value={tickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
+      <Dialog
+        title="声音定制"
+        open={soundDialogOpen}
+        setOpen={setSoundDialogOpen}
+        onConfirm={handleTickSoundConfirm}
+        onCancel={handleTickSoundCancel}
+      >
+        <Rodio label="滴答音" value={editingTickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
         {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
       </Dialog>
     );
   };
 
+  onMount(async () => {
+    await onSettingsUpdated((settings) => {
+      if (settings.tickSound) {
+        setTickSound(settings.tickSound);
+        setEditingTickSound(settings.tickSound);
+      }
+      if (settings.tickVolume != null) {
+        setVolumes("tick_default", settings.tickVolume);
+        setEditingVolumes("tick_default", settings.tickVolume);
+      }
+      if (settings.alarmVolume != null) {
+        setVolumes("alarm_default", settings.alarmVolume);
+        setEditingVolumes("alarm_default", settings.alarmVolume);
+      }
+      if (settings.promptVolume != null) {
+        setVolumes("prompt_default", settings.promptVolume);
+        setEditingVolumes("prompt_default", settings.promptVolume);
+      }
+    });
+
+    ping("header_mounted");
+  });
+
   const VolumeDialog = () => {
     return (
-      <Dialog title="音量大小" open={volumeDialogOpen} setOpen={setVolumeDialogOpen}>
+      <Dialog
+        title="音量大小"
+        open={volumeDialogOpen}
+        setOpen={setVolumeDialogOpen}
+        onConfirm={handleVolumeConfirm}
+        onCancel={handleVolumeCancel}
+      >
         <div class="flex flex-col gap-[1rem]">
           <Slider
             label="滴答音"
-            value={volumes.tick_default}
+            value={editingVolumes.tick_default}
             onValueChangeEnd={(v) => handleVolumeChange("tick_default", v)}
           />
           <Slider
             label="闹铃音"
-            value={volumes.alarm_default}
+            value={editingVolumes.alarm_default}
             onValueChangeEnd={(v) => handleVolumeChange("alarm_default", v)}
           />
           <Slider
             label="提示音"
-            value={volumes.prompt_default}
+            value={editingVolumes.prompt_default}
             onValueChangeEnd={(v) => handleVolumeChange("prompt_default", v)}
           />
-          <Slider
+          {
+            /* <Slider
             label="背景音"
             value={volumes.background_default}
             onValueChangeEnd={(v) => handleVolumeChange("background_default", v)}
-          />
+          /> */
+          }
         </div>
       </Dialog>
     );

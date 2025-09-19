@@ -13,6 +13,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.datastore.preferences.core.Preferences
 import java.lang.ref.WeakReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,6 +21,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 enum class PomodoroPhase(val value: String, val seconds: Int) {
     FOCUS("focus", 25 * 60), // 25 分钟
@@ -37,8 +39,16 @@ class PomodoroService : Service() {
     }
 
     val soundManager = SoundManager(this) // 声音管理器（封装音频）
+    private val store by lazy { Store(this) } // 数据存储
+    private var settings =
+        Settings(
+            tickSound = "pointer_tick",
+            tickVolume = 0.5f,
+            alarmVolume = 0.8f,
+            promptVolume = 0.8f) // 默认设置
     private val binder = LocalBinder()
     private var callback: WeakReference<ServiceCallback>? = null // 使用弱引用持有回调
+    private var settingsCallback: WeakReference<SettingsCallback>? = null // 使用弱引用持有设置回调
     private val NOTIFICATION_ID = 1
     private val CHANNEL_ID = "PomodoroChannel"
     private var toast: Toast? = null
@@ -65,6 +75,9 @@ class PomodoroService : Service() {
         createNotificationChannel()
         // 初始化音频
         soundManager.initialize()
+        // 载入并推送设置
+        loadPushSettings()
+        Log.d(LOG_TAG, "Loaded settings: $settings")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -238,9 +251,30 @@ class PomodoroService : Service() {
         super.onDestroy()
         // 取消回调注册
         unregisterCallback()
+        unregisterSettingsCallback()
         // 释放资源
         soundManager.release() // 释放音频资源
         scope.cancel() // 取消所有协程
+    }
+
+    fun loadPushSettings() {
+        val tickSound = readSetting<String>(SettingsKey.TICK_SOUND)
+        val tickVolume = readSetting<Float>(SettingsKey.TICK_VOLUME)
+        val alarmVolume = readSetting<Float>(SettingsKey.ALARM_VOLUME)
+        val promptVolume = readSetting<Float>(SettingsKey.PROMPT_VOLUME)
+        if (tickSound != null) {
+            settings.tickSound = tickSound
+        }
+        if (tickVolume != null) {
+            settings.tickVolume = tickVolume
+        }
+        if (alarmVolume != null) {
+            settings.alarmVolume = alarmVolume
+        }
+        if (promptVolume != null) {
+            settings.promptVolume = promptVolume
+        }
+        updateSettings() // 推送设置
     }
 
     // 注册回调
@@ -251,6 +285,16 @@ class PomodoroService : Service() {
     // 取消回调
     fun unregisterCallback() {
         this.callback = null
+    }
+
+    fun registerSettingsCallback(callback: SettingsCallback) {
+        this.settingsCallback = WeakReference(callback)
+        // 立即推送当前设置
+        updateSettings()
+    }
+
+    fun unregisterSettingsCallback() {
+        this.settingsCallback = null
     }
 
     private fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
@@ -355,7 +399,24 @@ class PomodoroService : Service() {
 
     fun state(): PomodoroState = state
 
+    fun settings(): Settings = settings
+
+    fun <T> writeSetting(key: SettingsKey, value: T): Boolean {
+        runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
+        // 重新载入并推送设置
+        loadPushSettings()
+        return true
+    }
+
+    fun <T> readSetting(key: SettingsKey): T? {
+        return runBlocking { store.read(key.createKey() as Preferences.Key<T>) }
+    }
+
     private fun updatePomodoroState(state: PomodoroState) {
         callback?.get()?.onPomodoroStateUpdated(state)
+    }
+
+    private fun updateSettings() {
+        settingsCallback?.get()?.onSettingsUpdated(settings)
     }
 }

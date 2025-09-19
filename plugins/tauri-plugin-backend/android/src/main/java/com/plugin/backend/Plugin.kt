@@ -35,8 +35,16 @@ class previewSoundArgs {
     var volume: Float? = null
 }
 
+@InvokeArg
+class WriteSettingsArgs {
+    var tickSound: String? = null
+    var tickVolume: Float? = null
+    var alarmVolume: Float? = null
+    var promptVolume: Float? = null
+}
+
 @TauriPlugin
-class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback {
+class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback, SettingsCallback {
     private var service: PomodoroService? = null
     private var isBound = false
 
@@ -58,6 +66,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
                 val binder = service as PomodoroService.LocalBinder
                 this@Plugin.service = binder.getService()
                 this@Plugin.service?.registerCallback(this@Plugin)
+                this@Plugin.service?.registerSettingsCallback(this@Plugin)
                 isBound = true
             }
 
@@ -150,6 +159,17 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         Log.d(LOG_TAG, "Pomodoro state pushed: $state")
     }
 
+    override fun onSettingsUpdated(settings: Settings) {
+        val event = JSObject()
+        event.put("tickSound", settings.tickSound)
+        event.put("tickVolume", settings.tickVolume)
+        event.put("alarmVolume", settings.alarmVolume)
+        event.put("promptVolume", settings.promptVolume)
+        trigger("settings_updated", event)
+
+        Log.d(LOG_TAG, "Settings pushed: $settings")
+    }
+
     private fun checkPermission() {
         if (android.os.Build.VERSION.SDK_INT >=
             android.os.Build.VERSION_CODES.TIRAMISU) { // Android 13+
@@ -168,8 +188,18 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     fun ping(invoke: Invoke) {
         val args = invoke.parseArgs(PingArgs::class.java)
 
+        when (args.value) {
+            "header_mounted" -> {
+                // 前端 Header 组件挂载完成，推送当前设置
+                val settings = service?.settings()
+                if (settings != null) {
+                    onSettingsUpdated(settings)
+                }
+            }
+        }
+
         val ret = JSObject()
-        ret.put("value", args.value)
+        ret.put("pong", args.value)
         invoke.resolve(ret)
     }
 
@@ -225,17 +255,52 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     fun previewSound(invoke: Invoke) {
         Log.i(LOG_TAG, "Previewing sound")
         val args = invoke.parseArgs(previewSoundArgs::class.java)
-        val soundType: SoundType? =
-            when (args.name) {
+        val mapTickType: (String?) -> SoundType? = { name ->
+            when (name) {
                 "pointer_tick" -> SoundType.TICK
                 "tension_tick" -> SoundType.TICK_TENSION
                 "vintage_tick" -> SoundType.TICK_VINTAGE
+                else -> null
+            }
+        }
+        val soundType: SoundType? =
+            when (args.name) {
+                "pointer_tick",
+                "tension_tick",
+                "vintage_tick" -> mapTickType(args.name)
+                "tick_default" -> mapTickType(service?.settings()?.tickSound)
+                "alarm_default" -> SoundType.ALARM
+                "prompt_default" -> SoundType.FOCUS_ALERT
                 else -> null
             }
 
         if (soundType != null) {
             service?.soundManager?.play(soundType, args.volume)
             Log.i(LOG_TAG, "Previewing sound: ${args.name}")
+        }
+
+        invoke.resolve()
+    }
+
+    @Command
+    fun writeSettings(invoke: Invoke) {
+        Log.i(LOG_TAG, "Writing settings")
+        val args = invoke.parseArgs(WriteSettingsArgs::class.java)
+        if (args.tickSound != null) {
+            service?.writeSetting(SettingsKey.TICK_SOUND, args.tickSound)
+            Log.i(LOG_TAG, "Tick sound set to: ${args.tickSound}")
+        }
+        if (args.tickVolume != null) {
+            service?.writeSetting(SettingsKey.TICK_VOLUME, args.tickVolume)
+            Log.i(LOG_TAG, "Tick volume set to: ${args.tickVolume}")
+        }
+        if (args.alarmVolume != null) {
+            service?.writeSetting(SettingsKey.ALARM_VOLUME, args.alarmVolume)
+            Log.i(LOG_TAG, "Alarm volume set to: ${args.alarmVolume}")
+        }
+        if (args.promptVolume != null) {
+            service?.writeSetting(SettingsKey.PROMPT_VOLUME, args.promptVolume)
+            Log.i(LOG_TAG, "Prompt volume set to: ${args.promptVolume}")
         }
 
         invoke.resolve()

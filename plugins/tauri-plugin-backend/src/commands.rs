@@ -47,6 +47,15 @@ pub(crate) async fn previewSound<R: Runtime>(
 }
 
 #[command]
+#[allow(non_snake_case)]
+pub(crate) async fn writeSettings<R: Runtime>(
+    app: AppHandle<R>,
+    payload: WriteSettingsRequest,
+) -> Result<()> {
+    app.backend().write_settings(payload)
+}
+
+#[command]
 pub(crate) async fn exit<R: Runtime>(app: AppHandle<R>) -> Result<()> {
     app.backend().exit()
 }

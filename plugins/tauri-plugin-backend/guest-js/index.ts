@@ -54,6 +54,19 @@ export async function previewSound(name: SoundName | SoundDefaultName, volume?: 
   });
 }
 
+export interface Settings {
+  tickSound?: SoundName;
+  tickVolume?: number;
+  alarmVolume?: number;
+  promptVolume?: number;
+}
+
+export async function writeSettings(settings: Settings): Promise<void> {
+  await invoke<Settings>("plugin:backend|writeSettings", {
+    payload: settings,
+  });
+}
+
 export async function exit(): Promise<void> {
   await invoke("plugin:backend|exit");
 }
@@ -71,6 +84,16 @@ export async function onPomodoroUpdated(
   return await addPluginListener(
     "backend",
     "pomodoro_updated",
+    handler,
+  );
+}
+
+export async function onSettingsUpdated(
+  handler: (data: Settings) => void,
+): Promise<PluginListener> {
+  return await addPluginListener(
+    "backend",
+    "settings_updated",
     handler,
   );
 }

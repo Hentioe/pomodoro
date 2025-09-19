@@ -44,6 +44,10 @@ impl<R: Runtime> AndroidBackend<R> {
         Ok(())
     }
 
+    pub fn write_settings(&self, _payload: WriteSettingsRequest) -> crate::Result<()> {
+        Ok(())
+    }
+
     pub fn exit(&self) -> crate::Result<()> {
         Ok(())
     }
