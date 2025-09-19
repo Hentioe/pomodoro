@@ -112,7 +112,7 @@ export default (props: { update?: Update }) => {
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
           <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
-          <NavIcon icon="tabler:music" onClick={() => setSoundDialogOpen(true)} />
+          <NavIcon icon={icons.Music} onClick={() => setSoundDialogOpen(true)} />
         </div>
       </header>
       <MusicDialog />
