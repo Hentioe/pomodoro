@@ -42,7 +42,7 @@ class PomodoroService : Service() {
     private val store by lazy { Store(this) } // 数据存储
     private var settings =
         Settings(
-            tickSound = "pointer_tick",
+            tickSound = "default_tick",
             tickVolume = 0.5f,
             alarmVolume = 0.8f,
             promptVolume = 0.8f) // 默认设置
