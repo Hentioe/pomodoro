@@ -43,11 +43,11 @@
     outline: none;
 
     &[data-state="open"] {
-      animation: scaleIn 0.25s ease-out;
+      animation: scaleIn 0.15s ease-out;
     }
 
     &[data-state="closed"] {
-      animation: scaleOut 0.15s ease-in;
+      animation: scaleOut 0.1s ease-in;
     }
   }
 

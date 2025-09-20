@@ -9,6 +9,11 @@
   input:focus {
     outline-offset: 0;
   }
+
+  /* 移除默认 outline，避免 dialog 时显示 */
+  a:focus, button:focus {
+    outline: none;
+  }
 }
 
 @theme {
