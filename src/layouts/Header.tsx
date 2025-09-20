@@ -21,9 +21,11 @@ type Volumes = {
 
 const TickOptions: RodioOption[] = [
   { label: "无", value: "none" },
-  { label: "指针", value: "pointer_tick" },
-  { label: "心电", value: "tension_tick" },
-  { label: "钟摆", value: "vintage_tick" },
+  { label: "指针", value: "default_tick" },
+  { label: "钟摆", value: "tick-tock_tick" },
+  { label: "木鱼", value: "mokugyo_tick" },
+  // { label: "心跳", value: "heartbeat_tick" },
+  { label: "心电", value: "ekg_tick" },
   // { label: "蔡徐坤", value: "kun_tick" },
 ];
 
@@ -34,7 +36,7 @@ const TickOptions: RodioOption[] = [
 //   { label: "雨声", value: "rain" }
 // ];
 
-const DEFAULT_TICK_SOUND: SoundName = "pointer_tick";
+const DEFAULT_TICK_SOUND: SoundName = "default_tick";
 const DEFAULT_TICK_VOLUME = 0.5;
 const DEFAULT_ALARM_VOLUME = 0.8;
 const DEFAULT_PROMPT_VOLUME = 0.8;

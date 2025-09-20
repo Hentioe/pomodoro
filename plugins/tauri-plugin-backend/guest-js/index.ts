@@ -33,9 +33,11 @@ export async function next(): Promise<void> {
 }
 
 export type SoundName =
-  | "pointer_tick"
-  | "tension_tick"
-  | "vintage_tick"
+  | "default_tick"
+  | "tick-tock_tick"
+  | "mokugyo_tick"
+  | "heartbeat_tick"
+  | "ekg_tick"
   | "kun_tick"
   | "none";
 

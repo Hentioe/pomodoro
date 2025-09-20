@@ -255,19 +255,13 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     fun previewSound(invoke: Invoke) {
         Log.i(LOG_TAG, "Previewing sound")
         val args = invoke.parseArgs(previewSoundArgs::class.java)
-        val mapTickType: (String?) -> SoundType? = { name ->
-            when (name) {
-                "pointer_tick" -> SoundType.TICK
-                "tension_tick" -> SoundType.TICK_TENSION
-                "vintage_tick" -> SoundType.TICK_VINTAGE
-                else -> null
-            }
-        }
         val soundType: SoundType? =
             when (args.name) {
-                "pointer_tick",
-                "tension_tick",
-                "vintage_tick" -> SoundType.from_setting_key(args.name)
+                "default_tick",
+                "tick-tock_tick",
+                "mokugyo_tick",
+                "heartbeat_tick",
+                "ekg_tick" -> SoundType.from_setting_key(args.name)
                 "tick_default" -> SoundType.from_setting_key(service?.settings()?.tickSound)
                 "alarm_default" -> SoundType.ALARM
                 "prompt_default" -> SoundType.FOCUS_ALERT
