@@ -7,6 +7,7 @@ interface Props {
   setOpen: Setter<boolean>;
   title: string;
   children: JSX.Element;
+  confirmText?: string;
   onConfirm?: () => Promise<boolean>;
   onCancel?: () => void;
 }
@@ -43,7 +44,7 @@ export default (props: Props) => {
             <div class="flex justify-end items-center">
               <div class="flex gap-[2rem]">
                 <DialogButton onClick={handleCancel}>取消</DialogButton>
-                <DialogButton onClick={handleConfirm}>确认</DialogButton>
+                <DialogButton onClick={handleConfirm}>{props.confirmText || "确认"}</DialogButton>
               </div>
             </div>
           </Dialog.Content>

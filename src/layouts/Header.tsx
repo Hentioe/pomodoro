@@ -1,6 +1,6 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { createSignal, onMount, Show } from "solid-js";
+import { createSignal, For, onMount, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
   onSettingsUpdated,
@@ -59,13 +59,7 @@ export default (props: { update?: Update }) => {
   });
   const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
-
-  const handleClickUpdate = async () => {
-    const url = props.update?.download?.[0].url;
-    if (url) {
-      await openUrl(url);
-    }
-  };
+  const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
 
   const handleTickSoundChange = async (value: string) => {
     const editing = value as SoundName;
@@ -105,6 +99,15 @@ export default (props: { update?: Update }) => {
     setEditingTickSound(tickSound());
   };
 
+  const handleUpdateConfirm = async () => {
+    const url = props.update?.download?.[0].url;
+    if (url) {
+      await openUrl(url);
+    }
+
+    return true;
+  };
+
   const Version = () => {
     return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">内测版</p>;
   };
@@ -120,6 +123,28 @@ export default (props: { update?: Update }) => {
       >
         <Rodio label="滴答音" value={editingTickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
         {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
+      </Dialog>
+    );
+  };
+
+  const ChangelogSummary = (props: { content: string }) => {
+    return (
+      <For each={props.content.split("\n")}>
+        {(line) => <p>{line}</p>}
+      </For>
+    );
+  };
+
+  const NewVersionDialog = () => {
+    return (
+      <Dialog
+        title="发现新版本"
+        open={newVersionDialogOpen}
+        setOpen={setNewVersionDialogOpen}
+        onConfirm={handleUpdateConfirm}
+        confirmText="前往下载"
+      >
+        <ChangelogSummary content={props.update?.changelog?.summary || "无更新内容"} />
       </Dialog>
     );
   };
@@ -192,7 +217,7 @@ export default (props: { update?: Update }) => {
         </div>
         <Show when={props.update} fallback={<Version />}>
           <p
-            onClick={handleClickUpdate}
+            onClick={() => setNewVersionDialogOpen(true)}
             class="bg-red-500 text-zinc-100 text-base rounded-lg px-[0.5rem] cursor-pointer"
           >
             发现新版本
@@ -205,6 +230,7 @@ export default (props: { update?: Update }) => {
       </header>
       <MusicDialog />
       <VolumeDialog />
+      <NewVersionDialog />
     </>
   );
 };
