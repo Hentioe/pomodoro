@@ -1,5 +1,5 @@
 import { Dialog } from "@ark-ui/solid/dialog";
-import { Accessor, JSX, Setter } from "solid-js";
+import { Accessor, JSX, Setter, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   title: string;
   children: JSX.Element;
   confirmText?: string;
+  hiddenCancel?: boolean;
   onConfirm?: () => Promise<boolean>;
   onCancel?: () => void;
 }
@@ -43,7 +44,9 @@ export default (props: Props) => {
             </div>
             <div class="flex justify-end items-center">
               <div class="flex gap-[2rem]">
-                <DialogButton onClick={handleCancel}>取消</DialogButton>
+                <Show when={!props.hiddenCancel}>
+                  <DialogButton onClick={handleCancel}>取消</DialogButton>
+                </Show>
                 <DialogButton onClick={handleConfirm}>{props.confirmText || "确认"}</DialogButton>
               </div>
             </div>

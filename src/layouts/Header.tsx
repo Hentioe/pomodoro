@@ -14,6 +14,7 @@ import { Dialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
 import icons from "../icons";
+import AboutNew from "./AboutNew";
 
 type Volumes = {
   [key in SoundDefaultName]: number;
@@ -60,6 +61,7 @@ export default (props: { update?: Update }) => {
   const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
+  const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
 
   const handleTickSoundChange = async (value: string) => {
     const editing = value as SoundName;
@@ -209,11 +211,19 @@ export default (props: { update?: Update }) => {
     );
   };
 
+  const AboutNewDialog = () => {
+    return (
+      <Dialog open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen} title="关于" hiddenCancel>
+        <AboutNew />
+      </Dialog>
+    );
+  };
+
   return (
     <>
       <header class="absolute top-[1rem] left-[1rem] right-[1rem] text-zinc-200 flex justify-between items-center">
         <div class="flex-1">
-          <NavIcon icon="alarm-news" />
+          <NavIcon icon={icons.AboutNew} onClick={() => setAboutNewDialogOpen(true)} />
         </div>
         <Show when={props.update} fallback={<Version />}>
           <p
@@ -231,6 +241,7 @@ export default (props: { update?: Update }) => {
       <MusicDialog />
       <VolumeDialog />
       <NewVersionDialog />
+      <AboutNewDialog />
     </>
   );
 };
