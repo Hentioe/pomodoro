@@ -267,15 +267,15 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
             when (args.name) {
                 "pointer_tick",
                 "tension_tick",
-                "vintage_tick" -> mapTickType(args.name)
-                "tick_default" -> mapTickType(service?.settings()?.tickSound)
+                "vintage_tick" -> SoundType.from_setting_key(args.name)
+                "tick_default" -> SoundType.from_setting_key(service?.settings()?.tickSound)
                 "alarm_default" -> SoundType.ALARM
                 "prompt_default" -> SoundType.FOCUS_ALERT
                 else -> null
             }
 
         if (soundType != null) {
-            service?.soundManager?.play(soundType, args.volume)
+            service?.soundManager?.play(soundType, args.volume ?: 1f)
             Log.i(LOG_TAG, "Previewing sound: ${args.name}")
         }
 

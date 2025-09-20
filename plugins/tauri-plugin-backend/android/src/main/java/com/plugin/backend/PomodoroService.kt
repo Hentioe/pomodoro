@@ -139,9 +139,12 @@ class PomodoroService : Service() {
                         state.isPlaying = true
                         updatePomodoroState(state) // 更新状态
                         updateNotification() // 更新通知
-
                         delay(1000L) // 延迟 1 秒
-                        soundManager.play(SoundType.TICK_TENSION) // 播放滴答声
+                        // 播放滴答声
+                        val soundType = SoundType.from_setting_key(settings.tickSound)
+                        if (soundType != null && settings.tickVolume > 0f) {
+                            soundManager.play(soundType, settings.tickVolume)
+                        }
                         state.remainingSeconds -= 1 // 减少剩余时间
                     } else if (state.isPlaying) {
                         Log.d(LOG_TAG, "Phase: ${state.phase.value} ended")
@@ -152,7 +155,7 @@ class PomodoroService : Service() {
                         Log.d(LOG_TAG, "Switched to phase: ${state.phase.value}")
                         updatePomodoroState(state) // 更新状态
                         // 播放结束铃声
-                        soundManager.play(SoundType.ALARM)
+                        soundManager.play(SoundType.ALARM, settings.alarmVolume)
                         delay((SoundType.ALARM.durationSeconds * 1000).toLong()) // 延迟播放时间
                         // 下一阶段提示
                         phaseAlert()
@@ -230,17 +233,17 @@ class PomodoroService : Service() {
         when (state.phase) {
             PomodoroPhase.FOCUS -> {
                 showToast("要开始专注了~")
-                soundManager.play(SoundType.FOCUS_ALERT)
+                soundManager.play(SoundType.FOCUS_ALERT, settings.promptVolume)
                 delay((SoundType.FOCUS_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.SHORT_BREAK -> {
                 showToast("休息一下吧~")
-                soundManager.play(SoundType.SHORT_BREAK_ALERT)
+                soundManager.play(SoundType.SHORT_BREAK_ALERT, settings.promptVolume)
                 delay((SoundType.SHORT_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.LONG_BREAK -> {
                 showToast("多休息一下，放松放松自己~")
-                soundManager.play(SoundType.LONG_BREAK_ALERT)
+                soundManager.play(SoundType.LONG_BREAK_ALERT, settings.promptVolume)
                 delay((SoundType.LONG_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
         }

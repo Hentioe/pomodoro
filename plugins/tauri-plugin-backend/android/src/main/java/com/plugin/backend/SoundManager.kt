@@ -5,14 +5,26 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 
 // 音频类型枚举
-enum class SoundType(val path: String, val durationSeconds: Float, val defaultVolume: Float) {
-    TICK("sounds/tick.wav", 0.0f, 0.5f),
-    TICK_TENSION("sounds/ticks/tension.wav", 0.0f, 0.5f),
-    TICK_VINTAGE("sounds/ticks/vintage.wav", 0.0f, 0.5f),
-    ALARM("sounds/alarm.wav", 3.5f, 0.8f),
-    LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.wav", 2.0f, 0.8f),
-    SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.wav", 2.0f, 0.8f),
-    FOCUS_ALERT("sounds/alerts/fixed_focus.wav", 2.0f, 0.8f)
+enum class SoundType(val path: String, val durationSeconds: Float) {
+    TICK("sounds/tick.wav", 0.0f),
+    TICK_TENSION("sounds/ticks/tension.wav", 0.0f),
+    TICK_VINTAGE("sounds/ticks/vintage.wav", 0.0f),
+    ALARM("sounds/alarm.wav", 3.5f),
+    LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.wav", 2.0f),
+    SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.wav", 2.0f),
+    FOCUS_ALERT("sounds/alerts/fixed_focus.wav", 2.0f);
+
+    // 添加静态方法
+    companion object {
+        fun from_setting_key(key: String?): SoundType? {
+            return when (key) {
+                "pointer_tick" -> TICK
+                "tension_tick" -> TICK_TENSION
+                "vintage_tick" -> TICK_VINTAGE
+                else -> null
+            }
+        }
+    }
 }
 
 // 音频数据类
@@ -60,13 +72,12 @@ class SoundManager(private val context: Context) {
     }
 
     // 播放指定音频（默认使用该音频的音量）
-    fun play(type: SoundType, volume: Float? = null) {
+    fun play(type: SoundType, volume: Float) {
         if (!isLoaded) {
             // 可选：日志或延迟播放
             return
         }
         val resource = sounds[type] ?: return
-        val volume = volume ?: resource.type.defaultVolume
         soundPool?.play(resource.soundId, volume, volume, 1, 0, 1.0f)
     }
 
