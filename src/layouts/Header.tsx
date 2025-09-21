@@ -111,7 +111,7 @@ export default (props: { update?: Update }) => {
   };
 
   const Version = () => {
-    return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">内测版</p>;
+    return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">开发版</p>;
   };
 
   const MusicDialog = () => {
