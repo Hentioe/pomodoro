@@ -40,30 +40,37 @@
   width: 100%;
 }
 
-.slider [data-orientation="vertical"] .control-area {
-  flex-direction: row;
-  height: 100%;
-}
-
 [data-scope="slider"][data-part="track"] {
   background: theme(--color-zinc-300);
   border-radius: 9999px;
-}
+  box-sizing: border-box;
+  position: relative; /* 此定位服务于伪元素 */
 
-[data-scope="slider"][data-part="track"][data-orientation="horizontal"] {
-  height: var(--slider-track-height);
-  width: 100%;
+  /* 伪元素用于增加上下范围，扩展事件区域 */
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: transparent;
+    top: -1rem;
+    bottom: -1rem;
+    width: 100%;
+  }
+
+  &[data-orientation="horizontal"] {
+    height: var(--slider-track-height);
+    width: 100%;
+  }
 }
 
 [data-scope="slider"][data-part="range"] {
   background: theme(--color-red-400);
   border-radius: inherit;
-}
 
-[data-scope="slider"][data-part="range"][data-disabled] {
-  background: rgba(0, 0, 0, 0.4);
-}
+  &[data-disabled] {
+    background: rgba(0, 0, 0, 0.4);
+  }
 
-[data-scope="slider"][data-part="range"][data-orientation="horizontal"] {
-  height: 100%;
+  &[data-orientation="horizontal"] {
+    height: 100%;
+  }
 }
