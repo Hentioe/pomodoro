@@ -27,11 +27,11 @@ export default () => {
         <li>
           -{" "}
           <a
-            href="https://blog.hentioe.dev/posts/pomodoro-clock-local-client-application-prospects.html"
+            href="https://blog.hentioe.dev/posts/pomodoro-clock-tauri-application-prospects.html"
             target="_blank"
             class="text-blue-400 underline"
           >
-            番茄钟：本地客户端应用前景的强大展现力
+            番茄钟：Tauri 跨端应用开发前景的强大展现力
           </a>
         </li>
       </ul>
