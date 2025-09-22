@@ -1,6 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Accessor, For, Setter } from "solid-js";
-import { Dialog } from "../components";
+import { StandardDialog } from "../components";
 
 export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Setter<boolean> }) => {
   const handleUpdateConfirm = async () => {
@@ -21,7 +21,7 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
   };
 
   return (
-    <Dialog
+    <StandardDialog
       title="发现新版本"
       open={props.open}
       setOpen={props.setOpen}
@@ -29,6 +29,6 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
       confirmText="前往下载"
     >
       <ChangelogSummary content={props.update?.changelog?.summary || "无更新内容"} />
-    </Dialog>
+    </StandardDialog>
   );
 };

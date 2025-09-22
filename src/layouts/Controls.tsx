@@ -2,7 +2,7 @@ import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import classNames from "classnames";
 import { createSignal } from "solid-js";
 import { PomodoroPhase } from "tauri-plugin-backend-api";
-import { Dialog } from "../components";
+import { StandardDialog } from "../components";
 import icons from "../icons";
 
 interface Props {
@@ -67,9 +67,9 @@ export default (props: Props) => {
           <ControlButton onClick={handleExit} icon={icons.Close} />
         </div>
       </div>
-      <Dialog title="退出确认" onConfirm={props.onExit} open={exitConfirmOpen} setOpen={setExitConfirmOpen}>
+      <StandardDialog title="退出确认" onConfirm={props.onExit} open={exitConfirmOpen} setOpen={setExitConfirmOpen}>
         番茄钟还在计时中，确定要退出吗？
-      </Dialog>
+      </StandardDialog>
     </>
   );
 };

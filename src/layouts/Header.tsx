@@ -9,8 +9,7 @@ import {
   SoundName,
   writeSettings,
 } from "tauri-plugin-backend-api";
-import { Dialog } from "../components";
-import Dialog2 from "../components/Dialog2";
+import { BasicDialog, StandardDialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
 import icons from "../icons";
@@ -109,7 +108,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
 
   const MusicDialog = () => {
     return (
-      <Dialog
+      <StandardDialog
         title="声音定制"
         open={soundDialogOpen}
         setOpen={setSoundDialogOpen}
@@ -118,7 +117,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
       >
         <Rodio label="滴答音" value={editingTickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
         {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
-      </Dialog>
+      </StandardDialog>
     );
   };
 
@@ -147,7 +146,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
 
   const VolumeDialog = () => {
     return (
-      <Dialog
+      <StandardDialog
         title="音量大小"
         open={volumeDialogOpen}
         setOpen={setVolumeDialogOpen}
@@ -178,15 +177,15 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
           /> */
           }
         </div>
-      </Dialog>
+      </StandardDialog>
     );
   };
 
   const AboutNewDialog = () => {
     return (
-      <Dialog2 open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen}>
+      <BasicDialog open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen}>
         <AboutNew updateChecker={props.updateChecker} onClose={() => setAboutNewDialogOpen(false)} />
-      </Dialog2>
+      </BasicDialog>
     );
   };
 
