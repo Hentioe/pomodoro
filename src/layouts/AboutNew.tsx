@@ -1,8 +1,9 @@
 import HentioeAvatar from "/src/assets/hentioe.webp";
-import { Icon } from "@iconify-icon/solid";
+import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getVersion } from "@tauri-apps/api/app";
 import { createResource, createSignal, JSX } from "solid-js";
 import { toast } from "tauri-plugin-backend-api";
+import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
 import NewVersionDialog from "./NewVersionDialog";
 
@@ -35,7 +36,7 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
       <div class="flex flex-col gap-[1rem]">
         <div class="flex items-center gap-[1rem]">
           <div class="w-[3rem] h-[3rem] bg-green-500 rounded-2xl shadow flex justify-center items-center">
-            <Icon icon="lets-icons:check-fill" class="text-white text-[2rem]" />
+            <Icon icon={icons.CheckFill} class="text-white text-[2rem]" />
           </div>
           <span class="font-bold text-[1.5rem]">关于</span>
         </div>
@@ -62,13 +63,13 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
         </p>
         <ul class="flex flex-col gap-[0.5rem]">
           <NavLink
-            icon="lets-icons:check-fill"
+            icon={icons.CheckFill}
             url="https://blog.hentioe.dev/posts/introduction-to-the-pomodoro-technique.html"
           >
             入门番茄工作法
           </NavLink>
           <NavLink
-            icon="solar:document-text-bold"
+            icon={icons.DocumentTextBold}
             url="https://blog.hentioe.dev/posts/pomodoro-clock-tauri-application-prospects.html"
           >
             跨端应用开发前景的强大展现力
@@ -89,7 +90,7 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
   );
 };
 
-const NavLink = (props: { url: string; icon: string; children: JSX.Element }) => {
+const NavLink = (props: { url: string; icon: string | IconifyIcon; children: JSX.Element }) => {
   return (
     <li>
       <a

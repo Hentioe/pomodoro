@@ -3,9 +3,11 @@ import Pause from "@iconify-icons/mingcute/pause-fill";
 import Play from "@iconify-icons/mingcute/play-fill";
 import Volume from "@iconify-icons/mingcute/volume-line";
 import Close from "@iconify-icons/noto-v1/cross-mark";
+import DocumentTextBold from "@iconify-icons/solar/document-text-bold";
 import Music from "@iconify-icons/tabler/music";
 import Setting from "@iconify-icons/tdesign/setting";
 import AboutNew from "./about-new";
+import CheckFill from "./check-fill";
 import Tomato from "./tomato";
 
 export default {
@@ -18,4 +20,6 @@ export default {
   Music,
   Setting, // 暂未使用
   AboutNew,
+  CheckFill,
+  DocumentTextBold,
 };

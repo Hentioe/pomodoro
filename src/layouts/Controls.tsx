@@ -39,7 +39,7 @@ export default (props: Props) => {
         class="h-full rounded-full flex justify-center white text-black items-center"
       >
         <Icon
-          icon="tomato"
+          icon={icons.Tomato}
           style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
           data-state={props.phase}
           class="w-[2.25rem] h-[2.25rem] text-[2.25rem] transition-colors duration-800"
