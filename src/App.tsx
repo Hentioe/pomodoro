@@ -2,7 +2,6 @@ import { createSignal, onCleanup, onMount } from "solid-js";
 import "./App.css";
 import { getIdentifier, getVersion } from "@tauri-apps/api/app";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { fetch } from "@tauri-apps/plugin-http";
 import { debug, error, info } from "@tauri-apps/plugin-log";
 import {
   exit,
@@ -15,8 +14,9 @@ import {
   reset,
 } from "tauri-plugin-backend-api";
 import FlipClock from "./flip-clock";
-import Controller from "./layouts/Controls";
+import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
+import { UpdateChecker } from "./update-checker";
 
 const appWindow = getCurrentWindow();
 
@@ -33,6 +33,7 @@ function App() {
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [loaded, setLoaded] = createSignal(false);
   const [update, setUpdate] = createSignal<Update | undefined>(undefined);
+  const [updateChecker, setUpdateChecker] = createSignal<UpdateChecker | undefined>(undefined);
 
   let flipClock: FlipClock;
   let dragEl: HTMLDivElement | undefined;
@@ -85,31 +86,28 @@ function App() {
     dragEl?.addEventListener("mousedown", dragEvent);
     setLoaded(true);
 
-    const resp = await fetch("https://pomodoro.hentioe.dev/api/update/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        app_id: await getIdentifier(),
-        platform: "android",
-        channel: "dev",
-        version: await getVersion(),
-        architecture: "aarch64",
-      }),
+    // 创建一个更新检查器，并立即检查更新
+    const checker = new UpdateChecker({
+      appId: await getIdentifier(),
+      platform: "android",
+      channel: "dev",
+      version: await getVersion(),
+      architecture: "aarch64",
     });
+    setUpdateChecker(checker);
 
-    const updateInfo = await resp.json() as Api.Error | Api.Success<Update>;
-    if (updateInfo.success) {
-      const update = updateInfo.payload;
+    const result = await checker.checkNow();
+
+    if (result.success) {
+      const update = result.payload;
       if (update.available) {
         info(`New version available: ${update.latest}`);
-        setUpdate(updateInfo.payload);
+        setUpdate(update);
       } else {
         debug("Check for updates: no updates available");
       }
     } else {
-      error("Check for updates failed: " + updateInfo.message);
+      error("Check for updates failed: " + result.message);
     }
   });
 
@@ -119,7 +117,7 @@ function App() {
 
   return (
     <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
-      <Header update={update()} />
+      <Header update={update()} updateChecker={updateChecker()} />
       <div class="flex-1 flex w-full items-center">
         <div class="clock-container cursor-grab" ref={dragEl}>
           <div class="digit-container" id="minute-ten">
@@ -140,7 +138,7 @@ function App() {
         </div>
       </div>
 
-      <Controller
+      <Controls
         loaded={loaded()}
         phase={phase()}
         isPlaying={isPlaying()}

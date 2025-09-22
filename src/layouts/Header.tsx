@@ -1,6 +1,5 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
-import { openUrl } from "@tauri-apps/plugin-opener";
-import { createSignal, For, onMount, Show } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import {
   onSettingsUpdated,
@@ -15,7 +14,9 @@ import Dialog2 from "../components/Dialog2";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
 import icons from "../icons";
+import { UpdateChecker } from "../update-checker";
 import AboutNew from "./AboutNew";
+import NewVersionDialog from "./NewVersionDialog";
 
 type Volumes = {
   [key in SoundDefaultName]: number;
@@ -44,7 +45,7 @@ const DEFAULT_ALARM_VOLUME = 0.8;
 const DEFAULT_PROMPT_VOLUME = 0.8;
 const DEFAULT_BACKGROUND_VOLUME = 0.6;
 
-export default (props: { update?: Update }) => {
+export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
   const [tickSound, setTickSound] = createSignal<SoundName>(DEFAULT_TICK_SOUND);
   const [editingTickSound, setEditingTickSound] = createSignal<SoundName>(DEFAULT_TICK_SOUND);
   const [volumes, setVolumes] = createStore<Volumes>({
@@ -102,15 +103,6 @@ export default (props: { update?: Update }) => {
     setEditingTickSound(tickSound());
   };
 
-  const handleUpdateConfirm = async () => {
-    const url = props.update?.download?.[0].url;
-    if (url) {
-      await openUrl(url);
-    }
-
-    return true;
-  };
-
   const Version = () => {
     return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">开发版</p>;
   };
@@ -126,28 +118,6 @@ export default (props: { update?: Update }) => {
       >
         <Rodio label="滴答音" value={editingTickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
         {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
-      </Dialog>
-    );
-  };
-
-  const ChangelogSummary = (props: { content: string }) => {
-    return (
-      <For each={props.content.split("\n")}>
-        {(line) => <p>{line}</p>}
-      </For>
-    );
-  };
-
-  const NewVersionDialog = () => {
-    return (
-      <Dialog
-        title="发现新版本"
-        open={newVersionDialogOpen}
-        setOpen={setNewVersionDialogOpen}
-        onConfirm={handleUpdateConfirm}
-        confirmText="前往下载"
-      >
-        <ChangelogSummary content={props.update?.changelog?.summary || "无更新内容"} />
       </Dialog>
     );
   };
@@ -215,7 +185,7 @@ export default (props: { update?: Update }) => {
   const AboutNewDialog = () => {
     return (
       <Dialog2 open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen}>
-        <AboutNew onClose={() => setAboutNewDialogOpen(false)} />
+        <AboutNew updateChecker={props.updateChecker} onClose={() => setAboutNewDialogOpen(false)} />
       </Dialog2>
     );
   };
@@ -241,7 +211,7 @@ export default (props: { update?: Update }) => {
       </header>
       <MusicDialog />
       <VolumeDialog />
-      <NewVersionDialog />
+      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} update={props.update} />
       <AboutNewDialog />
     </>
   );
