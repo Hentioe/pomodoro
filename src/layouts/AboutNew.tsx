@@ -40,12 +40,12 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
           </div>
           <span class="font-bold text-[1.5rem]">关于</span>
         </div>
-        <p class="leading-[2rem] tracking-wide text-gray-600">
+        <p class="leading-[2rem] tracking-wide text-gray-800">
           本应用是由
           <a
             href="https://github.com/Hentioe"
             target="_blank"
-            class="bg-sky-200/60 text-sky-500 px-2 rounded font-bold inline-flex items-center gap-[0.25rem] align-middle"
+            class="bg-zinc-200/70 active:bg-blue-200/90 transition-colors border border-zinc-200 text-blue-500 px-2 mx-1 rounded-xl inline-flex items-center gap-[0.25rem] align-middle"
           >
             <img src={HentioeAvatar} class="h-[1rem] w-[1rem] rounded-md" />
             <span>Hentioe</span>
