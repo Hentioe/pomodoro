@@ -11,6 +11,7 @@ import {
   writeSettings,
 } from "tauri-plugin-backend-api";
 import { Dialog } from "../components";
+import Dialog2 from "../components/Dialog2";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
 import icons from "../icons";
@@ -213,9 +214,9 @@ export default (props: { update?: Update }) => {
 
   const AboutNewDialog = () => {
     return (
-      <Dialog open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen} title="关于" hiddenCancel>
-        <AboutNew />
-      </Dialog>
+      <Dialog2 open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen}>
+        <AboutNew onClose={() => setAboutNewDialogOpen(false)} />
+      </Dialog2>
     );
   };
 
