@@ -20,6 +20,14 @@
   }
 }
 
+.depress-effect {
+  transition: all 0.1s ease;
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
 .control-btn {
   transition: all 0.2s ease;
   background: linear-gradient(145deg, #f0f0f0, #d1d1d1);

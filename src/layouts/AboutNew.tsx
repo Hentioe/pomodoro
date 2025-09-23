@@ -11,11 +11,14 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
   const [version] = createResource(getVersion);
   const [update, setUpdate] = createSignal<Update | undefined>(undefined);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
+  const [isUpdateChecking, setIsUpdateChecking] = createSignal(false);
 
   const handleCheckUpdate = async () => {
-    const checker = props.updateChecker;
-    if (checker) {
-      const result = await checker.checkCached();
+    if (props.updateChecker && !isUpdateChecking()) {
+      setIsUpdateChecking(true);
+      await toast("正在检查更新...");
+      const result = await props.updateChecker.checkCached();
+      setIsUpdateChecking(false);
 
       if (result.success) {
         if (result.payload.available) {
@@ -36,7 +39,11 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
       <div class="flex flex-col gap-[1rem]">
         <div class="flex items-center gap-[1rem]">
           <div class="w-[3rem] h-[3rem] bg-green-500 rounded-2xl shadow flex justify-center items-center">
-            <Icon icon={icons.CheckFill} class="text-white text-[2rem]" />
+            <Icon
+              icon={icons.Tomato}
+              style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
+              class="text-focus text-[2rem]"
+            />
           </div>
           <span class="font-bold text-[1.5rem]">关于</span>
         </div>
@@ -50,15 +57,18 @@ export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) =
             <img src={HentioeAvatar} class="h-[1rem] w-[1rem] rounded-md" />
             <span>Hentioe</span>
           </a>
-          开发的免费产品，基于 Tauri 框架正在为各个平台提供支持。
+          开发的免费产品，基于 Tauri 框架，正在为大量平台提供支持。
         </p>
         <p class="text-center text-sm flex justify-between items-center bg-blue-100/70 rounded-2xl px-4 py-4">
-          <span>软件版本</span>
-          <span onClick={handleCheckUpdate} class="p-2 bg-white shadow text-blue-400 rounded-md border border-zinc-200">
+          <span class="text-[1.1rem] text-gray-600">软件版本</span>
+          <button
+            onClick={handleCheckUpdate}
+            class="depress-effect p-2 bg-white text-blue-400 rounded-md border border-zinc-200"
+          >
             {version()}
-          </span>
+          </button>
         </p>
-        <p class="mt-[1rem] font-bold">
+        <p class="mt-[1rem] font-bold text-gray-700">
           更多内容请参考
         </p>
         <ul class="flex flex-col gap-[0.5rem]">
