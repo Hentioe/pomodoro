@@ -12,6 +12,7 @@ import {
 import { BasicDialog, StandardDialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
+import TimerDialog from "../dialogs/TimerDialog";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
 import AboutNew from "./AboutNew";
@@ -63,6 +64,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
+  const [timerDialogOpen, setTimerDialogOpen] = createSignal(false);
 
   const handleTickSoundChange = async (value: string) => {
     const editing = value as SoundName;
@@ -204,14 +206,16 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
           </p>
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
-          <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
+          <NavIcon icon="f7:timer" onClick={() => setTimerDialogOpen(true)} />
           <NavIcon icon={icons.Music} onClick={() => setSoundDialogOpen(true)} />
+          <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
         </div>
       </header>
       <MusicDialog />
       <VolumeDialog />
       <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} update={props.update} />
       <AboutNewDialog />
+      <TimerDialog open={timerDialogOpen} setOpen={setTimerDialogOpen} />
     </>
   );
 };

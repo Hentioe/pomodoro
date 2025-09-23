@@ -3,6 +3,10 @@ import { Slider } from "@ark-ui/solid/slider";
 interface Props {
   label: string;
   value: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  onValueChange?: (value: number) => void;
   onValueChangeEnd?: (value: number) => void;
 }
 
@@ -14,9 +18,10 @@ export default (props: Props) => {
   return (
     <Slider.Root
       defaultValue={[props.value]}
-      step={0.1}
-      min={0}
-      max={1}
+      step={props.step || 0.1}
+      min={props.min || 0}
+      max={props.max || 1}
+      onValueChange={details => props.onValueChange?.(details.value[0])}
       onValueChangeEnd={details => handleValueChangeEnd(details.value[0])}
     >
       <Slider.Label>{props.label}</Slider.Label>
