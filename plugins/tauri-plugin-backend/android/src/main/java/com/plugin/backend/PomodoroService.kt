@@ -435,27 +435,31 @@ class PomodoroService : Service() {
         runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
         // 重新载入并推送设置
         loadPushSettings()
-        // 如果 key 涉及时间设置，且当前阶段匹配，则立即应用剩余时间
+        // 处理可能涉及时长的修改
+        maybeWriteDurationSetting(key)
+
+        return true
+    }
+
+    fun maybeWriteDurationSetting(key: SettingsKey) {
         when (key) {
-            SettingsKey.FOCUS_MINUTES -> {
-                if (state.phase == PomodoroPhase.FOCUS) {
-                    state.remainingSeconds = currentTotalSeconds()
-                }
-            }
-            SettingsKey.SHORT_BREAK_MINUTES -> {
-                if (state.phase == PomodoroPhase.SHORT_BREAK) {
-                    state.remainingSeconds = currentTotalSeconds()
-                }
-            }
+            SettingsKey.FOCUS_MINUTES,
+            SettingsKey.SHORT_BREAK_MINUTES,
             SettingsKey.LONG_BREAK_MINUTES -> {
-                if (state.phase == PomodoroPhase.LONG_BREAK) {
-                    state.remainingSeconds = currentTotalSeconds()
+                if (state.phase ==
+                    when (key) {
+                        SettingsKey.FOCUS_MINUTES -> PomodoroPhase.FOCUS
+                        SettingsKey.SHORT_BREAK_MINUTES -> PomodoroPhase.SHORT_BREAK
+                        SettingsKey.LONG_BREAK_MINUTES -> PomodoroPhase.LONG_BREAK
+                        else -> null
+                    }) {
+                    // 如果修改的时长字段和当前阶段匹配，则立即应用于当前阶段
+                    state.remainingSeconds = currentTotalSeconds() // 重置定时器时间
+                    updateNotification() // 更新通知
                 }
             }
             else -> {}
         }
-
-        return true
     }
 
     fun <T> readSetting(key: SettingsKey): T? {
