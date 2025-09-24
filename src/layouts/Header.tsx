@@ -206,7 +206,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
           </p>
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
-          <NavIcon icon="f7:timer" onClick={() => setTimerDialogOpen(true)} />
+          <NavIcon icon={icons.Timer} onClick={() => setTimerDialogOpen(true)} />
           <NavIcon icon={icons.Music} onClick={() => setSoundDialogOpen(true)} />
           <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
         </div>

@@ -8,6 +8,7 @@ import Music from "@iconify-icons/tabler/music";
 import Setting from "@iconify-icons/tdesign/setting";
 import AboutNew from "./about-new";
 import CheckFill from "./check-fill";
+import Timer from "./timer";
 import Tomato from "./tomato";
 
 export default {
@@ -22,4 +23,5 @@ export default {
   AboutNew,
   CheckFill,
   DocumentTextBold,
+  Timer,
 };
