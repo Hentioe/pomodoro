@@ -30,13 +30,17 @@ export default (props: Props) => {
   const [submittedTimes, setSubmittedTimes] = createStore<Times>(structuredClone(DEFAULT_TIMES));
 
   const handleConfirm = async () => {
-    await writeSettings({
-      focusMinutes: editingTimes.focusMinutes,
-      shortBreakMinutes: editingTimes.shortBreakMinutes,
-      longBreakMinutes: editingTimes.longBreakMinutes,
-    });
+    if (editingTimes.focusMinutes !== submittedTimes.focusMinutes) {
+      await writeSettings({ focusMinutes: editingTimes.focusMinutes });
+    }
+    if (editingTimes.shortBreakMinutes !== submittedTimes.shortBreakMinutes) {
+      await writeSettings({ shortBreakMinutes: editingTimes.shortBreakMinutes });
+    }
+    if (editingTimes.longBreakMinutes !== submittedTimes.longBreakMinutes) {
+      await writeSettings({ longBreakMinutes: editingTimes.longBreakMinutes });
+    }
 
-    // 请求推送最新状态
+    // 请求推送修改后的状态
     await ping("--push=state");
 
     return true;
