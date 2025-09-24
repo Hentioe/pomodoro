@@ -41,6 +41,9 @@ class WriteSettingsArgs {
     var tickVolume: Float? = null
     var alarmVolume: Float? = null
     var promptVolume: Float? = null
+    var focusMinutes: Int? = null
+    var shortBreakMinutes: Int? = null
+    var longBreakMinutes: Int? = null
 }
 
 @TauriPlugin
@@ -165,6 +168,9 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         event.put("tickVolume", settings.tickVolume)
         event.put("alarmVolume", settings.alarmVolume)
         event.put("promptVolume", settings.promptVolume)
+        event.put("focusMinutes", settings.focusMinutes)
+        event.put("shortBreakMinutes", settings.shortBreakMinutes)
+        event.put("longBreakMinutes", settings.longBreakMinutes)
         trigger("settings_updated", event)
 
         Log.d(LOG_TAG, "Settings pushed: $settings")
@@ -189,8 +195,9 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         val args = invoke.parseArgs(PingArgs::class.java)
 
         when (args.value) {
-            "header_mounted" -> {
-                // 前端 Header 组件挂载完成，推送当前设置
+            "header_mounted",
+            "timer_dialog_mounted" -> {
+                // 一些需要读取设置的组件挂载完成，推送当前设置
                 val settings = service?.settings()
                 if (settings != null) {
                     onSettingsUpdated(settings)
@@ -295,6 +302,18 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         if (args.promptVolume != null) {
             service?.writeSetting(SettingsKey.PROMPT_VOLUME, args.promptVolume)
             Log.i(LOG_TAG, "Prompt volume set to: ${args.promptVolume}")
+        }
+        if (args.focusMinutes != null) {
+            service?.writeSetting(SettingsKey.FOCUS_MINUTES, args.focusMinutes)
+            Log.i(LOG_TAG, "Focus minutes set to: ${args.focusMinutes}")
+        }
+        if (args.shortBreakMinutes != null) {
+            service?.writeSetting(SettingsKey.SHORT_BREAK_MINUTES, args.shortBreakMinutes)
+            Log.i(LOG_TAG, "Short break minutes set to: ${args.shortBreakMinutes}")
+        }
+        if (args.longBreakMinutes != null) {
+            service?.writeSetting(SettingsKey.LONG_BREAK_MINUTES, args.longBreakMinutes)
+            Log.i(LOG_TAG, "Long break minutes set to: ${args.longBreakMinutes}")
         }
 
         invoke.resolve()

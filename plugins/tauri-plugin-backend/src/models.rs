@@ -32,4 +32,7 @@ pub struct WriteSettingsRequest {
     pub tick_volume: Option<f32>,
     pub alarm_volume: Option<f32>,
     pub prompt_volume: Option<f32>,
+    pub focus_minutes: Option<u32>,
+    pub short_break_minutes: Option<u32>,
+    pub long_break_minutes: Option<u32>,
 }

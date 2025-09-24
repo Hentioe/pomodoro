@@ -61,6 +61,9 @@ export interface Settings {
   tickVolume?: number;
   alarmVolume?: number;
   promptVolume?: number;
+  focusMinutes?: number;
+  shortBreakMinutes?: number;
+  longBreakMinutes?: number;
 }
 
 export async function writeSettings(settings: Settings): Promise<void> {

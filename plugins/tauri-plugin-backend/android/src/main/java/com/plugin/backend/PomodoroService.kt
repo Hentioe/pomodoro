@@ -45,7 +45,10 @@ class PomodoroService : Service() {
             tickSound = "default_tick",
             tickVolume = 0.5f,
             alarmVolume = 0.8f,
-            promptVolume = 0.8f) // 默认设置
+            promptVolume = 0.8f,
+            focusMinutes = 25,
+            shortBreakMinutes = 5,
+            longBreakMinutes = 15) // 默认设置
     private val binder = LocalBinder()
     private var callback: WeakReference<ServiceCallback>? = null // 使用弱引用持有回调
     private var settingsCallback: WeakReference<SettingsCallback>? = null // 使用弱引用持有设置回调
@@ -265,6 +268,9 @@ class PomodoroService : Service() {
         val tickVolume = readSetting<Float>(SettingsKey.TICK_VOLUME)
         val alarmVolume = readSetting<Float>(SettingsKey.ALARM_VOLUME)
         val promptVolume = readSetting<Float>(SettingsKey.PROMPT_VOLUME)
+        val focusMinutes = readSetting<Int>(SettingsKey.FOCUS_MINUTES)
+        val shortBreakMinutes = readSetting<Int>(SettingsKey.SHORT_BREAK_MINUTES)
+        val longBreakMinutes = readSetting<Int>(SettingsKey.LONG_BREAK_MINUTES)
         if (tickSound != null) {
             settings.tickSound = tickSound
         }
@@ -276,6 +282,15 @@ class PomodoroService : Service() {
         }
         if (promptVolume != null) {
             settings.promptVolume = promptVolume
+        }
+        if (focusMinutes != null) {
+            settings.focusMinutes = focusMinutes
+        }
+        if (shortBreakMinutes != null) {
+            settings.shortBreakMinutes = shortBreakMinutes
+        }
+        if (longBreakMinutes != null) {
+            settings.longBreakMinutes = longBreakMinutes
         }
         updateSettings() // 推送设置
     }
