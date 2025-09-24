@@ -8,6 +8,7 @@ import {
   next,
   onPomodoroUpdated,
   pause,
+  ping,
   play,
   PomodoroPhase,
   PomodoroState,
@@ -20,16 +21,9 @@ import { UpdateChecker } from "./update-checker";
 
 const appWindow = getCurrentWindow();
 
-// 状态到时间的映射
-const stateToTimeMap: Record<PomodoroPhase, number> = {
-  "focus": 25 * 60, // 25分钟
-  "short_break": 5 * 60, // 5分钟
-  "long_break": 15 * 60, // 15分钟
-};
-
 function App() {
   const [phase, setPhase] = createSignal<PomodoroPhase>("focus");
-  const [totalSeconds, setTotalSeconds] = createSignal(stateToTimeMap[phase()]);
+  const [totalSeconds, setTotalSeconds] = createSignal(0);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [loaded, setLoaded] = createSignal(false);
   const [update, setUpdate] = createSignal<Update | undefined>(undefined);
@@ -69,10 +63,10 @@ function App() {
     }
   };
 
-  const onUpdated = (data: PomodoroState) => {
-    setPhase(data.phase);
-    setTotalSeconds(data.remainingSeconds);
-    setIsPlaying(data.isPlaying);
+  const onStateUpdated = (state: PomodoroState) => {
+    setPhase(state.phase);
+    setTotalSeconds(state.remainingSeconds);
+    setIsPlaying(state.isPlaying);
     updateTimeDisplay();
   };
 
@@ -81,7 +75,7 @@ function App() {
     updateTimeDisplay();
     // 判断系统是否是 Android
     if (navigator.userAgent.indexOf("Android") > -1) {
-      await onPomodoroUpdated(onUpdated);
+      await onPomodoroUpdated(onStateUpdated);
     }
     dragEl?.addEventListener("mousedown", dragEvent);
     setLoaded(true);
@@ -109,6 +103,8 @@ function App() {
     } else {
       error("Check for updates failed: " + result.message);
     }
+
+    await ping("--push=state");
   });
 
   onCleanup(() => {

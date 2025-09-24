@@ -195,12 +195,18 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         val args = invoke.parseArgs(PingArgs::class.java)
 
         when (args.value) {
-            "header_mounted",
-            "timer_dialog_mounted" -> {
+            "--push=settings" -> {
                 // 一些需要读取设置的组件挂载完成，推送当前设置
                 val settings = service?.settings()
                 if (settings != null) {
                     onSettingsUpdated(settings)
+                }
+            }
+            "--push=state" -> {
+                // 推送当前状态
+                val state = service?.state()
+                if (state != null) {
+                    onPomodoroStateUpdated(state)
                 }
             }
         }

@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-enum class PomodoroPhase(val value: String, val seconds: Int) {
+enum class PomodoroPhase(val value: String, val defaultSeconds: Int) {
     FOCUS("focus", 25 * 60), // 25 分钟
     SHORT_BREAK("short_break", 5 * 60), // 5 分钟
     LONG_BREAK("long_break", 15 * 60) // 15 分钟
@@ -61,7 +61,7 @@ class PomodoroService : Service() {
     private var state =
         PomodoroState(
             phase = PomodoroPhase.FOCUS,
-            remainingSeconds = PomodoroPhase.FOCUS.seconds,
+            remainingSeconds = PomodoroPhase.FOCUS.defaultSeconds,
             isPlaying = false,
             cycleCount = 0) // 默认状态
     private var toggleIcon =
@@ -80,6 +80,8 @@ class PomodoroService : Service() {
         soundManager.initialize()
         // 载入并推送设置
         loadPushSettings()
+        // 应用配置中的剩余时间
+        state.remainingSeconds = currentTotalSeconds()
         Log.d(LOG_TAG, "Loaded settings: $settings")
     }
 
@@ -88,7 +90,7 @@ class PomodoroService : Service() {
 
         when (intent?.action) {
             ACTION_TOGGLE -> {
-                // 通知栏图标回调
+                // 切换播放状态
                 Log.i(LOG_TAG, "Icon clicked! Perform your action here")
                 if (state.isPlaying) {
                     stopTimer()
@@ -105,14 +107,15 @@ class PomodoroService : Service() {
                 state =
                     PomodoroState(
                         phase = PomodoroPhase.FOCUS,
-                        remainingSeconds = PomodoroPhase.FOCUS.seconds,
+                        remainingSeconds = settings.focusMinutes * 60,
                         isPlaying = false,
                         cycleCount = 0)
-                updatePomodoroState(state) // 更新状态
+                updatePomodoroState() // 更新状态
                 // 停止服务
                 stopSelf()
             }
             ACTION_START_AND_BIND -> {
+                // 启动和绑定服务
                 startForeground(
                     NOTIFICATION_ID,
                     buildNotification(),
@@ -120,6 +123,7 @@ class PomodoroService : Service() {
                 startTimer() // 启动计时器
             }
             ACTION_PRE_START -> {
+                // 预先启动服务
                 startForeground(
                     NOTIFICATION_ID,
                     buildNotification(),
@@ -140,7 +144,7 @@ class PomodoroService : Service() {
                 while (true) {
                     if (state.remainingSeconds > 0 && isTimerRunning) {
                         state.isPlaying = true
-                        updatePomodoroState(state) // 更新状态
+                        updatePomodoroState() // 更新状态
                         updateNotification() // 更新通知
                         delay(1000L) // 延迟 1 秒
                         // 播放滴答声
@@ -156,20 +160,20 @@ class PomodoroService : Service() {
                         // 进入下一个阶段
                         nextPhase() // 更新阶段和周期次数
                         Log.d(LOG_TAG, "Switched to phase: ${state.phase.value}")
-                        updatePomodoroState(state) // 更新状态
+                        updatePomodoroState() // 更新状态
                         // 播放结束铃声
                         soundManager.play(SoundType.ALARM, settings.alarmVolume)
                         delay((SoundType.ALARM.durationSeconds * 1000).toLong()) // 延迟播放时间
                         // 下一阶段提示
                         phaseAlert()
                         // 重置剩余时间，再次进入循环
-                        state.remainingSeconds = state.phase.seconds
-                        updatePomodoroState(state) // 更新状态
+                        state.remainingSeconds = currentTotalSeconds()
+                        updatePomodoroState() // 更新状态
                     } else {
                         // 被取消
                         state.isPlaying = false
                         isTimerRunning = false
-                        updatePomodoroState(state) // 更新状态
+                        updatePomodoroState() // 更新状态
                         break
                     }
                 }
@@ -181,13 +185,13 @@ class PomodoroService : Service() {
         isTimerRunning = false
         state.isPlaying = false
         toggleIcon = R.drawable.ic_play // 播放图标
-        updatePomodoroState(state) // 更新状态
+        updatePomodoroState() // 更新状态
         updateNotification() // 更新通知
     }
 
     fun resetTimer() {
-        state.remainingSeconds = state.phase.seconds
-        updatePomodoroState(state) // 更新状态
+        state.remainingSeconds = currentTotalSeconds()
+        updatePomodoroState() // 更新状态
         updateNotification() // 更新通知
     }
 
@@ -199,8 +203,8 @@ class PomodoroService : Service() {
             Log.d(LOG_TAG, "Skipping to next phase from ${state.phase.value}")
 
             nextPhase()
-            state.remainingSeconds = state.phase.seconds
-            updatePomodoroState(state) // 更新状态
+            state.remainingSeconds = currentTotalSeconds()
+            updatePomodoroState() // 更新状态
             updateNotification() // 更新通知
             phaseAlert() // 阶段提示
             startTimer() // 重新开始计时器
@@ -415,6 +419,14 @@ class PomodoroService : Service() {
         manager.createNotificationChannel(channel)
     }
 
+    fun currentTotalSeconds(): Int {
+        return when (state.phase) {
+            PomodoroPhase.FOCUS -> settings.focusMinutes * 60
+            PomodoroPhase.SHORT_BREAK -> settings.shortBreakMinutes * 60
+            PomodoroPhase.LONG_BREAK -> settings.longBreakMinutes * 60
+        }
+    }
+
     fun state(): PomodoroState = state
 
     fun settings(): Settings = settings
@@ -423,6 +435,26 @@ class PomodoroService : Service() {
         runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
         // 重新载入并推送设置
         loadPushSettings()
+        // 如果 key 涉及时间设置，且当前阶段匹配，则立即应用剩余时间
+        when (key) {
+            SettingsKey.FOCUS_MINUTES -> {
+                if (state.phase == PomodoroPhase.FOCUS) {
+                    state.remainingSeconds = currentTotalSeconds()
+                }
+            }
+            SettingsKey.SHORT_BREAK_MINUTES -> {
+                if (state.phase == PomodoroPhase.SHORT_BREAK) {
+                    state.remainingSeconds = currentTotalSeconds()
+                }
+            }
+            SettingsKey.LONG_BREAK_MINUTES -> {
+                if (state.phase == PomodoroPhase.LONG_BREAK) {
+                    state.remainingSeconds = currentTotalSeconds()
+                }
+            }
+            else -> {}
+        }
+
         return true
     }
 
@@ -430,7 +462,7 @@ class PomodoroService : Service() {
         return runBlocking { store.read(key.createKey() as Preferences.Key<T>) }
     }
 
-    private fun updatePomodoroState(state: PomodoroState) {
+    private fun updatePomodoroState() {
         callback?.get()?.onPomodoroStateUpdated(state)
     }
 

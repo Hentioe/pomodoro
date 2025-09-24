@@ -143,7 +143,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
       }
     });
 
-    ping("header_mounted");
+    await ping("--push=settings");
   });
 
   const VolumeDialog = () => {

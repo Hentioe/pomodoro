@@ -36,6 +36,9 @@ export default (props: Props) => {
       longBreakMinutes: editingTimes.longBreakMinutes,
     });
 
+    // 请求推送最新状态
+    await ping("--push=state");
+
     return true;
   };
 
@@ -59,7 +62,7 @@ export default (props: Props) => {
       }
     });
 
-    ping("timer_dialog_mounted");
+    await ping("--push=settings");
   });
 
   return (
