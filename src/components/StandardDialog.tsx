@@ -1,19 +1,22 @@
 import { Dialog } from "@ark-ui/solid/dialog";
 import { Accessor, JSX, Setter, Show } from "solid-js";
-import { Portal } from "solid-js/web";
+import BasicDialog from "./BasicDialog";
+
+interface ActionButtonsProps {
+  onConfirm?: () => Promise<boolean>;
+  onCancel?: () => void;
+  confirmText?: string;
+  hiddenCancel?: boolean;
+}
 
 interface Props {
   open: Accessor<boolean>;
   setOpen: Setter<boolean>;
   title: string;
   children: JSX.Element;
-  confirmText?: string;
-  hiddenCancel?: boolean;
-  onConfirm?: () => Promise<boolean>;
-  onCancel?: () => void;
 }
 
-export default (props: Props) => {
+export default (props: Props & ActionButtonsProps) => {
   const handleConfirm = async () => {
     if (props.onConfirm) {
       if (await props.onConfirm()) {
@@ -23,6 +26,8 @@ export default (props: Props) => {
     } else {
       props.setOpen(false);
     }
+
+    return true;
   };
 
   const handleCancel = () => {
@@ -32,28 +37,33 @@ export default (props: Props) => {
     props.setOpen(false);
   };
 
+  const Header = () => <Dialog.Title>{props.title}</Dialog.Title>;
+  const Footer = () => (
+    <ActionButtons
+      onConfirm={handleConfirm}
+      onCancel={handleCancel}
+      confirmText={props.confirmText}
+      hiddenCancel={props.hiddenCancel}
+    />
+  );
+
   return (
-    <Dialog.Root lazyMount unmountOnExit open={props.open()} onOpenChange={() => props.setOpen(false)}>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <div>
-              <Dialog.Title>{props.title}</Dialog.Title>
-              <Dialog.Description>{props.children}</Dialog.Description>
-            </div>
-            <div class="flex justify-end items-center">
-              <div class="flex gap-[2rem]">
-                <Show when={!props.hiddenCancel}>
-                  <DialogButton onClick={handleCancel}>取消</DialogButton>
-                </Show>
-                <DialogButton onClick={handleConfirm}>{props.confirmText || "确认"}</DialogButton>
-              </div>
-            </div>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
+      {props.children}
+    </BasicDialog>
+  );
+};
+
+const ActionButtons = (props: ActionButtonsProps) => {
+  return (
+    <div class="flex justify-end items-center">
+      <div class="flex gap-[2rem]">
+        <Show when={!props.hiddenCancel}>
+          <DialogButton onClick={props.onCancel}>取消</DialogButton>
+        </Show>
+        <DialogButton onClick={props.onConfirm}>{props.confirmText || "确认"}</DialogButton>
+      </div>
+    </div>
   );
 };
 

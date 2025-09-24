@@ -9,13 +9,13 @@ import {
   SoundName,
   writeSettings,
 } from "tauri-plugin-backend-api";
-import { BasicDialog, StandardDialog } from "../components";
+import { StandardDialog } from "../components";
 import Rodio from "../components/Rodio";
 import Slider from "../components/Slider";
+import AboutDialog from "../dialogs/AboutDialog";
 import TimerDialog from "../dialogs/TimerDialog";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
-import AboutNew from "./AboutNew";
 import NewVersionDialog from "./NewVersionDialog";
 
 type Volumes = {
@@ -32,12 +32,12 @@ const TickOptions: RodioOption[] = [
   // { label: "蔡徐坤", value: "kun_tick" },
 ];
 
-// const BackgroundOptions: RodioOption[] = [
-//   { label: "无", value: "none" },
-//   { label: "白噪音", value: "white-noise" },
-//   { label: "森林", value: "forest" },
-//   { label: "雨声", value: "rain" }
-// ];
+const BackgroundOptions: RodioOption[] = [
+  { label: "无", value: "none" },
+  { label: "白噪音", value: "white-noise" },
+  { label: "森林", value: "forest" },
+  { label: "雨声", value: "rain" },
+];
 
 const DEFAULT_TICK_SOUND: SoundName = "default_tick";
 const DEFAULT_TICK_VOLUME = 0.5;
@@ -117,8 +117,15 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
         onConfirm={handleTickSoundConfirm}
         onCancel={handleTickSoundCancel}
       >
-        <Rodio label="滴答音" value={editingTickSound()} options={TickOptions} onValueChange={handleTickSoundChange} />
-        {/* <Rodio label="背景音" value="none" options={BackgroundOptions} /> */}
+        <div class="flex flex-col gap-[1rem]">
+          <Rodio
+            label="滴答音"
+            value={editingTickSound()}
+            options={TickOptions}
+            onValueChange={handleTickSoundChange}
+          />
+          <Rodio label="背景音" value="none" options={BackgroundOptions} />
+        </div>
       </StandardDialog>
     );
   };
@@ -183,14 +190,6 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
     );
   };
 
-  const AboutNewDialog = () => {
-    return (
-      <BasicDialog open={aboutNewDialogOpen} setOpen={setAboutNewDialogOpen}>
-        <AboutNew updateChecker={props.updateChecker} onClose={() => setAboutNewDialogOpen(false)} />
-      </BasicDialog>
-    );
-  };
-
   return (
     <>
       <header class="absolute top-[1rem] left-[1rem] right-[1rem] text-zinc-200 flex justify-between items-center">
@@ -214,8 +213,15 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
       <MusicDialog />
       <VolumeDialog />
       <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} update={props.update} />
-      <AboutNewDialog />
+      {/* 定时器设置弹窗 */}
       <TimerDialog open={timerDialogOpen} setOpen={setTimerDialogOpen} />
+      {/* 关于弹窗 */}
+      <AboutDialog
+        open={aboutNewDialogOpen}
+        setOpen={setAboutNewDialogOpen}
+        updateChecker={props.updateChecker}
+        onClose={() => setAboutNewDialogOpen(false)}
+      />
     </>
   );
 };

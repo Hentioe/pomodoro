@@ -23,13 +23,6 @@
     justify-content: center;
   }
 
-  &[data-part="title"] {
-    margin: 0;
-    font-weight: 500;
-    color: rgb(26, 21, 35);
-    font-size: 1.25rem;
-  }
-
   &[data-part="content"] {
     background-color: theme(--color-zinc-100);
     border-radius: theme(--radius-2xl);
@@ -41,6 +34,8 @@
     padding: 1.5rem;
     position: relative;
     outline: none;
+    display: flex;
+    flex-direction: column;
 
     &[data-state="open"] {
       animation: scaleIn 0.15s ease-out;
@@ -51,10 +46,27 @@
     }
   }
 
-  &[data-part="description"] {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  /* &[data-part="header"] {
+    flex-shrink: 0;
+  } */
+
+  &[data-part="title"] {
+    margin: 0;
+    font-weight: 500;
+    color: rgb(26, 21, 35);
+    font-size: 1.25rem;
   }
+
+  &[data-part="description"] {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    /* flex: 1; */
+    overflow-y: auto;
+  }
+
+  /* &[data-part="footer"] {
+    flex-shrink: 0;
+  } */
 }
 
 @keyframes fadeIn {
