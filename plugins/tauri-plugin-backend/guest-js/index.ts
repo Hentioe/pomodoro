@@ -61,6 +61,7 @@ export interface Settings {
   tickVolume?: number;
   alarmVolume?: number;
   promptVolume?: number;
+  backgroundVolume?: number;
   focusMinutes?: number;
   shortBreakMinutes?: number;
   longBreakMinutes?: number;

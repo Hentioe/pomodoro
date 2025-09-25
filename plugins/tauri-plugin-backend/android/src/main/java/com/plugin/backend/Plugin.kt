@@ -41,6 +41,7 @@ class WriteSettingsArgs {
     var tickVolume: Float? = null
     var alarmVolume: Float? = null
     var promptVolume: Float? = null
+    var backgroundVolume: Float? = null
     var focusMinutes: Int? = null
     var shortBreakMinutes: Int? = null
     var longBreakMinutes: Int? = null
@@ -168,6 +169,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         event.put("tickVolume", settings.tickVolume)
         event.put("alarmVolume", settings.alarmVolume)
         event.put("promptVolume", settings.promptVolume)
+        event.put("backgroundVolume", settings.backgroundVolume)
         event.put("focusMinutes", settings.focusMinutes)
         event.put("shortBreakMinutes", settings.shortBreakMinutes)
         event.put("longBreakMinutes", settings.longBreakMinutes)
@@ -308,6 +310,10 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         if (args.promptVolume != null) {
             service?.writeSetting(SettingsKey.PROMPT_VOLUME, args.promptVolume)
             Log.i(LOG_TAG, "Prompt volume set to: ${args.promptVolume}")
+        }
+        if (args.backgroundVolume != null) {
+            service?.writeSetting(SettingsKey.BACKGROUND_VOLUME, args.backgroundVolume)
+            Log.i(LOG_TAG, "Background volume set to: ${args.backgroundVolume}")
         }
         if (args.focusMinutes != null) {
             service?.writeSetting(SettingsKey.FOCUS_MINUTES, args.focusMinutes)

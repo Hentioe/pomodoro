@@ -20,6 +20,7 @@ enum class SettingsKey(val keyName: String) {
     TICK_VOLUME("tick_volume"),
     ALARM_VOLUME("alarm_volume"),
     PROMPT_VOLUME("prompt_volume"),
+    BACKGROUND_VOLUME("background_volume"),
     FOCUS_MINUTES("focus_minutes"),
     SHORT_BREAK_MINUTES("short_break_minutes"),
     LONG_BREAK_MINUTES("long_break_minutes");

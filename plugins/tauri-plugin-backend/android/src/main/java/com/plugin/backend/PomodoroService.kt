@@ -38,7 +38,8 @@ class PomodoroService : Service() {
         const val ACTION_CLOSE = "ACTION_CLOSE"
     }
 
-    val soundManager = SoundManager(this) // 声音管理器（封装音频）
+    val soundManager = SoundManager(this) // 声音管理器（封装短音频）
+    val mediaManager = MediaManager(this) // 媒体管理器（封装长音频）
     private val store by lazy { Store(this) } // 数据存储
     private var settings =
         Settings(
@@ -46,6 +47,7 @@ class PomodoroService : Service() {
             tickVolume = 0.5f,
             alarmVolume = 0.8f,
             promptVolume = 0.8f,
+            backgroundVolume = 0.6f,
             focusMinutes = 25,
             shortBreakMinutes = 5,
             longBreakMinutes = 15) // 默认设置
@@ -147,19 +149,34 @@ class PomodoroService : Service() {
                         updatePomodoroState() // 更新状态
                         updateNotification() // 更新通知
                         delay(1000L) // 延迟 1 秒
+                        state.remainingSeconds -= 1 // 减少剩余时间
                         // 播放滴答声
                         val soundType = SoundType.from_setting_key(settings.tickSound)
                         if (soundType != null && settings.tickVolume > 0f) {
                             soundManager.play(soundType, settings.tickVolume)
                         }
-                        state.remainingSeconds -= 1 // 减少剩余时间
+                        if (state.phase == PomodoroPhase.FOCUS && mediaManager.isLooping().not()) {
+                            Log.i(LOG_TAG, "Starting background media for focus phase")
+                            // 如果是专注阶段，且背景音没有播放，则开始播放
+                            val localMedia =
+                                LocalMedia.from_setting_key("white-noise_music") // todo: 这里从配置中读取
+                            if (localMedia != null) {
+                                mediaManager.play(
+                                    localMedia, settings.backgroundVolume) // 音量也从配置中读取
+                            }
+                        }
                     } else if (state.isPlaying) {
-                        Log.d(LOG_TAG, "Phase: ${state.phase.value} ended")
                         // 如果正在播放，说明是阶段计时结束
+                        Log.d(LOG_TAG, "Phase: ${state.phase.value} ended")
                         updateNotification() // 更新通知（因为下一次更新已不在循环中）
                         // 进入下一个阶段
                         nextPhase() // 更新阶段和周期次数
                         Log.d(LOG_TAG, "Switched to phase: ${state.phase.value}")
+                        if (state.phase != PomodoroPhase.FOCUS) {
+                            // 如果当前已不是专注阶段，则停止背景音
+                            Log.i(LOG_TAG, "Stopping background media as phase is not focus")
+                            mediaManager.stop()
+                        }
                         updatePomodoroState() // 更新状态
                         // 播放结束铃声
                         soundManager.play(SoundType.ALARM, settings.alarmVolume)
@@ -173,6 +190,8 @@ class PomodoroService : Service() {
                         // 被取消
                         state.isPlaying = false
                         isTimerRunning = false
+                        Log.i(LOG_TAG, "Stopping background media as timer is stopped")
+                        mediaManager.stop() // 停止背景音
                         updatePomodoroState() // 更新状态
                         break
                     }
@@ -184,6 +203,7 @@ class PomodoroService : Service() {
         timerJob?.cancel() // 立即取消协程
         isTimerRunning = false
         state.isPlaying = false
+        mediaManager.stop() // 停止背景音
         toggleIcon = R.drawable.ic_play // 播放图标
         updatePomodoroState() // 更新状态
         updateNotification() // 更新通知
@@ -263,7 +283,8 @@ class PomodoroService : Service() {
         unregisterCallback()
         unregisterSettingsCallback()
         // 释放资源
-        soundManager.release() // 释放音频资源
+        soundManager.release() // 释放短音频资源
+        mediaManager.release() // 释放长音频资源
         scope.cancel() // 取消所有协程
     }
 
@@ -272,6 +293,7 @@ class PomodoroService : Service() {
         val tickVolume = readSetting<Float>(SettingsKey.TICK_VOLUME)
         val alarmVolume = readSetting<Float>(SettingsKey.ALARM_VOLUME)
         val promptVolume = readSetting<Float>(SettingsKey.PROMPT_VOLUME)
+        val backgroundVolume = readSetting<Float>(SettingsKey.BACKGROUND_VOLUME)
         val focusMinutes = readSetting<Int>(SettingsKey.FOCUS_MINUTES)
         val shortBreakMinutes = readSetting<Int>(SettingsKey.SHORT_BREAK_MINUTES)
         val longBreakMinutes = readSetting<Int>(SettingsKey.LONG_BREAK_MINUTES)
@@ -286,6 +308,9 @@ class PomodoroService : Service() {
         }
         if (promptVolume != null) {
             settings.promptVolume = promptVolume
+        }
+        if (backgroundVolume != null) {
+            settings.backgroundVolume = backgroundVolume
         }
         if (focusMinutes != null) {
             settings.focusMinutes = focusMinutes
