@@ -66,19 +66,6 @@ class MediaManager(private val context: Context) {
             .send()
     }
 
-    fun play(media: LocalMedia, volume: Float?) {
-        stop() // 停止可能的播放
-        isLooping = true
-        val assetUri = "asset:///${media.path}"
-        val mediaItem = MediaItem.fromUri(assetUri)
-        reset_player(exoPlayerA, mediaItem, volume)
-        reset_player(exoPlayerB, mediaItem, volume)
-        addMessage(Role.A, exoPlayerA, (media.overlapPositionSecs * 1000).toLong())
-        exoPlayerA.play()
-
-        Log.i(LOG_TAG, "Started playing media: $assetUri with volume: ${volume}")
-    }
-
     private val customTarget =
         object : PlayerMessage.Target {
             override fun handleMessage(messageType: Int, payload: Any?) {
@@ -95,6 +82,25 @@ class MediaManager(private val context: Context) {
                 }
             }
         }
+
+    fun play(media: LocalMedia, volume: Float?) {
+        stop() // 停止可能的播放
+        isLooping = true
+        val assetUri = "asset:///${media.path}"
+        val mediaItem = MediaItem.fromUri(assetUri)
+        reset_player(exoPlayerA, mediaItem, volume)
+        reset_player(exoPlayerB, mediaItem, volume)
+        addMessage(Role.A, exoPlayerA, (media.overlapPositionSecs * 1000).toLong())
+        exoPlayerA.play()
+
+        Log.i(LOG_TAG, "Started playing media: $assetUri with volume: ${volume}")
+    }
+
+    fun setVolume(volume: Float) {
+        exoPlayerA.volume = volume
+        exoPlayerB.volume = volume
+        Log.i(LOG_TAG, "Set media volume: ${volume}")
+    }
 
     fun isLooping(): Boolean = isLooping
 

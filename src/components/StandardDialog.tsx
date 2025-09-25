@@ -16,7 +16,9 @@ interface Props {
   children: JSX.Element;
 }
 
-export default (props: Props & ActionButtonsProps) => {
+export interface StandardDialogProps extends Props, ActionButtonsProps {}
+
+export default (props: StandardDialogProps) => {
   const handleConfirm = async () => {
     if (props.onConfirm) {
       if (await props.onConfirm()) {

@@ -460,10 +460,24 @@ class PomodoroService : Service() {
         runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
         // 重新载入并推送设置
         loadPushSettings()
+        // 处理可能涉及音量的修改
+        maybeWriteVolumeSetting(key, value as Any)
         // 处理可能涉及时长的修改
         maybeWriteDurationSetting(key)
 
         return true
+    }
+
+    fun maybeWriteVolumeSetting(key: SettingsKey, value: Any) {
+        when (key) {
+            SettingsKey.BACKGROUND_VOLUME -> {
+                if (mediaManager.isLooping()) {
+                    // 如果背景音正在播放，则更新其音量
+                    mediaManager.setVolume(value as Float)
+                }
+            }
+            else -> {}
+        }
     }
 
     fun maybeWriteDurationSetting(key: SettingsKey) {
