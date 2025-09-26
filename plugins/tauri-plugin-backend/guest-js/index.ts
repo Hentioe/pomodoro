@@ -50,6 +50,7 @@ export type DefaultName =
 export type MusicName =
   // | "white-noise_music"
   | "rain_music"
+  | "nature-crickets_music"
   | "none";
 
 export async function previewSound(name: TickName | MusicName | DefaultName, volume?: number): Promise<void> {
