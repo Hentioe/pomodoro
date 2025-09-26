@@ -1,11 +1,11 @@
 import { Accessor, onMount, Setter } from "solid-js";
 import { createStore } from "solid-js/store";
-import { onSettingsUpdated, ping, previewSound, SoundDefaultName, writeSettings } from "tauri-plugin-backend-api";
+import { DefaultName, onSettingsUpdated, ping, previewSound, writeSettings } from "tauri-plugin-backend-api";
 import { StandardDialog } from "../components";
 import Slider from "../components/Slider";
 
 type Volumes = {
-  [key in SoundDefaultName]: number;
+  [key in DefaultName]: number;
 };
 
 const DEFAULT_TICK_VOLUME = 0.5;
@@ -28,10 +28,10 @@ export default (props: Props) => {
   const [editing, setEditing] = createStore<Volumes>(structuredClone(DEFAULT_VOLUMS));
   const [submitted, setSubmitted] = createStore<Volumes>(structuredClone(DEFAULT_VOLUMS));
 
-  const handleChange = (type: SoundDefaultName, value: number) => {
+  const handleChange = async (type: DefaultName, value: number) => {
     setEditing(type, value);
     // 预览当前大小的声音
-    previewSound(type, value);
+    await previewSound(type, value);
   };
 
   const handleConfirm = async () => {
