@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount } from "solid-js";
+import { createSignal, JSX, onCleanup, onMount } from "solid-js";
 import "./App.css";
 import { getIdentifier, getVersion } from "@tauri-apps/api/app";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -14,7 +14,8 @@ import {
   PomodoroState,
   reset,
 } from "tauri-plugin-backend-api";
-import FlipClock from "./flip-clock";
+// import FlipClock from "./flip-clock";
+import FlipClock3D from "./flip-clock-3d";
 import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
 import { UpdateChecker } from "./update-checker";
@@ -29,8 +30,9 @@ function App() {
   const [update, setUpdate] = createSignal<Update | undefined>(undefined);
   const [updateChecker, setUpdateChecker] = createSignal<UpdateChecker | undefined>(undefined);
 
-  let flipClock: FlipClock;
-  let dragEl: HTMLDivElement | undefined;
+  // let flipClock: FlipClock;
+  let clock: FlipClock3D;
+  let clockContainerEl: HTMLDivElement | undefined;
 
   const handleTogglePlay = async () => {
     if (isPlaying()) {
@@ -53,7 +55,8 @@ function App() {
     let minutes = Math.floor(totalSeconds() / 60); // 获取分钟数
     let seconds = totalSeconds() % 60; // 获取秒数
 
-    flipClock.updateTime(minutes, seconds);
+    // flipClock.updateTime(minutes, seconds);
+    clock.update({ minutes, seconds });
   };
 
   const dragEvent = (e: MouseEvent) => {
@@ -71,13 +74,14 @@ function App() {
   };
 
   onMount(async () => {
-    flipClock = new FlipClock();
+    // flipClock = new FlipClock();
+    clock = new FlipClock3D(clockContainerEl!);
     updateTimeDisplay();
     // 判断系统是否是 Android
     if (navigator.userAgent.indexOf("Android") > -1) {
       await onPomodoroUpdated(onStateUpdated);
     }
-    dragEl?.addEventListener("mousedown", dragEvent);
+    clockContainerEl?.addEventListener("mousedown", dragEvent);
     setLoaded(true);
 
     // 创建一个更新检查器，并立即检查更新
@@ -108,29 +112,18 @@ function App() {
   });
 
   onCleanup(() => {
-    dragEl?.removeEventListener("mousedown", dragEvent);
+    clockContainerEl?.removeEventListener("mousedown", dragEvent);
   });
 
   return (
     <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
       <Header update={update()} updateChecker={updateChecker()} />
       <div class="flex-1 flex w-full items-center">
-        <div class="clock-container cursor-grab" ref={dragEl}>
-          <div class="digit-container" id="minute-ten">
-            <div class="digit-display">0</div>
-          </div>
-
-          <div class="digit-container" id="minute-one">
-            <div class="digit-display">0</div>
-          </div>
-
-          <div class="digit-container" id="second-ten">
-            <div class="digit-display">0</div>
-          </div>
-
-          <div class="digit-container" id="second-one">
-            <div class="digit-display">0</div>
-          </div>
+        <div id="clock-container" class="animated" ref={clockContainerEl}>
+          <FlipNumbers unit="min-tens" />
+          <FlipNumbers unit="min-ones" />
+          <FlipNumbers unit="sec-tens" />
+          <FlipNumbers unit="sec-ones" />
         </div>
       </div>
 
@@ -146,5 +139,31 @@ function App() {
     </main>
   );
 }
+
+const FlipNumbers = (props: { unit: string }) => {
+  return (
+    <ul class="flip" data-unit={props.unit}>
+      <NumberCard>0</NumberCard>
+      <NumberCard>0</NumberCard>
+    </ul>
+  );
+};
+
+const NumberCard = (props: { children: JSX.Element }) => {
+  return (
+    <li class="flip-item">
+      <a class="number">
+        <div class="up">
+          <div class="shadow" />
+          <div class="inn">{props.children}</div>
+        </div>
+        <div class="down">
+          <div class="shadow" />
+          <div class="inn">{props.children}</div>
+        </div>
+      </a>
+    </li>
+  );
+};
 
 export default App;

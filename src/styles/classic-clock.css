@@ -1,0 +1,55 @@
+/* 时钟容器 */
+.clock-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 1rem;
+  column-gap: 0.5rem;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+/* 时钟数字容器 */
+.digit-container {
+  position: relative;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  background: theme(--color-digit-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40vw; /* 根据容器宽度调整字体大小 */
+  font-family: "Roboto";
+  font-weight: 800;
+  color: theme(--color-digit-fg);
+  box-shadow: theme(--shadow-window);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* 数字显示区域 - 显示完整数字 */
+.digit-display {
+  position: absolute;
+  transform: scaleY(1.5); /* 垂直拉伸 1.5 倍 */
+}
+
+/* 折痕线 */
+.digit-container::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.3) 20%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.3) 80%,
+    transparent
+  );
+  transform: translateY(-1px);
+  z-index: 5;
+  pointer-events: none;
+}

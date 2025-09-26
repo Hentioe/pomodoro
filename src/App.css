@@ -1,5 +1,6 @@
 @import "./tailwind.css";
 @import "./styles/components.css";
+/* @import "./styles/classic-clock.css"; */
 
 #root {
   width: 100vw;
@@ -47,68 +48,228 @@
   }
 }
 
-/* 时钟容器 */
-.clock-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  row-gap: 1rem;
-  column-gap: 0.5rem;
-  width: 100%;
-  aspect-ratio: 3 / 4;
-}
-
 @font-face {
   font-family: "Roboto";
   font-style: normal;
   font-weight: 800;
   font-stretch: 100%;
-  font-display: swap;
+  font-display: block;
   src: url(/src/assets/fonts/Roboto-ExtraBold.ttf) format("truetype");
 }
 
-/* 时钟数字容器 */
-.digit-container {
-  position: relative;
-  border-radius: 12px;
+#clock-container {
+  --number-font-size: 30vh;
+
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 0.5rem;
+  column-gap: 0.5rem;
+  aspect-ratio: 3 / 4;
+}
+
+.flip {
+  list-style: none;
+  position: relative;
+  float: left;
+  flex: 1;
   height: 100%;
-  background: theme(--color-digit-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40vw; /* 根据容器宽度调整字体大小 */
-  font-family: "Roboto";
-  font-weight: 800;
-  color: theme(--color-digit-fg);
+  font-size: var(--number-font-size);
+  line-height: var(--number-font-size);
+  font-weight: bold;
+  border-radius: 2.25rem;
   box-shadow: theme(--shadow-window);
-  overflow: hidden;
-  z-index: 1;
+
+  .flip-item {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    &:first-child {
+      z-index: 2;
+    }
+
+    .number {
+      display: block;
+      height: 100%;
+      perspective: 1500px;
+      font-family: "Roboto";
+      font-weight: 800;
+
+      &:after {
+        content: "";
+        position: absolute;
+        /* 让自己垂直居中 */
+        top: calc(50% - 3px);
+        left: 0px;
+        right: 0px;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.4);
+        transform: translateY(-1px);
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      div {
+        z-index: 1;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        overflow: hidden;
+
+        &.up {
+          transform-origin: 50% 100%;
+          top: 0;
+
+          .inn {
+            top: 0;
+          }
+        }
+
+        &.down {
+          transform-origin: 50% 0%;
+          bottom: 0;
+
+          .inn {
+            bottom: 0;
+          }
+        }
+
+        .shadow {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+        }
+
+        .inn {
+          position: absolute;
+          left: 0;
+          z-index: 1;
+          width: 100%;
+          height: 200%;
+          text-shadow: 0 1px 2px #000;
+          text-align: center;
+          background-color: theme(--color-digit-bg);
+          color: theme(--color-digit-fg);
+          border-radius: 2.25rem;
+        }
+      }
+    }
+  }
 }
 
-/* 数字显示区域 - 显示完整数字 */
-.digit-display {
-  position: absolute;
-  transform: scaleY(1.5); /* 垂直拉伸 1.5 倍 */
+/* 动画 */
+#clock-container.animated {
+  .flip-item.before {
+    z-index: 3;
+
+    .up {
+      z-index: 2;
+      animation: clock-3d-turn2 0.25s linear both;
+
+      .shadow {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 1)
+        );
+        animation: clock-3d-show 0.25s linear both;
+      }
+    }
+
+    .down {
+      .shadow {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 1),
+          rgba(0, 0, 0, 0.1)
+        );
+        animation: clock-3d-show 0.25s linear both;
+      }
+    }
+  }
+
+  .flip-item.active {
+    animation: clock-3d-asd 0.25s 0.25s linear both;
+    z-index: 2;
+
+    .up {
+      .shadow {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 1)
+        );
+        animation: clock-3d-hide 0.25s 0.25s linear both;
+      }
+    }
+
+    .down {
+      z-index: 2;
+      animation: clock-3d-turn 0.25s 0.25s linear both;
+
+      .shadow {
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 1),
+          rgba(0, 0, 0, 0.1)
+        );
+        animation: clock-3d-hide 0.25s 0.25s linear both;
+      }
+    }
+  }
 }
 
-/* 折痕线 */
-.digit-container::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 2px;
-  right: 2px;
-  height: 4px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 0, 0, 0.3) 20%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.3) 80%,
-    transparent
-  );
-  transform: translateY(-1px);
-  z-index: 5;
-  pointer-events: none;
+@keyframes clock-3d-asd {
+  0% {
+    z-index: 2;
+  }
+  5% {
+    z-index: 4;
+  }
+  100% {
+    z-index: 4;
+  }
+}
+
+@keyframes clock-3d-turn {
+  0% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes clock-3d-turn2 {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes clock-3d-show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes clock-3d-hide {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

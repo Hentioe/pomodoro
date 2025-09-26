@@ -52,14 +52,14 @@ export default (props: Props) => {
     <>
       <div
         class={classNames([
-          "absolute bottom-[-3.5rem] z-10 h-[3.5rem] bg-gray-800 text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]",
+          "absolute bottom-[-3.5rem] z-10 h-[3.5rem] bg-digit-bg text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]",
           "transition-all duration-700",
           { "bottom-[2rem]": props.loaded },
         ])}
       >
         <div class="flex items-center gap-[1.25rem]">
           <TomatoIndicator />
-          <div class="w-[1px] h-[1.25rem] bg-gray-500" />
+          <div class="w-[1px] h-[1.25rem] bg-zinc-600" />
         </div>
         <div class="flex items-center gap-[1.25rem] pl-[1.25rem]">
           <ControlButton onClick={props.onTogglePlay} icon={props.isPlaying ? icons.Pause : icons.Play} />
