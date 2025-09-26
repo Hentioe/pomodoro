@@ -38,6 +38,7 @@ class previewSoundArgs {
 @InvokeArg
 class WriteSettingsArgs {
     var tickSound: String? = null
+    var backgroundMusic: String? = null
     var tickVolume: Float? = null
     var alarmVolume: Float? = null
     var promptVolume: Float? = null
@@ -166,6 +167,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     override fun onSettingsUpdated(settings: Settings) {
         val event = JSObject()
         event.put("tickSound", settings.tickSound)
+        event.put("backgroundMusic", settings.backgroundMusic)
         event.put("tickVolume", settings.tickVolume)
         event.put("alarmVolume", settings.alarmVolume)
         event.put("promptVolume", settings.promptVolume)
@@ -298,6 +300,10 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         if (args.tickSound != null) {
             service?.writeSetting(SettingsKey.TICK_SOUND, args.tickSound)
             Log.i(LOG_TAG, "Tick sound set to: ${args.tickSound}")
+        }
+        if (args.backgroundMusic != null) {
+            service?.writeSetting(SettingsKey.BACKGROUND_MUSIC, args.backgroundMusic)
+            Log.i(LOG_TAG, "Background music set to: ${args.backgroundMusic}")
         }
         if (args.tickVolume != null) {
             service?.writeSetting(SettingsKey.TICK_VOLUME, args.tickVolume)

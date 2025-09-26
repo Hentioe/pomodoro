@@ -17,6 +17,7 @@ private val Context.dataStore: DataStore<Preferences> by
 
 enum class SettingsKey(val keyName: String) {
     TICK_SOUND("tick_sound"),
+    BACKGROUND_MUSIC("background_music"),
     TICK_VOLUME("tick_volume"),
     ALARM_VOLUME("alarm_volume"),
     PROMPT_VOLUME("prompt_volume"),

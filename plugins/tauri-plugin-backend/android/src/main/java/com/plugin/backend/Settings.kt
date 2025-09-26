@@ -2,6 +2,7 @@ package com.plugin.backend
 
 class Settings(
     var tickSound: String,
+    var backgroundMusic: String,
     var tickVolume: Float,
     var alarmVolume: Float,
     var promptVolume: Float,
@@ -11,7 +12,7 @@ class Settings(
     var longBreakMinutes: Int,
 ) {
     override fun toString(): String {
-        return "Settings(tickSound='$tickSound', tickVolume=$tickVolume, alarmVolume=$alarmVolume, promptVolume=$promptVolume, backgroundVolume=$backgroundVolume, focusMinutes=$focusMinutes, shortBreakMinutes=$shortBreakMinutes, longBreakMinutes=$longBreakMinutes)"
+        return "Settings(tickSound='$tickSound', backgroundMusic='$backgroundMusic', tickVolume=$tickVolume, alarmVolume=$alarmVolume, promptVolume=$promptVolume, backgroundVolume=$backgroundVolume, focusMinutes=$focusMinutes, shortBreakMinutes=$shortBreakMinutes, longBreakMinutes=$longBreakMinutes)"
     }
 }
 

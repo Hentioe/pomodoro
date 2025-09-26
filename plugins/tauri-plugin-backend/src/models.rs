@@ -29,6 +29,7 @@ pub struct PreviewSoundRequest {
 #[serde(rename_all = "camelCase")]
 pub struct WriteSettingsRequest {
     pub tick_sound: Option<String>,
+    pub background_music: Option<String>,
     pub tick_volume: Option<f32>,
     pub alarm_volume: Option<f32>,
     pub prompt_volume: Option<f32>,

@@ -32,7 +32,7 @@ export async function next(): Promise<void> {
   await invoke("plugin:backend|next");
 }
 
-export type SoundName =
+export type TickName =
   | "default_tick"
   | "tick-tock_tick"
   | "mokugyo_tick"
@@ -41,14 +41,18 @@ export type SoundName =
   | "kun_tick"
   | "none";
 
-export type SoundDefaultName =
+export type DefaultName =
   | "tick_default"
   | "alarm_default"
   | "prompt_default"
   | "background_default";
 
-export async function previewSound(name: SoundName | SoundDefaultName, volume?: number): Promise<void> {
-  await invoke<{ name: SoundName | SoundDefaultName; volume?: number }>("plugin:backend|previewSound", {
+export type MusicName =
+  | "white-noise_music"
+  | "none";
+
+export async function previewSound(name: TickName | MusicName | DefaultName, volume?: number): Promise<void> {
+  await invoke<{ name: TickName | MusicName | DefaultName; volume?: number }>("plugin:backend|previewSound", {
     payload: {
       name,
       volume,
@@ -57,7 +61,8 @@ export async function previewSound(name: SoundName | SoundDefaultName, volume?: 
 }
 
 export interface Settings {
-  tickSound?: SoundName;
+  tickSound?: TickName;
+  backgroundMusic?: MusicName;
   tickVolume?: number;
   alarmVolume?: number;
   promptVolume?: number;

@@ -44,6 +44,7 @@ class PomodoroService : Service() {
     private var settings =
         Settings(
             tickSound = "default_tick",
+            backgroundMusic = "none",
             tickVolume = 0.5f,
             alarmVolume = 0.8f,
             promptVolume = 0.8f,
@@ -155,12 +156,14 @@ class PomodoroService : Service() {
                         if (soundType != null && settings.tickVolume > 0f) {
                             soundManager.play(soundType, settings.tickVolume)
                         }
-                        if (state.phase == PomodoroPhase.FOCUS && mediaManager.isLooping().not()) {
-                            Log.i(LOG_TAG, "Starting background media for focus phase")
-                            // 如果是专注阶段，且背景音没有播放，则开始播放
-                            val localMedia =
-                                LocalMedia.from_setting_key("white-noise_music") // todo: 这里从配置中读取
+                        if (state.phase == PomodoroPhase.FOCUS && // 专注阶段
+                            settings.backgroundVolume > 0f && // 背景未静音
+                            mediaManager.isLooping().not() // 背景未播放
+                        ) {
+                            // 符合背景播放条件，检索设置的音乐并尝试播放
+                            val localMedia = LocalMedia.from_setting_key(settings.backgroundMusic)
                             if (localMedia != null) {
+                                Log.i(LOG_TAG, "Starting background media for focus phase")
                                 mediaManager.play(
                                     localMedia, settings.backgroundVolume) // 音量也从配置中读取
                             }
@@ -290,6 +293,7 @@ class PomodoroService : Service() {
 
     fun loadPushSettings() {
         val tickSound = readSetting<String>(SettingsKey.TICK_SOUND)
+        val backgroundMusic = readSetting<String>(SettingsKey.BACKGROUND_MUSIC)
         val tickVolume = readSetting<Float>(SettingsKey.TICK_VOLUME)
         val alarmVolume = readSetting<Float>(SettingsKey.ALARM_VOLUME)
         val promptVolume = readSetting<Float>(SettingsKey.PROMPT_VOLUME)
@@ -299,6 +303,9 @@ class PomodoroService : Service() {
         val longBreakMinutes = readSetting<Int>(SettingsKey.LONG_BREAK_MINUTES)
         if (tickSound != null) {
             settings.tickSound = tickSound
+        }
+        if (backgroundMusic != null) {
+            settings.backgroundMusic = backgroundMusic
         }
         if (tickVolume != null) {
             settings.tickVolume = tickVolume
@@ -460,6 +467,8 @@ class PomodoroService : Service() {
         runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
         // 重新载入并推送设置
         loadPushSettings()
+        // 处理可能涉及音乐的修改
+        maybeWriteMusicSetting(key, value as Any)
         // 处理可能涉及音量的修改
         maybeWriteVolumeSetting(key, value as Any)
         // 处理可能涉及时长的修改
@@ -468,11 +477,31 @@ class PomodoroService : Service() {
         return true
     }
 
+    fun maybeWriteMusicSetting(key: SettingsKey, value: Any) {
+        when (key) {
+            SettingsKey.BACKGROUND_MUSIC -> {
+                val localMedia = LocalMedia.from_setting_key(value as String)
+                if (localMedia == null) {
+                    Log.i(LOG_TAG, "Background music set to none or invalid, stopping playback")
+                    // 如果设置为 none，则停止播放
+                    mediaManager.stop()
+                } else if (settings.backgroundVolume >= 0f &&
+                    state.phase == PomodoroPhase.FOCUS &&
+                    state.isPlaying) {
+                    Log.i(LOG_TAG, "Applying new background music setting immediately")
+                    // 符合即时生效条件，立即切换音乐
+                    mediaManager.play(localMedia, settings.backgroundVolume)
+                }
+            }
+            else -> {}
+        }
+    }
+
     fun maybeWriteVolumeSetting(key: SettingsKey, value: Any) {
         when (key) {
             SettingsKey.BACKGROUND_VOLUME -> {
                 if (mediaManager.isLooping()) {
-                    // 如果背景音正在播放，则更新其音量
+                    // 符合即时生效条件，立即调整音量
                     mediaManager.setVolume(value as Float)
                 }
             }
@@ -492,7 +521,7 @@ class PomodoroService : Service() {
                         SettingsKey.LONG_BREAK_MINUTES -> PomodoroPhase.LONG_BREAK
                         else -> null
                     }) {
-                    // 如果修改的时长字段和当前阶段匹配，则立即应用于当前阶段
+                    // 符合即时生效条件，立即更新时长
                     state.remainingSeconds = currentTotalSeconds() // 重置定时器时间
                     updateNotification() // 更新通知
                 }
