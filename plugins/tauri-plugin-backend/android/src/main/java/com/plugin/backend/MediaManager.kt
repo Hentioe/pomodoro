@@ -11,12 +11,12 @@ import androidx.media3.exoplayer.PlayerMessage
 
 // 路径，重叠位置（秒）
 enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
-    WHITE_NOISE("musics/white-noise.mp3", 26.2f); // 白噪音
+    RAIN("musics/rain.mp3", 36.6f); // 雨声，36.6 秒位置重叠（原淡出位置在 37 秒）
 
     companion object {
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
-                "white-noise_music" -> WHITE_NOISE
+                "rain_music" -> RAIN
                 else -> null
             }
         }

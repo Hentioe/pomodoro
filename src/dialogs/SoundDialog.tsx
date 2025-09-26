@@ -23,9 +23,9 @@ const TickOptions: RodioOption[] = [
 
 const BackgroundOptions: RodioOption[] = [
   { label: "无", value: "none" },
-  { label: "白噪音", value: "white-noise_music" },
-  // { label: "下雨", value: "rain" },
-  // { label: "自然（虫鸣）", value: "nature-crickets" },
+  // { label: "白噪音", value: "white-noise_music" },
+  { label: "下雨", value: "rain_music" },
+  // { label: "自然（虫鸣）", value: "nature-crickets_music" },
 ];
 
 export default (props: Props) => {
