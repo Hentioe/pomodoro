@@ -6,20 +6,28 @@ import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.PlayerMessage
 
-// 路径，重叠位置（秒）
-enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
-    RAIN("musics/rain.mp3", 36.6f), // 雨声，36.6 秒位置重叠（原淡出位置在 37 秒）
-    WIND_STRONG("musics/wind-strong.mp3", 27.0f), // 强风，27 秒位置重叠
-    BEACH("musics/beach.mp3", 67.0f), // 海滩，67 秒位置重叠
-    NATURE_STREAM("musics/nature-stream.mp3", 29.0f), // 自然（溪流），29 秒位置重叠
-    NATURE_CRICKETS("musics/nature-crickets.mp3", 40.0f); // 自然（虫鸣），40 秒位置重叠
+enum class LocalMedia(
+    val path: String, // 文件路径
+    val overlapPositionSecs: Float, // 重叠位置（秒）
+    val delayMs: Int = 200, // 经初步测试，目前的双实例交叉实现大概有接近 0.2 秒的延迟
+    val loopable: Boolean = false // 是否是可循环音频
+) {
+
+    TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，直接循环
+    RAIN("musics/rain.ogg", 66f, 400), // 雨声，66 秒位置重叠（由于音频预处理不够，需增加延迟至 0.4 秒）
+    WIND_STRONG("musics/wind-strong.mp3", 27f), // 强风，27 秒位置重叠
+    BEACH("musics/beach.mp3", 67f), // 海滩，67 秒位置重叠
+    NATURE_STREAM("musics/nature-stream.mp3", 29f), // 自然（溪流），29 秒位置重叠
+    NATURE_CRICKETS("musics/nature-crickets.mp3", 40f); // 自然（虫鸣），40 秒位置重叠
 
     companion object {
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
+                "timer_music" -> TIMER
                 "rain_music" -> RAIN
                 "wind-strong_music" -> WIND_STRONG
                 "beach_music" -> BEACH
@@ -43,9 +51,23 @@ class MediaManager(private val context: Context) {
 
     data class Payload(val role: Role, val overlapPositionMs: Long)
 
-    private val exoPlayerA: ExoPlayer by lazy { ExoPlayer.Builder(context).build() }
+    val listener =
+        object : Player.Listener {
+            override fun onEvents(player: Player, events: Player.Events) {
+                if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED) &&
+                    player.playbackState == Player.STATE_READY) {
+                    Log.d(LOG_TAG, "Player is ready and started playing")
+                }
+            }
+        }
 
-    private val exoPlayerB: ExoPlayer by lazy { ExoPlayer.Builder(context).build() }
+    private val exoPlayerA: ExoPlayer by lazy {
+        ExoPlayer.Builder(context).build().apply { addListener(listener) }
+    }
+
+    private val exoPlayerB: ExoPlayer by lazy {
+        ExoPlayer.Builder(context).build().apply { addListener(listener) }
+    }
 
     private var isLooping: Boolean = false
 
@@ -96,12 +118,26 @@ class MediaManager(private val context: Context) {
         isLooping = true
         val assetUri = "asset:///${media.path}"
         val mediaItem = MediaItem.fromUri(assetUri)
-        reset_player(exoPlayerA, mediaItem, volume)
-        reset_player(exoPlayerB, mediaItem, volume)
-        addMessage(Role.A, exoPlayerA, (media.overlapPositionSecs * 1000).toLong())
-        exoPlayerA.play()
 
-        Log.i(LOG_TAG, "Started playing media: $assetUri with volume: ${volume}")
+        if (media.loopable) {
+            // 可循环音频直接使用循环模式
+            reset_player(exoPlayerA, mediaItem, volume)
+            exoPlayerA.setRepeatMode(Player.REPEAT_MODE_ONE)
+            exoPlayerA.play()
+        } else {
+            // 其它音频循环通过双实例交叉淡化
+            reset_player(exoPlayerA, mediaItem, volume)
+            reset_player(exoPlayerB, mediaItem, volume)
+            // 关闭循环模式
+            exoPlayerA.setRepeatMode(Player.REPEAT_MODE_OFF)
+            exoPlayerB.setRepeatMode(Player.REPEAT_MODE_OFF)
+            // 实际交叉位置由原交叉位置和延迟决定
+            val position = (media.overlapPositionSecs * 1000 - media.delayMs).toLong()
+            addMessage(Role.A, exoPlayerA, position)
+            exoPlayerA.play()
+        }
+
+        Log.i(LOG_TAG, "Started playing media: ${media.path} with volume: ${volume}")
     }
 
     fun setVolume(volume: Float) {
