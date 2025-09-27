@@ -69,6 +69,8 @@ android {
     }
   }
   compileOptions {
+    isCoreLibraryDesugaringEnabled = true // For Java 8+ API support on older Android versions
+
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
@@ -90,6 +92,7 @@ dependencies {
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.4")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5") // For Java 8+ API support on older Android versions
 }
 
 apply(from = "tauri.build.gradle.kts")
