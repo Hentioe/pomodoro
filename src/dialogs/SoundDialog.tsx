@@ -26,6 +26,7 @@ const BackgroundOptions: RodioOption[] = [
   // { label: "白噪音", value: "white-noise_music" },
   { label: "下雨", value: "rain_music" },
   { label: "强风", value: "wind-strong_music" },
+  { label: "海滩", value: "beach_music" },
   { label: "自然（溪流）", value: "nature-stream_music" },
   { label: "自然（虫鸣）", value: "nature-crickets_music" },
 ];

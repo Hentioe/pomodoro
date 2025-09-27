@@ -51,6 +51,7 @@ export type MusicName =
   // | "white-noise_music"
   | "rain_music"
   | "wind-strong_music"
+  | "beach_music"
   | "nature-stream_music"
   | "nature-crickets_music"
   | "none";
