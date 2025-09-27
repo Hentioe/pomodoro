@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.PlayerMessage
 // 路径，重叠位置（秒）
 enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
     RAIN("musics/rain.mp3", 36.6f), // 雨声，36.6 秒位置重叠（原淡出位置在 37 秒）
+    WIND_STRONG("musics/wind-strong.mp3", 27.0f), // 强风，27 秒位置重叠
     NATURE_STREAM("musics/nature-stream.mp3", 29.0f), // 自然（溪流），29 秒位置重叠
     NATURE_CRICKETS("musics/nature-crickets.mp3", 40.0f); // 自然（虫鸣），40 秒位置重叠
 
@@ -19,6 +20,7 @@ enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
                 "rain_music" -> RAIN
+                "wind-strong_music" -> WIND_STRONG
                 "nature-stream_music" -> NATURE_STREAM
                 "nature-crickets_music" -> NATURE_CRICKETS
                 else -> null
