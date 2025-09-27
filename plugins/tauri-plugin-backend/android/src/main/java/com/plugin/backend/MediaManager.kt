@@ -6,12 +6,18 @@ import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.PlayerMessage
 
-// 路径，重叠位置（秒）
-enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
-    RAIN("musics/rain.mp3", 36.6f), // 雨声，36.6 秒位置重叠（原淡出位置在 37 秒）
+// 参考：经初步测试，目前的双实例交叉实现大概有接近 0.2 秒的延迟。
+enum class LocalMedia(
+    val path: String, // 文件路径
+    val overlapPositionSecs: Float, // 重叠位置（秒）
+    val loopable: Boolean = false // 是否是可循环音频
+) {
+    TIMER("musics/timer.ogg", 0.0f, true), // 计时器，直接循环
+    RAIN("musics/rain.ogg", 40.0f), // 雨声，40 秒位置重叠
     WIND_STRONG("musics/wind-strong.mp3", 27.0f), // 强风，27 秒位置重叠
     BEACH("musics/beach.mp3", 67.0f), // 海滩，67 秒位置重叠
     NATURE_STREAM("musics/nature-stream.mp3", 29.0f), // 自然（溪流），29 秒位置重叠
@@ -20,6 +26,7 @@ enum class LocalMedia(val path: String, val overlapPositionSecs: Float) {
     companion object {
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
+                "timer_music" -> TIMER
                 "rain_music" -> RAIN
                 "wind-strong_music" -> WIND_STRONG
                 "beach_music" -> BEACH
@@ -96,12 +103,24 @@ class MediaManager(private val context: Context) {
         isLooping = true
         val assetUri = "asset:///${media.path}"
         val mediaItem = MediaItem.fromUri(assetUri)
-        reset_player(exoPlayerA, mediaItem, volume)
-        reset_player(exoPlayerB, mediaItem, volume)
-        addMessage(Role.A, exoPlayerA, (media.overlapPositionSecs * 1000).toLong())
-        exoPlayerA.play()
 
-        Log.i(LOG_TAG, "Started playing media: $assetUri with volume: ${volume}")
+        if (media.loopable) {
+            // 可循环音频直接使用循环模式
+            reset_player(exoPlayerA, mediaItem, volume)
+            exoPlayerA.setRepeatMode(Player.REPEAT_MODE_ONE)
+            exoPlayerA.play()
+        } else {
+            // 其它音频循环通过双实例交叉淡化
+            reset_player(exoPlayerA, mediaItem, volume)
+            reset_player(exoPlayerB, mediaItem, volume)
+            // 关闭循环模式
+            exoPlayerA.setRepeatMode(Player.REPEAT_MODE_OFF)
+            exoPlayerB.setRepeatMode(Player.REPEAT_MODE_OFF)
+            addMessage(Role.A, exoPlayerA, (media.overlapPositionSecs * 1000).toLong())
+            exoPlayerA.play()
+        }
+
+        Log.i(LOG_TAG, "Started playing media: ${media.path} with volume: ${volume}")
     }
 
     fun setVolume(volume: Float) {
