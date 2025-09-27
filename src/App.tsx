@@ -116,7 +116,7 @@ function App() {
   });
 
   return (
-    <main class="h-full mx-[1rem] flex flex-col justify-between items-center px-[1rem] relative">
+    <main class="h-full px-[1rem]  flex flex-col justify-between items-center relative">
       <Header update={update()} updateChecker={updateChecker()} />
       <div class="flex-1 flex w-full items-center">
         <div id="clock-container" class="animated" ref={clockContainerEl}>

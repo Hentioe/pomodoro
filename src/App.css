@@ -58,8 +58,6 @@
 }
 
 #clock-container {
-  --number-font-size: 30vh;
-
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -75,8 +73,6 @@
   float: left;
   flex: 1;
   height: 100%;
-  font-size: var(--number-font-size);
-  line-height: var(--number-font-size);
   font-weight: bold;
   border-radius: 2.25rem;
   box-shadow: theme(--shadow-window);
@@ -99,6 +95,7 @@
       perspective: 1500px;
       font-family: "Roboto";
       font-weight: 800;
+      container-type: inline-size; /* 给字体大小 cqw/cqh 提供参考 */
 
       &:after {
         content: "";
@@ -158,6 +155,12 @@
           background-color: theme(--color-digit-bg);
           color: theme(--color-digit-fg);
           border-radius: 2.25rem;
+          /* 居中文字 */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          /* 字体大小是容器宽度的 150% */
+          font-size: 150cqw;
         }
       }
     }
