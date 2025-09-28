@@ -13,12 +13,11 @@ import androidx.media3.exoplayer.PlayerMessage
 enum class LocalMedia(
     val path: String, // 文件路径
     val overlapPositionSecs: Float, // 重叠位置（秒）
-    val delayMs: Int = 200, // 经初步测试，目前的双实例交叉实现大概有接近 0.2 秒的延迟
+    val delayMs: Int = -200, // 经初步测试，目前的双实例交叉实现大概有接近 0.2 秒的延迟。故提前 200 毫秒开始交叉
     val loopable: Boolean = false // 是否是可循环音频
 ) {
-
     TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，直接循环
-    RAIN("musics/rain.ogg", 66f, 400), // 雨声，66 秒位置重叠（由于音频预处理不够，需增加延迟至 0.4 秒）
+    RAIN("musics/rain.ogg", 66f, -600), // 雨声，66 秒位置重叠（由于音频预处理不够，提前 0.6 秒）
     WIND_STRONG("musics/wind-strong.mp3", 27f), // 强风，27 秒位置重叠
     BONFIRE("musics/bonfire.ogg", 49f), // 篝火，49 秒位置重叠
     BEACH("musics/beach.mp3", 67f), // 海滩，67 秒位置重叠
@@ -56,9 +55,12 @@ class MediaManager(private val context: Context) {
     val listener =
         object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
-                if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED) &&
-                    player.playbackState == Player.STATE_READY) {
-                    Log.d(LOG_TAG, "Player is ready and started playing")
+                if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED)) {
+                    if (player.playbackState == Player.STATE_READY) {
+                        Log.d(LOG_TAG, "Player is ready and started playing")
+                    } else if (player.playbackState == Player.STATE_ENDED) {
+                        Log.d(LOG_TAG, "Player playback ended")
+                    }
                 }
             }
         }
@@ -106,11 +108,13 @@ class MediaManager(private val context: Context) {
                     exoPlayerB.seekTo(0)
                     addMessage(Role.B, exoPlayerB, payload.overlapPositionMs)
                     exoPlayerB.play()
+                    Log.d(LOG_TAG, "exoPlayerB volume: ${exoPlayerB.volume}")
                 } else if (payload is Payload && payload.role == Role.B) {
                     Log.i(LOG_TAG, "Switching to Player A")
                     exoPlayerA.seekTo(0)
                     addMessage(Role.A, exoPlayerA, payload.overlapPositionMs)
                     exoPlayerA.play()
+                    Log.d(LOG_TAG, "exoPlayerA volume: ${exoPlayerA.volume}")
                 }
             }
         }
@@ -134,7 +138,7 @@ class MediaManager(private val context: Context) {
             exoPlayerA.setRepeatMode(Player.REPEAT_MODE_OFF)
             exoPlayerB.setRepeatMode(Player.REPEAT_MODE_OFF)
             // 实际交叉位置由原交叉位置和延迟决定
-            val position = (media.overlapPositionSecs * 1000 - media.delayMs).toLong()
+            val position = (media.overlapPositionSecs * 1000 + media.delayMs).toLong()
             addMessage(Role.A, exoPlayerA, position)
             exoPlayerA.play()
         }
