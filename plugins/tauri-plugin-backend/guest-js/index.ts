@@ -48,11 +48,11 @@ export type DefaultName =
   | "background_default";
 
 export type MusicName =
-  // | "white-noise_music"
   | "rain_music"
   | "timer_music"
   | "wind-strong_music"
   | "beach_music"
+  | "bonfire_music"
   | "nature-stream_music"
   | "nature-crickets_music"
   | "none";

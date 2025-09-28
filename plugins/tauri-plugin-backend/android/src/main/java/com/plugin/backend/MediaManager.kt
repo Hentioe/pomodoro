@@ -20,6 +20,7 @@ enum class LocalMedia(
     TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，直接循环
     RAIN("musics/rain.ogg", 66f, 400), // 雨声，66 秒位置重叠（由于音频预处理不够，需增加延迟至 0.4 秒）
     WIND_STRONG("musics/wind-strong.mp3", 27f), // 强风，27 秒位置重叠
+    BONFIRE("musics/bonfire.ogg", 49f), // 篝火，49 秒位置重叠
     BEACH("musics/beach.mp3", 67f), // 海滩，67 秒位置重叠
     NATURE_STREAM("musics/nature-stream.mp3", 29f), // 自然（溪流），29 秒位置重叠
     NATURE_CRICKETS("musics/nature-crickets.mp3", 40f); // 自然（虫鸣），40 秒位置重叠
@@ -31,6 +32,7 @@ enum class LocalMedia(
                 "rain_music" -> RAIN
                 "wind-strong_music" -> WIND_STRONG
                 "beach_music" -> BEACH
+                "bonfire_music" -> BONFIRE
                 "nature-stream_music" -> NATURE_STREAM
                 "nature-crickets_music" -> NATURE_CRICKETS
                 else -> null
