@@ -1,4 +1,5 @@
 import HentioeAvatar from "/src/assets/hentioe.webp";
+import TauriLogo from "/src/assets/tauri.svg";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getVersion } from "@tauri-apps/api/app";
 import { Accessor, createResource, createSignal, JSX, Setter } from "solid-js";
@@ -45,7 +46,7 @@ export default (props: Props) => {
   const Header = () => {
     return (
       <div class="flex items-center gap-[1rem]">
-        <div class="w-[3rem] h-[3rem] bg-green-500 rounded-2xl shadow flex justify-center items-center">
+        <div class="w-[3rem] h-[3rem] bg-green-400 rounded-2xl shadow flex justify-center items-center">
           <Icon
             icon={icons.Tomato}
             style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
@@ -75,16 +76,15 @@ export default (props: Props) => {
       <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
         <div class="flex flex-col gap-[1rem]">
           <p class="leading-[2rem] tracking-wide text-gray-800">
-            本应用是由
-            <a
-              href="https://github.com/Hentioe"
-              target="_blank"
-              class="bg-zinc-200/70 active:bg-blue-200/90 transition-colors border border-zinc-200 text-blue-500 px-2 mx-1 rounded-xl inline-flex items-center gap-[0.25rem] align-middle"
-            >
-              <img src={HentioeAvatar} class="h-[1rem] w-[1rem] rounded-md" />
-              <span>Hentioe</span>
-            </a>
-            开发的免费产品，基于 Tauri 框架，正在为大量平台提供支持。
+            本应用是由<IconLink
+              text="Hentioe"
+              url="https://github.com/Hentioe"
+              imgSrc={HentioeAvatar}
+            />开发的免费产品，基于<IconLink
+              text="Tauri"
+              url="https://tauri.app"
+              imgSrc={TauriLogo}
+            />框架构建，正在为大量平台提供支持。
           </p>
           <p class="text-center text-sm flex justify-between items-center bg-blue-100/70 rounded-2xl px-4 py-4">
             <span class="text-[1.1rem] text-gray-600">软件版本</span>
@@ -132,5 +132,18 @@ const NavLink = (props: { url: string; icon: string | IconifyIcon; children: JSX
         <p class="text-gray-600">{props.children}</p>
       </a>
     </li>
+  );
+};
+
+const IconLink = (props: { text: string; url: string; imgSrc: string }) => {
+  return (
+    <a
+      href={props.url}
+      target="_blank"
+      class="bg-zinc-200/70 active:bg-blue-200/90 h-[1.5rem] transition-colors border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle"
+    >
+      <img src={props.imgSrc} class="h-[1rem] w-[1rem] rounded-md" />
+      <span>{props.text}</span>
+    </a>
   );
 };
