@@ -26,6 +26,7 @@ const BackgroundOptions: RodioOption[] = [
   // { label: "白噪音", value: "white-noise_music" },
   { label: "计时器", value: "timer_music" },
   { label: "下雨", value: "rain_music" },
+  { label: "雷雨", value: "rain-thunder_music" },
   { label: "强风", value: "wind-strong_music" },
   { label: "海滩", value: "beach_music" },
   { label: "篝火", value: "bonfire_music" },

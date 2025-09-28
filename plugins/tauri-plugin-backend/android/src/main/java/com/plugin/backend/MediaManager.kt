@@ -18,17 +18,19 @@ enum class LocalMedia(
 ) {
     TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，直接循环
     RAIN("musics/rain.ogg", 66f, -600), // 雨声，66 秒位置重叠（由于音频预处理不够，提前 0.6 秒）
-    WIND_STRONG("musics/wind-strong.mp3", 27f), // 强风，27 秒位置重叠
+    RAIN_THUNDER("musics/rain-thunder.ogg", 66f, -400), // 带雷雨声的雨声，66 秒位置重叠（由于音频预处理不够，提前 0.4 秒）
+    WIND_STRONG("musics/wind-strong.ogg", 27f), // 强风，27 秒位置重叠
     BONFIRE("musics/bonfire.ogg", 49f), // 篝火，49 秒位置重叠
-    BEACH("musics/beach.mp3", 67f), // 海滩，67 秒位置重叠
-    NATURE_STREAM("musics/nature-stream.mp3", 29f), // 自然（溪流），29 秒位置重叠
-    NATURE_CRICKETS("musics/nature-crickets.mp3", 40f); // 自然（虫鸣），40 秒位置重叠
+    BEACH("musics/beach.ogg", 67f), // 海滩，67 秒位置重叠
+    NATURE_STREAM("musics/nature-stream.ogg", 29f), // 自然（溪流），29 秒位置重叠
+    NATURE_CRICKETS("musics/nature-crickets.ogg", 40f); // 自然（虫鸣），40 秒位置重叠
 
     companion object {
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
                 "timer_music" -> TIMER
                 "rain_music" -> RAIN
+                "rain-thunder_music" -> RAIN_THUNDER
                 "wind-strong_music" -> WIND_STRONG
                 "beach_music" -> BEACH
                 "bonfire_music" -> BONFIRE
