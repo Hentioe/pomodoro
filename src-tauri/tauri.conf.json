@@ -38,6 +38,6 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["sounds/*", "sounds/alerts/*"]
+    "resources": []
   }
 }

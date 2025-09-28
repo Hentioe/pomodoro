@@ -6,10 +6,10 @@ import android.media.SoundPool
 
 // 声音枚举
 enum class AlarmSound(val path: String, val durationSeconds: Float) {
-    ALARM("sounds/alarm.wav", 3.5f),
-    LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.wav", 2.0f),
-    SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.wav", 2.0f),
-    FOCUS_ALERT("sounds/alerts/fixed_focus.wav", 2.0f)
+    ALARM("sounds/alarm.ogg", 3.5f),
+    LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.ogg", 2.0f),
+    SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.ogg", 2.0f),
+    FOCUS_ALERT("sounds/alerts/fixed_focus.ogg", 2.0f)
 }
 
 // SoundPool 管理器
