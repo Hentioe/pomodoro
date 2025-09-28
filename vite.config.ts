@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import postcssNesting from "postcss-nesting";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 
@@ -8,7 +9,11 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vite.dev/config/
 export default defineConfig(async () => ({
   plugins: [solid(), tailwindcss()],
-
+  css: {
+    postcss: {
+      plugins: [postcssNesting], // 转换嵌套 CSS，提高低版本兼容性
+    },
+  },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent Vite from obscuring rust errors
