@@ -49,6 +49,12 @@ class WriteSettingsArgs {
     var longBreakMinutes: Int? = null
 }
 
+@InvokeArg
+class DownloadPackageArgs {
+    var url: String = ""
+    var version: String = ""
+}
+
 @TauriPlugin
 class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback, SettingsCallback {
     private var service: PomodoroService? = null
@@ -76,6 +82,8 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
             // 显示版本过低对话框
             showLowVersionDialog()
         }
+        // 检查最近下载的通知
+        checkDownloadNotification(activity.applicationContext)
         // 预启动并绑定服务
         startAndBindService(PomodoroService.ACTION_PRE_START)
     }
@@ -369,6 +377,21 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
             service?.writeSetting(SettingsKey.LONG_BREAK_MINUTES, args.longBreakMinutes)
             Log.i(LOG_TAG, "Long break minutes set to: ${args.longBreakMinutes}")
         }
+
+        invoke.resolve()
+    }
+
+    @Command
+    fun downloadPackage(invoke: Invoke) {
+        val args = invoke.parseArgs(DownloadPackageArgs::class.java)
+        Log.i(LOG_TAG, "Downloading package from ${args.url} version ${args.version}")
+
+        val downloadId = startDownload(activity.applicationContext, args.url, args.version)
+        val store = Store(this.activity.applicationContext)
+        // 存储下载 ID 以供广播接收器验证
+        store.writeSync(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>(), downloadId)
+        // 存储下载版本以供下次启动时检查
+        store.writeSync(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey(), args.version)
 
         invoke.resolve()
     }

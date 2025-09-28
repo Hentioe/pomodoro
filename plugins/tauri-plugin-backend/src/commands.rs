@@ -56,6 +56,15 @@ pub(crate) async fn writeSettings<R: Runtime>(
 }
 
 #[command]
+#[allow(non_snake_case)]
+pub(crate) async fn downloadPackage<R: Runtime>(
+    app: AppHandle<R>,
+    payload: DownloadPackageRequest,
+) -> Result<()> {
+    app.backend().download_package(payload)
+}
+
+#[command]
 pub(crate) async fn exit<R: Runtime>(app: AppHandle<R>) -> Result<()> {
     app.backend().exit()
 }

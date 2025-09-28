@@ -3,9 +3,9 @@ import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getVersion } from "@tauri-apps/api/app";
 import { createResource, createSignal, JSX } from "solid-js";
 import { toast } from "tauri-plugin-backend-api";
+import NewVersionDialog from "../dialogs/NewVersionDialog";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
-import NewVersionDialog from "./NewVersionDialog";
 
 export default (props: { onClose: () => void; updateChecker?: UpdateChecker }) => {
   const [version] = createResource(getVersion);

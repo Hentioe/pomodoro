@@ -24,21 +24,41 @@ enum class SettingsKey(val keyName: String) {
     BACKGROUND_VOLUME("background_volume"),
     FOCUS_MINUTES("focus_minutes"),
     SHORT_BREAK_MINUTES("short_break_minutes"),
-    LONG_BREAK_MINUTES("long_break_minutes");
+    LONG_BREAK_MINUTES("long_break_minutes"),
+    // 用于存储最新下载 ID 的键
+    LATEST_DOWNLOAD_ID("latest_download_id"),
+    // 用户存储最新下载版本的键
+    LATEST_DOWNLOAD_VERSION("latest_download_version");
 
     fun createKey(): Preferences.Key<String> = stringPreferencesKey(keyName)
+
+    fun <T> createKeyT(): Preferences.Key<T> = stringPreferencesKey(keyName) as Preferences.Key<T>
 }
 
 class Store(context: Context) {
     private val dataStore = context.dataStore
 
-    // 通用写入方法
+    // 异步的写入方法
     suspend fun <T> write(key: Preferences.Key<T>, value: T) {
         dataStore.edit { preferences -> preferences[key] = value }
     }
 
-    // 通用读取方法
+    // 异步的读取方法
     suspend fun <T> read(key: Preferences.Key<T>): T? {
         return dataStore.data.map { preferences -> preferences[key] }.firstOrNull()
+    }
+
+    // 同步的写入方法
+    fun <T> writeSync(key: Preferences.Key<T>, value: T) {
+        kotlinx.coroutines.runBlocking { write(key, value) }
+    }
+
+    // 同步的读取方法
+    fun <T> readSync(key: Preferences.Key<T>): T? {
+        return kotlinx.coroutines.runBlocking { read(key) }
+    }
+
+    suspend fun remove(key: Preferences.Key<*>) {
+        dataStore.edit { preferences -> preferences.remove(key) }
     }
 }

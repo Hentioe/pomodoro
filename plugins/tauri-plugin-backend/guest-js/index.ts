@@ -84,6 +84,15 @@ export async function writeSettings(settings: Settings): Promise<void> {
   });
 }
 
+export async function downloadPackage(url: string, version: string): Promise<void> {
+  await invoke<{ url: string; version: string }>("plugin:backend|downloadPackage", {
+    payload: {
+      url,
+      version,
+    },
+  });
+}
+
 export async function exit(): Promise<void> {
   await invoke("plugin:backend|exit");
 }

@@ -38,3 +38,10 @@ pub struct WriteSettingsRequest {
     pub short_break_minutes: Option<u32>,
     pub long_break_minutes: Option<u32>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DownloadPackageRequest {
+    pub url: String,
+    pub version: String,
+}

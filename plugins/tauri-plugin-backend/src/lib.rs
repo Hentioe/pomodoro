@@ -44,6 +44,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             commands::next,
             commands::previewSound,
             commands::writeSettings,
+            commands::downloadPackage,
             commands::exit
         ])
         .setup(|app, api| {

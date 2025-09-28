@@ -65,6 +65,12 @@ impl<R: Runtime> AndroidBackend<R> {
             .map_err(Into::into)
     }
 
+    pub fn download_package(&self, payload: DownloadPackageRequest) -> crate::Result<()> {
+        self.0
+            .run_mobile_plugin("downloadPackage", payload)
+            .map_err(Into::into)
+    }
+
     pub fn exit(&self) -> crate::Result<()> {
         self.0.run_mobile_plugin("exit", ()).map_err(Into::into)
     }

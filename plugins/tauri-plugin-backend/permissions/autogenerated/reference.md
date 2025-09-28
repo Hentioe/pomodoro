@@ -10,9 +10,10 @@ Default permissions for the plugin
 - `allow-pause`
 - `allow-reset`
 - `allow-next`
-- `allow-exit`
 - `allow-previewSound`
 - `allow-writeSettings`
+- `allow-downloadPackage`
+- `allow-exit`
 - `allow-registerListener`
 
 ## Permission Table
@@ -23,6 +24,32 @@ Default permissions for the plugin
 <th>Description</th>
 </tr>
 
+
+<tr>
+<td>
+
+`backend:allow-downloadPackage`
+
+</td>
+<td>
+
+Enables the downloadPackage command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`backend:deny-downloadPackage`
+
+</td>
+<td>
+
+Denies the downloadPackage command without any pre-configured scope.
+
+</td>
+</tr>
 
 <tr>
 <td>

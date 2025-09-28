@@ -48,6 +48,10 @@ impl<R: Runtime> AndroidBackend<R> {
         Ok(())
     }
 
+    pub fn download_package(&self, _payload: DownloadPackageRequest) -> crate::Result<()> {
+        Ok(())
+    }
+
     pub fn exit(&self) -> crate::Result<()> {
         Ok(())
     }

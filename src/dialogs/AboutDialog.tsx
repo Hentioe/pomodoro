@@ -6,8 +6,8 @@ import { Accessor, createResource, createSignal, JSX, Setter } from "solid-js";
 import { toast } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
 import icons from "../icons";
-import NewVersionDialog from "../layouts/NewVersionDialog";
 import { UpdateChecker } from "../update-checker";
+import NewVersionDialog from "./NewVersionDialog";
 
 interface Props {
   open: Accessor<boolean>;

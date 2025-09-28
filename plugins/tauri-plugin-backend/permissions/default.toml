@@ -7,8 +7,9 @@ permissions = [
   "allow-pause",
   "allow-reset",
   "allow-next",
-  "allow-exit",
   "allow-previewSound",
   "allow-writeSettings",
+  "allow-downloadPackage",
+  "allow-exit",
   "allow-registerListener",
 ]

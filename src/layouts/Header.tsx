@@ -1,12 +1,12 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { createSignal, Show } from "solid-js";
 import AboutDialog from "../dialogs/AboutDialog";
+import NewVersionDialog from "../dialogs/NewVersionDialog";
 import SoundDialog from "../dialogs/SoundDialog";
 import TimerDialog from "../dialogs/TimerDialog";
 import VolumeDialog from "../dialogs/VolumeDialog";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
-import NewVersionDialog from "./NewVersionDialog";
 
 export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
   const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
