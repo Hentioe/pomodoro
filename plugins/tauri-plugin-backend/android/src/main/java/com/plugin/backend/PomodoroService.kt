@@ -39,6 +39,7 @@ class PomodoroService : Service() {
     }
 
     val soundManager = SoundManager(this) // 声音管理器（封装短音频）
+    val alarmManager = AlarmManager(this) // 闹钟管理器（封装提示音）
     val mediaManager = MediaManager(this) // 媒体管理器（封装长音频）
     private val store by lazy { Store(this) } // 数据存储
     private var settings =
@@ -79,8 +80,10 @@ class PomodoroService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        // 初始化音频
+        // 初始化短音频
         soundManager.initialize()
+        // 初始化闹钟音频
+        alarmManager.initialize()
         // 载入并推送设置
         loadPushSettings()
         // 应用配置中的剩余时间
@@ -182,8 +185,8 @@ class PomodoroService : Service() {
                         }
                         updatePomodoroState() // 更新状态
                         // 播放结束铃声
-                        soundManager.play(SoundType.ALARM, settings.alarmVolume)
-                        delay((SoundType.ALARM.durationSeconds * 1000).toLong()) // 延迟播放时间
+                        alarmManager.play(AlarmSound.ALARM, settings.alarmVolume)
+                        delay((AlarmSound.ALARM.durationSeconds * 1000).toLong()) // 延迟播放时间
                         // 下一阶段提示
                         phaseAlert()
                         // 重置剩余时间，再次进入循环
@@ -263,18 +266,18 @@ class PomodoroService : Service() {
         when (state.phase) {
             PomodoroPhase.FOCUS -> {
                 showToast("要开始专注了~")
-                soundManager.play(SoundType.FOCUS_ALERT, settings.promptVolume)
-                delay((SoundType.FOCUS_ALERT.durationSeconds * 1000).toLong())
+                alarmManager.play(AlarmSound.FOCUS_ALERT, settings.promptVolume)
+                delay((AlarmSound.FOCUS_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.SHORT_BREAK -> {
                 showToast("休息一下吧~")
-                soundManager.play(SoundType.SHORT_BREAK_ALERT, settings.promptVolume)
-                delay((SoundType.SHORT_BREAK_ALERT.durationSeconds * 1000).toLong())
+                alarmManager.play(AlarmSound.SHORT_BREAK_ALERT, settings.promptVolume)
+                delay((AlarmSound.SHORT_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.LONG_BREAK -> {
                 showToast("多休息一下，放松放松自己~")
-                soundManager.play(SoundType.LONG_BREAK_ALERT, settings.promptVolume)
-                delay((SoundType.LONG_BREAK_ALERT.durationSeconds * 1000).toLong())
+                alarmManager.play(AlarmSound.LONG_BREAK_ALERT, settings.promptVolume)
+                delay((AlarmSound.LONG_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
         }
     }
@@ -287,6 +290,7 @@ class PomodoroService : Service() {
         unregisterSettingsCallback()
         // 释放资源
         soundManager.release() // 释放短音频资源
+        alarmManager.release() // 释放提示音资源
         mediaManager.release() // 释放长音频资源
         scope.cancel() // 取消所有协程
     }

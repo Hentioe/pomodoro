@@ -4,39 +4,24 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
 
-// 音频枚举
-enum class SoundType(val path: String, val durationSeconds: Float) {
-    TICK("sounds/tick.wav", 0.0f),
-    TICK_TOCK("sounds/ticks/tick-tock-1.wav", 0.0f),
-    TICK_MOKUGYO("sounds/ticks/mokugyo.wav", 0.0f),
-    // TICK_HEARTBEAT("sounds/ticks/heartbeat.wav", 0.0f),
-    TICK_EKG("sounds/ticks/ekg.wav", 0.0f);
-
-    // 添加静态方法
-    companion object {
-        fun from_setting_key(key: String?): SoundType? {
-            return when (key) {
-                "default_tick" -> TICK
-                "tick-tock_tick" -> TICK_TOCK
-                "mokugyo_tick" -> TICK_MOKUGYO
-                // "heartbeat_tick" -> TICK_HEARTBEAT
-                "ekg_tick" -> TICK_EKG
-                else -> null
-            }
-        }
-    }
+// 声音枚举
+enum class AlarmSound(val path: String, val durationSeconds: Float) {
+    ALARM("sounds/alarm.wav", 3.5f),
+    LONG_BREAK_ALERT("sounds/alerts/fixed_long_break.wav", 2.0f),
+    SHORT_BREAK_ALERT("sounds/alerts/fixed_short_break.wav", 2.0f),
+    FOCUS_ALERT("sounds/alerts/fixed_focus.wav", 2.0f)
 }
 
-// 音频数据类
-data class SoundResource(
-    val type: SoundType,
-    var soundId: Int = 0 // 加载后赋值
-)
-
 // SoundPool 管理器
-class SoundManager(private val context: Context) {
+class AlarmManager(private val context: Context) {
+    // 音频数据类
+    data class SoundResource(
+        val type: AlarmSound,
+        var soundId: Int = 0 // 加载后赋值
+    )
+
     private var soundPool: SoundPool? = null
-    private val sounds = mutableMapOf<SoundType, SoundResource>()
+    private val sounds = mutableMapOf<AlarmSound, SoundResource>()
     private var isLoaded = false
 
     // 初始化：创建 SoundPool 并加载所有音频
@@ -44,7 +29,7 @@ class SoundManager(private val context: Context) {
         val audioAttributes =
             AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_GAME) // 用于游戏以避免被震动模式静音
+                .setUsage(AudioAttributes.USAGE_ALARM) // 用于闹钟，避免受到媒体音量的限制
                 .build()
 
         soundPool =
@@ -54,7 +39,7 @@ class SoundManager(private val context: Context) {
                 .build()
 
         // 加载所有音频
-        SoundType.values().forEach { type ->
+        AlarmSound.values().forEach { type ->
             val resource = SoundResource(type)
             sounds[type] = resource
             val descriptor = context.assets.openFd(type.path)
@@ -72,7 +57,7 @@ class SoundManager(private val context: Context) {
     }
 
     // 播放指定音频（默认使用该音频的音量）
-    fun play(type: SoundType, volume: Float) {
+    fun play(type: AlarmSound, volume: Float) {
         if (!isLoaded) {
             // 可选：日志或延迟播放
             return
