@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.util.Log
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
 import app.tauri.annotation.TauriPlugin
@@ -60,8 +61,38 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     override fun load(webView: WebView) {
         super.load(webView)
         Log.i(LOG_TAG, "Plugin loaded")
+        // 获取 webview 版本
+        val webViewVersion = WebView.getCurrentWebViewPackage()?.versionName
+        Log.i(LOG_TAG, "WebView version: $webViewVersion")
+        // 将版本号推送到前端
+        val event = JSObject()
+        event.put("platform", "android")
+        event.put("version", webViewVersion ?: "unknown")
+        // 已获取到 webview 信息，触发事件
+        trigger("webview_info_fetched", event)
+        val majorNumber = getMajorWebViewNumber(webViewVersion)
+        if (majorNumber != null && majorNumber < 111) {
+            Log.w(LOG_TAG, "WebView version is too low: $webViewVersion, requires 111+")
+            // 显示版本过低对话框
+            showLowVersionDialog()
+        }
         // 预启动并绑定服务
         startAndBindService(PomodoroService.ACTION_PRE_START)
+    }
+
+    // 显示版本过低对话框
+    private fun showLowVersionDialog() {
+        AlertDialog.Builder(this.activity)
+            .setTitle("WebView 版本过低")
+            .setMessage("您的设备 WebView 版本过低，不满足运行要求。请更新 WebView 或升级设备系统后重试。")
+            .setPositiveButton("确认") { _, _ ->
+                // 停止服务
+                val intent = Intent(activity, PomodoroService::class.java)
+                activity.stopService(intent)
+                activity.finishAffinity() // 关闭所有活动
+            }
+            .setCancelable(false) // 禁止取消对话框
+            .show()
     }
 
     private val connection =

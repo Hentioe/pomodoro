@@ -114,3 +114,18 @@ export async function onSettingsUpdated(
     handler,
   );
 }
+
+export interface WebViewInfo {
+  platform: "android";
+  version: string;
+}
+
+export async function onWebViewInfoFetched(
+  handler: (data: WebViewInfo) => void,
+): Promise<PluginListener> {
+  return await addPluginListener(
+    "backend",
+    "webview_info_fetched",
+    handler,
+  );
+}

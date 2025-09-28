@@ -7,12 +7,14 @@ import {
   exit,
   next,
   onPomodoroUpdated,
+  onWebViewInfoFetched,
   pause,
   ping,
   play,
   PomodoroPhase,
   PomodoroState,
   reset,
+  WebViewInfo,
 } from "tauri-plugin-backend-api";
 // import FlipClock from "./flip-clock";
 import FlipClock3D from "./flip-clock-3d";
@@ -20,7 +22,9 @@ import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
 import { UpdateChecker } from "./update-checker";
 
-const appWindow = getCurrentWindow();
+const isMobile = navigator.userAgent.indexOf("Android") > -1;
+
+const appWindow = isMobile ? getCurrentWindow() : null;
 
 function App() {
   const [phase, setPhase] = createSignal<PomodoroPhase>("focus");
@@ -62,25 +66,31 @@ function App() {
   const dragEvent = (e: MouseEvent) => {
     if (e.buttons === 1) {
       // Primary (left) button
-      appWindow.startDragging(); // Else start dragging
+      appWindow?.startDragging(); // Else start dragging
     }
   };
 
-  const onStateUpdated = (state: PomodoroState) => {
+  const handlePomodoroUpdated = (state: PomodoroState) => {
     setPhase(state.phase);
     setTotalSeconds(state.remainingSeconds);
     setIsPlaying(state.isPlaying);
     updateTimeDisplay();
   };
 
+  const handleWebViewInfoFetched = (webviewInfo: WebViewInfo) => {
+    info("WebView version: " + webviewInfo.version);
+  };
+
   onMount(async () => {
     // flipClock = new FlipClock();
     clock = new FlipClock3D(clockContainerEl!);
     updateTimeDisplay();
-    // 判断系统是否是 Android
-    if (navigator.userAgent.indexOf("Android") > -1) {
-      await onPomodoroUpdated(onStateUpdated);
+    if (isMobile) {
+      await onPomodoroUpdated(handlePomodoroUpdated);
+      await onWebViewInfoFetched(handleWebViewInfoFetched);
+      await ping("--push=state");
     }
+
     clockContainerEl?.addEventListener("mousedown", dragEvent);
     setLoaded(true);
 
@@ -107,8 +117,6 @@ function App() {
     } else {
       error("Check for updates failed: " + result.message);
     }
-
-    await ping("--push=state");
   });
 
   onCleanup(() => {
