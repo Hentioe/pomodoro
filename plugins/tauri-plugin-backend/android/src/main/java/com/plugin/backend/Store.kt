@@ -8,11 +8,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 private const val PREFERENCES_NAME = "base_settings"
 
-// 扩展属性，创建 DataStore 实例
-private val Context.dataStore: DataStore<Preferences> by
+public val Context.settingsStore: DataStore<Preferences> by
     preferencesDataStore(name = PREFERENCES_NAME)
 
 enum class SettingsKey(val keyName: String) {
@@ -35,30 +35,26 @@ enum class SettingsKey(val keyName: String) {
     fun <T> createKeyT(): Preferences.Key<T> = stringPreferencesKey(keyName) as Preferences.Key<T>
 }
 
-class Store(context: Context) {
-    private val dataStore = context.dataStore
+// 异步的写入方法
+suspend fun <T> DataStore<Preferences>.write(key: Preferences.Key<T>, value: T) {
+    this.edit { preferences -> preferences[key] = value }
+}
 
-    // 异步的写入方法
-    suspend fun <T> write(key: Preferences.Key<T>, value: T) {
-        dataStore.edit { preferences -> preferences[key] = value }
-    }
+// 异步的读取方法
+suspend fun <T> DataStore<Preferences>.read(key: Preferences.Key<T>): T? {
+    return this.data.map { preferences -> preferences[key] }.firstOrNull()
+}
 
-    // 异步的读取方法
-    suspend fun <T> read(key: Preferences.Key<T>): T? {
-        return dataStore.data.map { preferences -> preferences[key] }.firstOrNull()
-    }
+// 同步的写入方法
+fun <T> DataStore<Preferences>.writeSync(key: Preferences.Key<T>, value: T) {
+    kotlinx.coroutines.runBlocking { write(key, value) }
+}
 
-    // 同步的写入方法
-    fun <T> writeSync(key: Preferences.Key<T>, value: T) {
-        kotlinx.coroutines.runBlocking { write(key, value) }
-    }
+// 同步的读取方法
+fun <T> DataStore<Preferences>.readSync(key: Preferences.Key<T>): T? {
+    return kotlinx.coroutines.runBlocking { read(key) }
+}
 
-    // 同步的读取方法
-    fun <T> readSync(key: Preferences.Key<T>): T? {
-        return kotlinx.coroutines.runBlocking { read(key) }
-    }
-
-    suspend fun remove(key: Preferences.Key<*>) {
-        dataStore.edit { preferences -> preferences.remove(key) }
-    }
+suspend fun DataStore<Preferences>.remove(key: Preferences.Key<*>) {
+    this.edit { preferences -> preferences.remove(key) }
 }

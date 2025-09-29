@@ -16,7 +16,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
         // 读取存储的最新下载 ID 判断是否匹配
         val latestDownloadId =
-            Store(context).readSync(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
+            context.settingsStore.readSync(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
         if (downloadId != latestDownloadId) {
             Log.d(LOG_TAG, "Ignoring download ID $downloadId, expecting $latestDownloadId")
             return

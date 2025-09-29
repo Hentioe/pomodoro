@@ -31,24 +31,25 @@ fun checkDownloadNotification(context: Context) {
     MainScope().launch {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         val versionName = packageInfo.versionName
-        val store = Store(context)
-        val storedVersion = store.read(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey())
+        val storedVersion =
+            context.settingsStore.read(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey())
         if (storedVersion == versionName) {
             // 最近下载的版本和当前相同
             Log.i(
                 LOG_TAG,
                 "Latest downloaded version ($storedVersion) is same as current version ($versionName), removing download notification if any")
-            val downloadId = store.read(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
+            val downloadId =
+                context.settingsStore.read(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
             if (downloadId != null) {
                 val downloadManager =
                     context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.remove(downloadId)
                 Log.i(LOG_TAG, "Removed download notification for ID $downloadId")
                 // 移除下载 ID 的记录
-                store.remove(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
+                context.settingsStore.remove(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>())
             }
             // 移除下载版本的记录
-            store.remove(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey())
+            context.settingsStore.remove(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey())
         }
     }
 }

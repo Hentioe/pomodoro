@@ -21,7 +21,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 enum class PomodoroPhase(val value: String, val defaultSeconds: Int) {
     FOCUS("focus", 25 * 60), // 25 分钟
@@ -41,7 +40,6 @@ class PomodoroService : Service() {
     val soundManager = SoundManager(this) // 声音管理器（封装短音频）
     val alarmManager = AlarmManager(this) // 闹钟管理器（封装提示音）
     val mediaManager = MediaManager(this) // 媒体管理器（封装长音频）
-    private val store by lazy { Store(this) } // 数据存储
     private var settings =
         Settings(
             tickSound = "default_tick",
@@ -468,7 +466,7 @@ class PomodoroService : Service() {
     fun settings(): Settings = settings
 
     fun <T> writeSetting(key: SettingsKey, value: T): Boolean {
-        runBlocking { store.write(key.createKey() as Preferences.Key<T>, value) }
+        this.settingsStore.writeSync(key.createKey() as Preferences.Key<T>, value)
         // 重新载入并推送设置
         loadPushSettings()
         // 处理可能涉及音乐的修改
@@ -535,7 +533,7 @@ class PomodoroService : Service() {
     }
 
     fun <T> readSetting(key: SettingsKey): T? {
-        return runBlocking { store.read(key.createKey() as Preferences.Key<T>) }
+        return this.settingsStore.readSync(key.createKey() as Preferences.Key<T>)
     }
 
     private fun updatePomodoroState() {

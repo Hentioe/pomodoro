@@ -395,11 +395,12 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         Log.i(LOG_TAG, "Downloading package from ${args.url} version ${args.version}")
 
         val downloadId = startDownload(activity.applicationContext, args.url, args.version)
-        val store = Store(this.activity.applicationContext)
         // 存储下载 ID 以供广播接收器验证
-        store.writeSync(SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>(), downloadId)
+        activity.settingsStore.writeSync(
+            SettingsKey.LATEST_DOWNLOAD_ID.createKeyT<Long>(), downloadId)
         // 存储下载版本以供下次启动时检查
-        store.writeSync(SettingsKey.LATEST_DOWNLOAD_VERSION.createKey(), args.version)
+        activity.settingsStore.writeSync(
+            SettingsKey.LATEST_DOWNLOAD_VERSION.createKey(), args.version)
 
         invoke.resolve()
     }
