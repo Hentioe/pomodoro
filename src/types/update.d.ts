@@ -3,7 +3,7 @@ type Architecture = "aarch64" | "armv7" | "i686" | "x86_64";
 
 interface Changelog {
   summary: string;
-  details?: string;
+  details?: string[];
 }
 
 interface DownloadInfo {
