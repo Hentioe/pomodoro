@@ -71,11 +71,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         val webViewVersion = WebView.getCurrentWebViewPackage()?.versionName
         Log.i(LOG_TAG, "WebView version: $webViewVersion")
         // 将版本号推送到前端
-        val event = JSObject()
-        event.put("platform", "android")
-        event.put("version", webViewVersion ?: "unknown")
-        // 已获取到 webview 信息，触发事件
-        trigger("webview_info_fetched", event)
+        onWebviewInfoFetched(webViewVersion)
         val majorNumber = getMajorWebViewNumber(webViewVersion)
         if (majorNumber != null && majorNumber < 111) {
             Log.w(LOG_TAG, "WebView version is too low: $webViewVersion, requires 111+")
@@ -192,6 +188,13 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         }
     }
 
+    private fun onWebviewInfoFetched(webViewVersion: String?) {
+        val event = JSObject()
+        event.put("platform", "android")
+        event.put("version", webViewVersion ?: "unknown")
+        trigger("webview_info_fetched", event)
+    }
+
     override fun onPomodoroStateUpdated(state: PomodoroState) {
         val event = JSObject()
         event.put("phase", state.phase.value)
@@ -251,6 +254,11 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
                 if (state != null) {
                     onPomodoroStateUpdated(state)
                 }
+            }
+            "--push=webview" -> {
+                // 推送 webview 信息
+                val webViewVersion = WebView.getCurrentWebViewPackage()?.versionName
+                onWebviewInfoFetched(webViewVersion)
             }
         }
 

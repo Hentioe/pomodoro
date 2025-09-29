@@ -1,10 +1,13 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
-import { createSignal, Show } from "solid-js";
+import { info } from "@tauri-apps/plugin-log";
+import { createSignal, onMount, Show } from "solid-js";
+import { onWebViewInfoFetched, ping, WebViewInfo } from "tauri-plugin-backend-api";
 import AboutDialog from "../dialogs/AboutDialog";
 import NewVersionDialog from "../dialogs/NewVersionDialog";
 import SoundDialog from "../dialogs/SoundDialog";
 import TimerDialog from "../dialogs/TimerDialog";
 import VolumeDialog from "../dialogs/VolumeDialog";
+import { isMobile } from "../helper";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
 
@@ -14,10 +17,23 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
   const [timerDialogOpen, setTimerDialogOpen] = createSignal(false);
+  const [webviewInfo, setWebviewInfo] = createSignal<WebViewInfo | undefined>(undefined);
 
   const Version = () => {
     return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">开发版</p>;
   };
+
+  const handleWebViewInfoFetched = (webviewInfo: WebViewInfo) => {
+    info("WebView version: " + webviewInfo.version);
+    setWebviewInfo(webviewInfo);
+  };
+
+  onMount(async () => {
+    if (isMobile) {
+      await onWebViewInfoFetched(handleWebViewInfoFetched);
+      await ping("--push=webview");
+    }
+  });
 
   return (
     <>
@@ -51,8 +67,9 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
       <AboutDialog
         open={aboutNewDialogOpen}
         setOpen={setAboutNewDialogOpen}
-        updateChecker={props.updateChecker}
         onClose={() => setAboutNewDialogOpen(false)}
+        updateChecker={props.updateChecker}
+        webViewInfo={webviewInfo()}
       />
     </>
   );

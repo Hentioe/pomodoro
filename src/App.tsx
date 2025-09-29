@@ -7,22 +7,19 @@ import {
   exit,
   next,
   onPomodoroUpdated,
-  onWebViewInfoFetched,
   pause,
   ping,
   play,
   PomodoroPhase,
   PomodoroState,
   reset,
-  WebViewInfo,
 } from "tauri-plugin-backend-api";
 // import FlipClock from "./flip-clock";
 import FlipClock3D from "./flip-clock-3d";
+import { isMobile } from "./helper";
 import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
 import { UpdateChecker } from "./update-checker";
-
-const isMobile = navigator.userAgent.indexOf("Android") > -1;
 
 const appWindow = isMobile ? getCurrentWindow() : null;
 
@@ -77,17 +74,12 @@ function App() {
     updateTimeDisplay();
   };
 
-  const handleWebViewInfoFetched = (webviewInfo: WebViewInfo) => {
-    info("WebView version: " + webviewInfo.version);
-  };
-
   onMount(async () => {
     // flipClock = new FlipClock();
     clock = new FlipClock3D(clockContainerEl!);
     updateTimeDisplay();
     if (isMobile) {
       await onPomodoroUpdated(handlePomodoroUpdated);
-      await onWebViewInfoFetched(handleWebViewInfoFetched);
       await ping("--push=state");
     }
 

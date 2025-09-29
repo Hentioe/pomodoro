@@ -3,7 +3,7 @@ import TauriLogo from "/src/assets/tauri.svg";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getVersion } from "@tauri-apps/api/app";
 import { Accessor, createResource, createSignal, JSX, Setter } from "solid-js";
-import { toast } from "tauri-plugin-backend-api";
+import { toast, WebViewInfo } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
 import icons from "../icons";
 import { UpdateChecker } from "../update-checker";
@@ -13,6 +13,7 @@ interface Props {
   open: Accessor<boolean>;
   setOpen: Setter<boolean>;
   onClose: () => void;
+  webViewInfo?: WebViewInfo;
   updateChecker?: UpdateChecker;
 }
 
@@ -45,15 +46,18 @@ export default (props: Props) => {
 
   const Header = () => {
     return (
-      <div class="flex items-center gap-[1rem]">
-        <div class="w-[3rem] h-[3rem] bg-green-400 rounded-2xl shadow flex justify-center items-center">
+      <div class="flex flex-col justify-center items-center gap-[0.5rem]">
+        {/* 图标 */}
+        <div class="w-[4.5rem] h-[4.5rem] bg-green-400 rounded-2xl shadow-md flex justify-center items-center">
           <Icon
             icon={icons.Tomato}
             style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
-            class="text-focus text-[2rem]"
+            class="text-focus text-[3.5rem] w-[3.5rem] h-[3.5rem]"
           />
         </div>
-        <span class="font-bold text-[1.5rem]">关于</span>
+        {/* 应用名称 */}
+        <p class="font-bold text-[1.5rem]">番茄钟</p>
+        <p class="text-gray-600 text-sm tracking-wide">高效专注，轻松管理时间</p>
       </div>
     );
   };
@@ -74,8 +78,24 @@ export default (props: Props) => {
   return (
     <>
       <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
-        <div class="flex flex-col gap-[1rem]">
-          <p class="leading-[2rem] tracking-wide text-gray-800">
+        <div class="bg-white rounded-xl p-[1rem] flex flex-col gap-[1rem] border border-zinc-50">
+          <Field name="应用版本">
+            <button
+              onClick={handleCheckUpdate}
+              class="depress-effect px-2 py-1 bg-white text-blue-400 rounded-xl border border-zinc-200/80"
+            >
+              {version() || "未知"}
+            </button>
+          </Field>
+          <Field name="WebView">
+            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.version : "未知"}</FieldTextValue>
+          </Field>
+          <Field name="运行平台">
+            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.platform : "未知"}</FieldTextValue>
+          </Field>
+        </div>
+        <div class="mt-[1rem] flex flex-col gap-[1rem]">
+          <p class="leading-[2rem] tracking-wide text-gray-700">
             本应用是由<IconLink
               text="Hentioe"
               url="https://github.com/Hentioe"
@@ -86,16 +106,7 @@ export default (props: Props) => {
               imgSrc={TauriLogo}
             />框架构建，正在为大量平台提供支持。
           </p>
-          <p class="text-center text-sm flex justify-between items-center bg-blue-100/70 rounded-2xl px-4 py-4">
-            <span class="text-[1.1rem] text-gray-600">软件版本</span>
-            <button
-              onClick={handleCheckUpdate}
-              class="depress-effect p-2 bg-white text-blue-400 rounded-md border border-zinc-200"
-            >
-              {version()}
-            </button>
-          </p>
-          <p class="mt-[1rem] font-bold text-gray-700">
+          <p class="font-bold text-gray-700">
             更多内容请参考
           </p>
           <ul class="flex flex-col gap-[0.5rem]">
@@ -120,6 +131,19 @@ export default (props: Props) => {
   );
 };
 
+const Field = (props: { name: string; children: JSX.Element }) => {
+  return (
+    <button class="flex items-center justify-between">
+      <span class="text-gray-500">{props.name}</span>
+      {props.children}
+    </button>
+  );
+};
+
+const FieldTextValue = (props: { children: JSX.Element }) => {
+  return <span class="text-gray-600">{props.children}</span>;
+};
+
 const NavLink = (props: { url: string; icon: string | IconifyIcon; children: JSX.Element }) => {
   return (
     <li>
@@ -140,7 +164,7 @@ const IconLink = (props: { text: string; url: string; imgSrc: string }) => {
     <a
       href={props.url}
       target="_blank"
-      class="bg-zinc-200/70 active:bg-blue-200/90 h-[1.5rem] transition-colors border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle"
+      class="h-[1.5rem] bg-zinc-200/70 active:bg-blue-200/90 transition-colors border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle"
     >
       <img src={props.imgSrc} class="h-[1rem] w-[1rem] rounded-md" />
       <span>{props.text}</span>
