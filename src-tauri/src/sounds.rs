@@ -1,10 +1,10 @@
 use rodio::{Decoder, OutputStream, OutputStreamBuilder};
 use std::{fs::File, io::BufReader, path::PathBuf, sync::Arc};
 use tauri::AppHandle;
-#[cfg(not(target_os = "android"))]
 use tauri::{path::BaseDirectory, Manager};
 use tokio::sync::{Mutex, MutexGuard, OnceCell};
 
+#[cfg(not(target_os = "android"))]
 static RODIO_HANDLE: OnceCell<Arc<Mutex<OutputStream>>> = OnceCell::const_new();
 
 pub enum Sound {

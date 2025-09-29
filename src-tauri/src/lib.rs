@@ -1,36 +1,16 @@
-use std::time::Duration;
-
-use crate::sounds::Sound;
-use tauri::AppHandle;
 use tauri_plugin_log::{Target, TargetKind};
-use tokio::time::sleep;
 
+#[cfg(not(target_os = "android"))]
+mod desktop;
+#[cfg(not(target_os = "android"))]
 mod sounds;
+#[cfg(not(target_os = "android"))]
+use crate::desktop::{done, exit, tick};
 
-#[tauri::command]
-async fn tick(handle: AppHandle) {
-    Sound::Tick.play(&handle).await;
-}
-
-#[tauri::command]
-async fn done(handle: AppHandle, next_state: String) {
-    Sound::Alarm.play(&handle).await;
-    sleep(Duration::from_secs(Sound::Alarm.duration_secs())).await;
-    let state_sound = match next_state.as_str() {
-        "focus" => Sound::FocusAlert,
-        "short_break" => Sound::ShortBreakAlert,
-        "long_break" => Sound::LongBreakAlert,
-        _ => panic!("unknown state"),
-    };
-
-    state_sound.play(&handle).await;
-    sleep(Duration::from_secs(state_sound.duration_secs())).await;
-}
-
-#[tauri::command]
-fn exit(handle: AppHandle) {
-    handle.exit(0);
-}
+#[cfg(target_os = "android")]
+mod mobile;
+#[cfg(target_os = "android")]
+use crate::mobile::{done, exit, tick};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
