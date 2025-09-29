@@ -17,8 +17,8 @@
 }
 
 @theme {
-  --color-digit-bg: oklch(19.087% 0.00873 264.37);
-  --color-digit-fg: oklch(73.824% 0.01576 285.937);
+  --color-digit-bg: #101010;
+  --color-digit-fg: #b0b0b0;
   --color-focus: #e15252;
   --color-short-break: #4a95e0;
   --color-long-break: #65c26a;
