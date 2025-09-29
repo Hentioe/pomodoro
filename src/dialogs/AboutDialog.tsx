@@ -2,6 +2,7 @@ import HentioeAvatar from "/src/assets/hentioe.webp";
 import TauriLogo from "/src/assets/tauri.svg";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { getVersion } from "@tauri-apps/api/app";
+import { error } from "@tauri-apps/plugin-log";
 import { Accessor, createResource, createSignal, JSX, Setter } from "solid-js";
 import { toast, WebViewInfo } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
@@ -27,20 +28,28 @@ export default (props: Props) => {
     if (props.updateChecker && !isUpdateChecking()) {
       setIsUpdateChecking(true);
       await toast("正在检查更新...");
-      const result = await props.updateChecker.checkCached();
-      setIsUpdateChecking(false);
+      try {
+        const result = await props.updateChecker.checkCached();
 
-      if (result.success) {
-        if (result.payload.available) {
-          setUpdate(result.payload);
-          setNewVersionDialogOpen(true);
+        if (result.success) {
+          if (result.payload.available) {
+            setUpdate(result.payload);
+            setNewVersionDialogOpen(true);
+          } else {
+            setNewVersionDialogOpen(false);
+            await toast("当前已是最新版本");
+          }
         } else {
-          setNewVersionDialogOpen(false);
-          await toast("当前已是最新版本");
+          await toast("检查更新失败: " + result.message);
         }
-      } else {
-        await toast("检查更新失败: " + result.message);
+      } catch (e) {
+        if (e instanceof String) {
+          error("Failed to check for updates: " + e);
+        }
+        await toast("检查更新失败");
       }
+
+      setIsUpdateChecking(false);
     }
   };
 

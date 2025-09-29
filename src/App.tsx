@@ -74,18 +74,7 @@ function App() {
     updateTimeDisplay();
   };
 
-  onMount(async () => {
-    // flipClock = new FlipClock();
-    clock = new FlipClock3D(clockContainerEl!);
-    updateTimeDisplay();
-    if (isMobile) {
-      await onPomodoroUpdated(handlePomodoroUpdated);
-      await ping("--push=state");
-    }
-
-    clockContainerEl?.addEventListener("mousedown", dragEvent);
-    setLoaded(true);
-
+  const checkUpdate = async () => {
     // 创建一个更新检查器，并立即检查更新
     const checker = new UpdateChecker({
       appId: await getIdentifier(),
@@ -96,19 +85,39 @@ function App() {
     });
     setUpdateChecker(checker);
 
-    const result = await checker.checkNow();
-
-    if (result.success) {
-      const update = result.payload;
-      if (update.available) {
-        info(`New version available: ${update.latest}`);
-        setUpdate(update);
+    try {
+      const result = await checker.checkNow();
+      if (result.success) {
+        const update = result.payload;
+        if (update.available) {
+          info(`New version available: ${update.latest}`);
+          setUpdate(update);
+        } else {
+          debug("Check for updates: no updates available");
+        }
       } else {
-        debug("Check for updates: no updates available");
+        error("Check for updates failed: " + result.message);
       }
-    } else {
-      error("Check for updates failed: " + result.message);
+    } catch (e: any) {
+      if (e instanceof String) {
+        error("Check for updates failed: " + e);
+      }
     }
+  };
+
+  onMount(async () => {
+    // flipClock = new FlipClock();
+    clock = new FlipClock3D(clockContainerEl!);
+    updateTimeDisplay();
+    if (isMobile) {
+      await onPomodoroUpdated(handlePomodoroUpdated);
+      await ping("--push=state");
+    }
+    setLoaded(true);
+
+    clockContainerEl?.addEventListener("mousedown", dragEvent);
+    // 检查更新
+    await checkUpdate();
   });
 
   onCleanup(() => {
