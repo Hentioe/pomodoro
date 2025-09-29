@@ -11,6 +11,12 @@
 - 自然（溪流）：<https://freesound.org/people/BurghRecords/sounds/446019/>
 - 自然（虫鸣）：<https://freesound.org/people/eric5335/sounds/53380/>
 
+## 循环音频
+
+- 下雨
+  - 实现方式：交叉淡出淡入
+  - 拼接位置：倒数第 `5` 秒，持续 `4` 秒。
+
 ## 响度标准
 
 - 闹铃音：`-12 LUFS`

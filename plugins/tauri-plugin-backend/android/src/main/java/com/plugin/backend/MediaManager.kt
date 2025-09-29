@@ -14,10 +14,10 @@ enum class LocalMedia(
     val path: String, // 文件路径
     val overlapPositionSecs: Float, // 重叠位置（秒）
     val delayMs: Int = -200, // 经初步测试，目前的双实例交叉实现大概有接近 0.2 秒的延迟。故提前 200 毫秒开始交叉
-    val loopable: Boolean = false // 是否是可循环音频
+    val is_seamless: Boolean = false // 是否为（可直接循环的）无缝音频
 ) {
-    TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，直接循环
-    RAIN("musics/rain.ogg", 66f, -600), // 雨声，66 秒位置重叠（由于音频预处理不够，提前 0.6 秒）
+    TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，循环音频
+    RAIN("musics/rain.ogg", 0.0f, 0, true), // 雨声，循环音频
     RAIN_THUNDER("musics/rain-thunder.ogg", 66f, -400), // 带雷雨声的雨声，66 秒位置重叠（由于音频预处理不够，提前 0.4 秒）
     WIND_STRONG("musics/wind-strong.ogg", 27f), // 强风，27 秒位置重叠
     BONFIRE("musics/bonfire.ogg", 49f), // 篝火，49 秒位置重叠
@@ -127,7 +127,7 @@ class MediaManager(private val context: Context) {
         val assetUri = "asset:///${media.path}"
         val mediaItem = MediaItem.fromUri(assetUri)
 
-        if (media.loopable) {
+        if (media.is_seamless) {
             // 可循环音频直接使用循环模式
             reset_player(exoPlayerA, mediaItem, volume)
             exoPlayerA.setRepeatMode(Player.REPEAT_MODE_ONE)
