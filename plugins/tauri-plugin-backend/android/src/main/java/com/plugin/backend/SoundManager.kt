@@ -6,11 +6,11 @@ import android.media.SoundPool
 
 // 音频枚举
 enum class SoundType(val path: String, val durationSeconds: Float) {
-    TICK("sounds/tick.wav", 0.0f),
-    TICK_TOCK("sounds/ticks/tick-tock-1.wav", 0.0f),
-    TICK_MOKUGYO("sounds/ticks/mokugyo.wav", 0.0f),
-    // TICK_HEARTBEAT("sounds/ticks/heartbeat.wav", 0.0f),
-    TICK_EKG("sounds/ticks/ekg.wav", 0.0f);
+    TICK("sounds/ticks/pointer.ogg", 0.0f),
+    TICK_TOCK("sounds/ticks/tick-tock-1.ogg", 0.0f),
+    TICK_MOKUGYO("sounds/ticks/mokugyo.ogg", 0.0f),
+    // TICK_HEARTBEAT("sounds/ticks/heartbeat.ogg", 0.0f),
+    TICK_EKG("sounds/ticks/ekg.ogg", 0.0f);
 
     // 添加静态方法
     companion object {
