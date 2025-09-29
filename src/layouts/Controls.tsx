@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { createSignal } from "solid-js";
 import { PomodoroPhase } from "tauri-plugin-backend-api";
 import { StandardDialog } from "../components";
+import SoundDialog from "../dialogs/SoundDialog";
 import icons from "../icons";
 
 interface Props {
@@ -20,7 +21,9 @@ interface Props {
 }
 
 export default (props: Props) => {
+  const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [exitConfirmOpen, setExitConfirmOpen] = createSignal(false);
+
   const handleExit = async () => {
     if (props.isPlaying) {
       setExitConfirmOpen(true);
@@ -52,21 +55,25 @@ export default (props: Props) => {
     <>
       <div
         class={classNames([
-          "absolute bottom-[-3.5rem] z-10 h-[3.5rem] bg-digit-bg text-zinc-300 shadow-window rounded-full flex justify-center items-center px-[1rem]",
+          "absolute bottom-[-3rem] z-10 h-[3.5rem] bg-digit-bg text-zinc-300 shadow-window rounded-[1.025rem] flex justify-center items-center px-[0.5rem]",
           "transition-all duration-700",
-          { "bottom-[2rem]": props.loaded },
+          { "bottom-[1rem]": props.loaded },
         ])}
       >
-        <div class="flex items-center gap-[1.25rem]">
+        <div class="flex items-center gap-[0.75rem]">
           <TomatoIndicator />
           <div class="w-[1px] h-[1.25rem] bg-zinc-600" />
         </div>
-        <div class="flex items-center gap-[1.25rem] pl-[1.25rem]">
-          <ControlButton onClick={props.onTogglePlay} icon={props.isPlaying ? icons.Pause : icons.Play} />
-          <ControlButton onClick={props.onReset} icon={icons.Reset} />
-          <ControlButton onClick={handleExit} icon={icons.Close} />
+        <div class="flex items-center gap-[0.75rem] pl-[0.75rem]">
+          <ControlButton icon={props.isPlaying ? icons.Pause : icons.Play} onClick={props.onTogglePlay} />
+          <ControlButton icon={icons.Reset} onClick={props.onReset} />
+          <ControlButton icon={icons.Music} onClick={() => setSoundDialogOpen(true)} />
+          <ControlButton icon={icons.Close} onClick={handleExit} />
         </div>
       </div>
+      {/* 声音定制弹窗 */}
+      <SoundDialog open={soundDialogOpen} setOpen={setSoundDialogOpen} />
+      {/* 退出确认弹窗 */}
       <StandardDialog title="退出确认" onConfirm={props.onExit} open={exitConfirmOpen} setOpen={setExitConfirmOpen}>
         番茄钟还在计时中，确定要退出吗？
       </StandardDialog>
@@ -84,9 +91,9 @@ const ControlButton = (props: { icon: string | IconifyIcon; onClick?: () => void
   return (
     <div
       onClick={handleClick}
-      class="control-btn w-[2rem] h-[2rem] text-gray-600 rounded-full flex justify-center items-center cursor-pointer"
+      class="depress-effect w-[2.55rem] h-[2.55rem] bg-black text-digit-fg rounded-[1.025rem] flex justify-center items-center cursor-pointer"
     >
-      <Icon icon={props.icon} class="w-[1.25rem] h-[1.25rem] text-[1.25rem]" />
+      <Icon icon={props.icon} class="w-[1.6rem] h-[1.6rem] text-[1.6rem]" />
     </div>
   );
 };
