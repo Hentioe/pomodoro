@@ -1,8 +1,10 @@
 package com.plugin.backend
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Looper
 import android.util.Log
+import android.view.animation.LinearInterpolator
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -78,7 +80,7 @@ class MediaManager(private val context: Context) {
     private var isLooping: Boolean = false
 
     // todo: 重构为 ExoPlayer 的扩展函数
-    fun reset_player(player: ExoPlayer, mediaItem: MediaItem, volume: Float?) {
+    fun reset_player(player: ExoPlayer, mediaItem: MediaItem, volume: Float) {
         player.stop()
         player.clearMediaItems()
         player.setAudioAttributes(
@@ -88,7 +90,7 @@ class MediaManager(private val context: Context) {
                 .build(),
             false)
         player.setMediaItem(mediaItem)
-        player.volume = volume ?: 0.6f
+        player.volume = volume
         player.prepare()
     }
 
@@ -126,12 +128,22 @@ class MediaManager(private val context: Context) {
         isLooping = true
         val assetUri = "asset:///${media.path}"
         val mediaItem = MediaItem.fromUri(assetUri)
+        val volume = volume ?: 0.6f
 
         if (media.is_seamless) {
             // 可循环音频直接使用循环模式
-            reset_player(exoPlayerA, mediaItem, volume)
+            reset_player(exoPlayerA, mediaItem, 0f)
             exoPlayerA.setRepeatMode(Player.REPEAT_MODE_ONE)
             exoPlayerA.play()
+            // 音量渐入
+            val animator = ValueAnimator.ofFloat(0f, volume)
+            animator.duration = 2000 // 渐入时长
+            animator.interpolator = LinearInterpolator() // 线性渐变
+            animator.addUpdateListener { animation ->
+                val volume = animation.animatedValue as Float
+                exoPlayerA.setVolume(volume) // 更新音量
+            }
+            animator.start()
         } else {
             // 其它音频循环通过双实例交叉淡化
             reset_player(exoPlayerA, mediaItem, volume)
