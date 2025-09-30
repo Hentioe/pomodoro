@@ -1,15 +1,19 @@
 import RocketPhoto from "/src/assets/images/rocket.png";
+import { destructure } from "@solid-primitives/destructure";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Accessor, For, Setter } from "solid-js";
 import { downloadPackage, toast } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
 import CloseableTitleBar from "../components/CloseableTitleBar";
+import { globalState } from "../states/global";
 
-export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Setter<boolean> }) => {
+export default (props: { open: Accessor<boolean>; setOpen: Setter<boolean> }) => {
+  const { update } = destructure(globalState);
+
   const handleUpdate = async () => {
-    const url = props.update?.download?.[0].url;
+    const url = update()?.download?.[0].url;
     if (url) {
-      await downloadPackage(url, props.update?.latest || "unknown");
+      await downloadPackage(url, update()?.latest || "unknown");
       await toast("更新包正在下载，从通知中查看进度");
     }
 
@@ -17,7 +21,7 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
   };
 
   const handleBrowserDownload = async () => {
-    const url = props.update?.download?.[0].url;
+    const url = update()?.download?.[0].url;
     if (url) {
       await openUrl(url);
       await toast("请留意浏览器的下载任务");
@@ -59,14 +63,14 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
           <img src={RocketPhoto} class="w-[3rem]" />
         </div>
         <p class="mt-[1rem] text-center text-red-600 font-mono">
-          {props.update?.latest || "未知版本号"}
+          {update()?.latest || "未知版本号"}
         </p>
         <p class="mt-[0.5rem] text-center">
-          {props.update?.changelog?.summary || "暂无更新摘要。"}
+          {update()?.changelog?.summary || "暂无更新摘要。"}
         </p>
       </div>
       <div class="my-[1rem] w-full h-[1px] bg-zinc-200" />
-      <ChangelogDetails details={props.update?.changelog?.details} />
+      <ChangelogDetails details={update()?.changelog?.details} />
     </BasicDialog>
   );
 };

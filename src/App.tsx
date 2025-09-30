@@ -19,6 +19,7 @@ import FlipClock3D from "./flip-clock-3d";
 import { isMobile } from "./helper";
 import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
+import { setUpdate } from "./states/global";
 import { UpdateChecker } from "./update-checker";
 
 const appWindow = isMobile ? getCurrentWindow() : null;
@@ -28,7 +29,6 @@ function App() {
   const [totalSeconds, setTotalSeconds] = createSignal(0);
   const [isPlaying, setIsPlaying] = createSignal(false);
   const [loaded, setLoaded] = createSignal(false);
-  const [update, setUpdate] = createSignal<Update | undefined>(undefined);
   const [updateChecker, setUpdateChecker] = createSignal<UpdateChecker | undefined>(undefined);
 
   // let flipClock: FlipClock;
@@ -126,7 +126,7 @@ function App() {
 
   return (
     <main class="h-full px-[1rem]  flex flex-col justify-between items-center relative">
-      <Header update={update()} updateChecker={updateChecker()} />
+      <Header updateChecker={updateChecker()} />
       <div class="flex-1 flex w-full items-center">
         <div id="clock-container" class="animated" ref={clockContainerEl}>
           <FlipNumbers unit="min-tens" />

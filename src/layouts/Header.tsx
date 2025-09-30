@@ -1,4 +1,5 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
+import { destructure } from "@solid-primitives/destructure";
 import { info } from "@tauri-apps/plugin-log";
 import { createSignal, onMount, Show } from "solid-js";
 import { onWebViewInfoFetched, ping, WebViewInfo } from "tauri-plugin-backend-api";
@@ -8,14 +9,17 @@ import TimerDialog from "../dialogs/TimerDialog";
 import VolumeDialog from "../dialogs/VolumeDialog";
 import { isMobile } from "../helper";
 import icons from "../icons";
+import { globalState } from "../states/global";
 import { UpdateChecker } from "../update-checker";
 
-export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
+export default (props: { updateChecker?: UpdateChecker }) => {
   const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
   const [timerDialogOpen, setTimerDialogOpen] = createSignal(false);
   const [webviewInfo, setWebviewInfo] = createSignal<WebViewInfo | undefined>(undefined);
+
+  const { update } = destructure(globalState);
 
   const Version = () => {
     return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">开发版</p>;
@@ -37,9 +41,9 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
     <>
       <header class="absolute top-[1rem] left-[1rem] right-[1rem] text-zinc-200 flex justify-between items-center">
         <div class="flex-1">
-          <NavIcon icon={props.update ? icons.AboutNew : icons.About} onClick={() => setAboutNewDialogOpen(true)} />
+          <NavIcon icon={update() ? icons.AboutNew : icons.About} onClick={() => setAboutNewDialogOpen(true)} />
         </div>
-        <Show when={props.update} fallback={<Version />}>
+        <Show when={update()} fallback={<Version />}>
           <p
             onClick={() => setNewVersionDialogOpen(true)}
             class="bg-red-500 text-zinc-100 text-base rounded-lg px-[0.5rem] cursor-pointer"
@@ -57,7 +61,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
       {/* 定时器设置弹窗 */}
       <TimerDialog open={timerDialogOpen} setOpen={setTimerDialogOpen} />
       {/* 新版本弹窗 */}
-      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} update={props.update} />
+      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} />
       {/* 关于弹窗 */}
       <AboutDialog
         open={aboutNewDialogOpen}

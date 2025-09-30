@@ -1,12 +1,14 @@
 import HentioeAvatar from "/src/assets/hentioe.webp";
 import TauriLogo from "/src/assets/tauri.svg";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
+import { destructure } from "@solid-primitives/destructure";
 import { getVersion } from "@tauri-apps/api/app";
 import { error } from "@tauri-apps/plugin-log";
-import { Accessor, createResource, createSignal, JSX, Setter } from "solid-js";
+import { Accessor, createResource, createSignal, JSX, Setter, Show } from "solid-js";
 import { toast, WebViewInfo } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
 import icons from "../icons";
+import { globalState, setUpdate } from "../states/global";
 import { UpdateChecker } from "../update-checker";
 import NewVersionDialog from "./NewVersionDialog";
 
@@ -20,9 +22,10 @@ interface Props {
 
 export default (props: Props) => {
   const [version] = createResource(getVersion);
-  const [update, setUpdate] = createSignal<Update | undefined>(undefined);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [isUpdateChecking, setIsUpdateChecking] = createSignal(false);
+
+  const { update } = destructure(globalState);
 
   const handleCheckUpdate = async () => {
     if (props.updateChecker && !isUpdateChecking()) {
@@ -84,17 +87,26 @@ export default (props: Props) => {
     );
   };
 
+  const VersionButton = () => {
+    return (
+      <button
+        onClick={handleCheckUpdate}
+        class="depress-effect relative px-2 py-1 bg-white text-blue-400 rounded-xl border border-zinc-200/50"
+      >
+        {version() || "未知"}
+        <Show when={update()}>
+          <div class="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500" />
+        </Show>
+      </button>
+    );
+  };
+
   return (
     <>
       <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
         <div class="bg-white rounded-xl p-[1rem] flex flex-col gap-[1rem] border border-zinc-50">
           <Field name="应用版本">
-            <button
-              onClick={handleCheckUpdate}
-              class="depress-effect px-2 py-1 bg-white text-blue-400 rounded-xl border border-zinc-200/80"
-            >
-              {version() || "未知"}
-            </button>
+            <VersionButton />
           </Field>
           <Field name="WebView">
             <FieldTextValue>{props.webViewInfo ? props.webViewInfo.version : "未知"}</FieldTextValue>
@@ -135,7 +147,7 @@ export default (props: Props) => {
         </div>
       </BasicDialog>
       {/* 新版本弹窗 */}
-      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} update={update()} />
+      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} />
     </>
   );
 };
@@ -143,7 +155,7 @@ export default (props: Props) => {
 const Field = (props: { name: string; children: JSX.Element }) => {
   return (
     <button class="flex items-center justify-between">
-      <span class="text-gray-500">{props.name}</span>
+      <span class="text-gray-600">{props.name}</span>
       {props.children}
     </button>
   );
