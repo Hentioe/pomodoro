@@ -48,6 +48,11 @@
   aspect-ratio: 3 / 4;
 }
 
+#controls {
+  /* 控制器缓入动画 */
+  transition: bottom 0.7s ease-in-out;
+}
+
 .flip {
   list-style: none;
   position: relative;

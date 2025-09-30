@@ -54,9 +54,9 @@ export default (props: Props) => {
   return (
     <>
       <div
+        id="controls"
         class={classNames([
           "absolute bottom-[-3rem] z-10 h-[3.5rem] bg-digit-bg text-zinc-300 shadow-window rounded-[1.025rem] flex justify-center items-center px-[0.5rem]",
-          "transition-all duration-700",
           { "bottom-[1rem]": props.loaded },
         ])}
       >
