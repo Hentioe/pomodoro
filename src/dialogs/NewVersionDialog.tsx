@@ -1,19 +1,47 @@
-// import { openUrl } from "@tauri-apps/plugin-opener";
 import RocketPhoto from "/src/assets/images/rocket.png";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { Accessor, For, Setter } from "solid-js";
 import { downloadPackage, toast } from "tauri-plugin-backend-api";
-import { StandardDialog } from "../components";
+import { BasicDialog } from "../components";
 
 export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Setter<boolean> }) => {
-  const handleUpdateConfirm = async () => {
+  const handleUpdate = async () => {
     const url = props.update?.download?.[0].url;
     if (url) {
-      // await openUrl(url);
       await downloadPackage(url, props.update?.latest || "unknown");
       await toast("更新包正在下载，从通知中查看进度");
     }
 
-    return true;
+    props.setOpen(false);
+  };
+
+  const handleBrowserDownload = async () => {
+    const url = props.update?.download?.[0].url;
+    if (url) {
+      await openUrl(url);
+      await toast("请留意浏览器的下载任务");
+    }
+
+    props.setOpen(false);
+  };
+
+  const Header = () => {
+    return (
+      <div>
+        <p class="text-center text-xl font-semibold">发现新版本</p>
+      </div>
+    );
+  };
+
+  const Footer = () => {
+    return (
+      <div class="flex flex-col gap-[0.75rem]">
+        <button onClick={handleUpdate} class="w-full bg-blue-500 text-zinc-50 py-[0.5rem] rounded-full text-center">
+          立即更新
+        </button>
+        <button onClick={handleBrowserDownload}>从浏览器下载</button>
+      </div>
+    );
   };
 
   const ChangelogDetails = (props: { details?: string[] }) => {
@@ -27,12 +55,11 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
   };
 
   return (
-    <StandardDialog
-      title={"发现新版本"}
+    <BasicDialog
       open={props.open}
       setOpen={props.setOpen}
-      onConfirm={handleUpdateConfirm}
-      confirmText="开始下载"
+      header={<Header />}
+      footer={<Footer />}
     >
       <div>
         <div class="flex justify-center">
@@ -47,6 +74,6 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
       </div>
       <div class="my-[1rem] w-full h-[1px] bg-zinc-200" />
       <ChangelogDetails details={props.update?.changelog?.details} />
-    </StandardDialog>
+    </BasicDialog>
   );
 };
