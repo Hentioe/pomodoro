@@ -31,13 +31,11 @@ export default (props: Props) => {
 
   const handleConfirm = async () => {
     if (editingTimes.focusMinutes !== submittedTimes.focusMinutes) {
-      await writeSettings({ focusMinutes: editingTimes.focusMinutes });
-    }
-    if (editingTimes.shortBreakMinutes !== submittedTimes.shortBreakMinutes) {
-      await writeSettings({ shortBreakMinutes: editingTimes.shortBreakMinutes });
-    }
-    if (editingTimes.longBreakMinutes !== submittedTimes.longBreakMinutes) {
-      await writeSettings({ longBreakMinutes: editingTimes.longBreakMinutes });
+      await writeSettings({
+        focusMinutes: editingTimes.focusMinutes,
+        shortBreakMinutes: editingTimes.shortBreakMinutes,
+        longBreakMinutes: editingTimes.longBreakMinutes,
+      });
     }
 
     // 请求推送修改后的状态
