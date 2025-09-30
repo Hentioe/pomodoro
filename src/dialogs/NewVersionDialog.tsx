@@ -3,6 +3,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { Accessor, For, Setter } from "solid-js";
 import { downloadPackage, toast } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
+import CloseableTitleBar from "../components/CloseableTitleBar";
 
 export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Setter<boolean> }) => {
   const handleUpdate = async () => {
@@ -23,14 +24,6 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
     }
 
     props.setOpen(false);
-  };
-
-  const Header = () => {
-    return (
-      <div>
-        <p class="text-center text-xl font-semibold">发现新版本</p>
-      </div>
-    );
   };
 
   const Footer = () => {
@@ -58,7 +51,7 @@ export default (props: { update?: Update; open: Accessor<boolean>; setOpen: Sett
     <BasicDialog
       open={props.open}
       setOpen={props.setOpen}
-      header={<Header />}
+      header={<CloseableTitleBar title="发现新版本" setOpen={props.setOpen} />}
       footer={<Footer />}
     >
       <div>

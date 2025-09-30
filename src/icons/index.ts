@@ -1,4 +1,5 @@
 import Reset from "@iconify-icons/humbleicons/refresh";
+import CloseLine from "@iconify-icons/mingcute/close-line";
 import Pause from "@iconify-icons/mingcute/pause-fill";
 import Play from "@iconify-icons/mingcute/play-fill";
 import Volume from "@iconify-icons/mingcute/volume-line";
@@ -17,6 +18,7 @@ export default {
   Play,
   Reset,
   Close,
+  CloseLine,
   Volume,
   Music,
   Setting, // 暂未使用
