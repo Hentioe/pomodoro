@@ -37,7 +37,7 @@ export default (props: { update?: Update; updateChecker?: UpdateChecker }) => {
     <>
       <header class="absolute top-[1rem] left-[1rem] right-[1rem] text-zinc-200 flex justify-between items-center">
         <div class="flex-1">
-          <NavIcon icon={icons.AboutNew} onClick={() => setAboutNewDialogOpen(true)} />
+          <NavIcon icon={props.update ? icons.AboutNew : icons.About} onClick={() => setAboutNewDialogOpen(true)} />
         </div>
         <Show when={props.update} fallback={<Version />}>
           <p

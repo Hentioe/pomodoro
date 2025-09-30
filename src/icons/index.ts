@@ -6,6 +6,7 @@ import Volume from "@iconify-icons/mingcute/volume-line";
 import DocumentTextBold from "@iconify-icons/solar/document-text-bold";
 import Music from "@iconify-icons/tabler/music";
 import Setting from "@iconify-icons/tdesign/setting";
+import About from "./about";
 import AboutNew from "./about-new";
 import CheckFill from "./check-fill";
 import Close from "./close";
@@ -22,6 +23,7 @@ export default {
   Volume,
   Music,
   Setting, // 暂未使用
+  About,
   AboutNew,
   CheckFill,
   DocumentTextBold,
