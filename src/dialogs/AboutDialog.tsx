@@ -4,6 +4,7 @@ import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { destructure } from "@solid-primitives/destructure";
 import { getVersion } from "@tauri-apps/api/app";
 import { error } from "@tauri-apps/plugin-log";
+import classNames from "classnames";
 import { Accessor, createResource, createSignal, JSX, Setter, Show } from "solid-js";
 import { toast, WebViewInfo } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
@@ -91,7 +92,7 @@ export default (props: Props) => {
     return (
       <button
         onClick={handleCheckUpdate}
-        class="depress-effect relative px-2 py-1 bg-white text-blue-400 rounded-xl border border-zinc-200/50"
+        class="depress-effect relative px-2 py-1 bg-white text-blue-400 rounded-xl"
       >
         {version() || "未知"}
         <Show when={update()}>
@@ -104,7 +105,7 @@ export default (props: Props) => {
   return (
     <>
       <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
-        <div class="bg-white rounded-xl p-[1rem] flex flex-col gap-[1rem] border border-zinc-50">
+        <div class="bg-white rounded-xl p-[0.75rem] flex flex-col gap-[1rem]">
           <Field name="应用版本">
             <VersionButton />
           </Field>
@@ -125,7 +126,7 @@ export default (props: Props) => {
               text="Tauri"
               url="https://tauri.app"
               imgSrc={TauriLogo}
-            />框架构建，正在为大量平台提供支持。
+            />框架构建。
           </p>
           <p class="font-bold text-gray-700">
             更多内容请参考
@@ -155,14 +156,14 @@ export default (props: Props) => {
 const Field = (props: { name: string; children: JSX.Element }) => {
   return (
     <button class="flex items-center justify-between">
-      <span class="text-gray-600">{props.name}</span>
+      <span class="text-gray-800">{props.name}</span>
       {props.children}
     </button>
   );
 };
 
 const FieldTextValue = (props: { children: JSX.Element }) => {
-  return <span class="text-gray-600">{props.children}</span>;
+  return <span class="text-gray-500">{props.children}</span>;
 };
 
 const NavLink = (props: { url: string; icon: string | IconifyIcon; children: JSX.Element }) => {
@@ -185,7 +186,10 @@ const IconLink = (props: { text: string; url: string; imgSrc: string }) => {
     <a
       href={props.url}
       target="_blank"
-      class="h-[1.5rem] bg-zinc-200/70 active:bg-blue-200/90 transition-colors border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle"
+      class={classNames([
+        "h-[1.5rem] bg-zinc-200/70 border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle",
+        "transition-colors active:bg-blue-200/90 active:border-blue-200",
+      ])}
     >
       <img src={props.imgSrc} class="h-[1rem] w-[1rem] rounded-md" />
       <span>{props.text}</span>
