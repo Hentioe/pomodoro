@@ -18,7 +18,7 @@ enum class LocalMedia(
 ) {
     TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，循环音频
     RAIN("musics/rain.ogg", 0.0f, 0, true), // 雨声，循环音频
-    RAIN_THUNDER("musics/rain-thunder.ogg", 66f, -400), // 带雷雨声的雨声，66 秒位置重叠（由于音频预处理不够，提前 0.4 秒）
+    RAIN_THUNDER("musics/rain-thunder.ogg", 0.0f, 0, true), // 雷雨，循环音频
     WIND_STRONG("musics/wind-strong.ogg", 27f), // 强风，27 秒位置重叠
     BONFIRE("musics/bonfire.ogg", 49f), // 篝火，49 秒位置重叠
     BEACH("musics/beach.ogg", 67f), // 海滩，67 秒位置重叠
