@@ -8,6 +8,7 @@ import classNames from "classnames";
 import { Accessor, createResource, createSignal, JSX, Setter, Show } from "solid-js";
 import { toast, WebViewInfo } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
+import { useTranslator } from "../i18n";
 import icons from "../icons";
 import { globalState, setUpdate } from "../states/global";
 import { UpdateChecker } from "../update-checker";
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default (props: Props) => {
+  const t = useTranslator();
   const [version] = createResource(getVersion);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [isUpdateChecking, setIsUpdateChecking] = createSignal(false);
@@ -31,7 +33,7 @@ export default (props: Props) => {
   const handleCheckUpdate = async () => {
     if (props.updateChecker && !isUpdateChecking()) {
       setIsUpdateChecking(true);
-      await toast("正在检查更新...");
+      await toast(t("update.checking"));
       try {
         const result = await props.updateChecker.checkCached();
 
@@ -41,16 +43,16 @@ export default (props: Props) => {
             setNewVersionDialogOpen(true);
           } else {
             setNewVersionDialogOpen(false);
-            await toast("当前已是最新版本");
+            await toast(t("update.latest"));
           }
         } else {
-          await toast("检查更新失败: " + result.message);
+          await toast(t("update.error", { message: result.message }));
         }
       } catch (e) {
         if (e instanceof String) {
           error("Failed to check for updates: " + e);
         }
-        await toast("检查更新失败");
+        await toast(t("update.failed"));
       }
 
       setIsUpdateChecking(false);
@@ -69,8 +71,8 @@ export default (props: Props) => {
           />
         </div>
         {/* 应用名称 */}
-        <p class="font-bold text-[1.5rem]">番茄钟</p>
-        <p class="text-gray-600 text-sm tracking-wide">高效专注，轻松管理时间</p>
+        <p class="font-bold text-[1.5rem]">{t("app.name")}</p>
+        <p class="text-gray-600 text-sm tracking-wide">{t("app.description")}</p>
       </div>
     );
   };
@@ -82,7 +84,7 @@ export default (props: Props) => {
           class="text-blue-400 font-bold"
           onClick={props.onClose}
         >
-          确认
+          {t("about.button.confirm")}
         </button>
       </div>
     );
@@ -94,7 +96,7 @@ export default (props: Props) => {
         onClick={handleCheckUpdate}
         class="depress-effect relative px-2 py-1 bg-white text-blue-400 rounded-xl"
       >
-        {version() || "未知"}
+        {version() || t("about.unknown_value")}
         <Show when={update()}>
           <div class="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500" />
         </Show>
@@ -106,43 +108,47 @@ export default (props: Props) => {
     <>
       <BasicDialog open={props.open} setOpen={props.setOpen} header={<Header />} footer={<Footer />}>
         <div class="bg-white rounded-xl p-[0.75rem] flex flex-col gap-[1rem]">
-          <Field name="应用版本">
+          <Field name={t("about.app_version")}>
             <VersionButton />
           </Field>
           <Field name="WebView">
-            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.version : "未知"}</FieldTextValue>
+            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.version : t("about.unknown_value")}</FieldTextValue>
           </Field>
-          <Field name="运行平台">
-            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.platform : "未知"}</FieldTextValue>
+          <Field name={t("about.platform")}>
+            <FieldTextValue>{props.webViewInfo ? props.webViewInfo.platform : t("about.unknown_value")}</FieldTextValue>
           </Field>
         </div>
         <div class="mt-[1rem] flex flex-col gap-[1rem]">
           <p class="leading-[2rem] tracking-wide text-gray-700">
-            本应用是由<IconLink
+            {t("about.this_app_is")}
+            <IconLink
               text="Hentioe"
               url="https://github.com/Hentioe"
               imgSrc={HentioeAvatar}
-            />开发的免费产品，基于<IconLink
+            />
+            {t("about.developed_free_product")}
+            <IconLink
               text="Tauri"
               url="https://tauri.app"
               imgSrc={TauriLogo}
-            />框架构建。
+            />
+            {t("about.built_with_framework")}
           </p>
           <p class="font-bold text-gray-700">
-            更多内容请参考
+            {t("about.more_info_refer")}
           </p>
           <ul class="flex flex-col gap-[0.5rem]">
             <NavLink
               icon={icons.CheckFill}
               url="https://blog.hentioe.dev/posts/introduction-to-the-pomodoro-technique.html"
             >
-              入门番茄工作法
+              {t("about.refer.intro")}
             </NavLink>
             <NavLink
               icon={icons.DocumentTextBold}
               url="https://blog.hentioe.dev/posts/pomodoro-clock-tauri-application-prospects.html"
             >
-              跨端应用开发前景的强大展现力
+              {t("about.refer.tauri")}
             </NavLink>
           </ul>
         </div>
