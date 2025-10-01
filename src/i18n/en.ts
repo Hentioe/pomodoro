@@ -33,4 +33,14 @@ export const dict: Dict = {
       confirm: "Confirm",
     },
   },
+  // 发现新版本
+  new_version: {
+    title: "Found New Version",
+    update_now: "Update Now",
+    download_from_browser: "Download from Browser",
+    downloading_notice: "Downloading (check notification)",
+    downloading_notice_browser: "Check browser downloads",
+    no_release_notes: "No release notes available",
+    unknown_version: "Unknown",
+  },
 };

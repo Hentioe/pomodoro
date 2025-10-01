@@ -31,4 +31,14 @@ export const dict = {
       confirm: "确认",
     },
   },
+  // 发现新版本
+  new_version: {
+    title: "发现新版本",
+    update_now: "立即更新",
+    download_from_browser: "从浏览器下载",
+    downloading_notice: "下载中，请检查通知",
+    downloading_notice_browser: "请留意浏览器的下载任务",
+    no_release_notes: "暂无更新日志",
+    unknown_version: "未知",
+  },
 };
