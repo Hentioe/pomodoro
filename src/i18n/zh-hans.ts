@@ -3,6 +3,10 @@ export const dict = {
     name: "番茄钟",
     description: "高效专注，轻松管理时间",
   },
+  header: {
+    new_version: "发现新版本",
+    development_version: "开发版",
+  },
   // 弹窗组件
   dialog: {
     standard: {

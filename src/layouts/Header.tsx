@@ -7,11 +7,14 @@ import AboutDialog from "../dialogs/AboutDialog";
 import NewVersionDialog from "../dialogs/NewVersionDialog";
 import SettingsDialog from "../dialogs/SettingsDialog";
 import { isMobile } from "../helper";
+import { useTranslator } from "../i18n";
 import icons from "../icons";
 import { globalState } from "../states/global";
 import { UpdateChecker } from "../update-checker";
 
 export default (props: { updateChecker?: UpdateChecker }) => {
+  const t = useTranslator();
+
   const [settingsDialogOpen, setSettingsDialogOpen] = createSignal(false);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
@@ -20,7 +23,7 @@ export default (props: { updateChecker?: UpdateChecker }) => {
   const { update } = destructure(globalState);
 
   const Version = () => {
-    return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">开发版</p>;
+    return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">{t("header.development_version")}</p>;
   };
 
   const handleWebViewInfoFetched = (webviewInfo: WebViewInfo) => {
@@ -46,7 +49,7 @@ export default (props: { updateChecker?: UpdateChecker }) => {
             onClick={() => setNewVersionDialogOpen(true)}
             class="bg-red-500 text-zinc-100 text-base rounded-lg px-[0.5rem] cursor-pointer"
           >
-            发现新版本
+            {t("header.new_version")}
           </p>
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">

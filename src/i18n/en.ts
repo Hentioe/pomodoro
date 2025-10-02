@@ -5,6 +5,10 @@ export const dict: Dict = {
     name: "Pomodoro",
     description: "Efficiently focus and easily manage your time",
   },
+  header: {
+    new_version: "Found New Version",
+    development_version: "Development Version",
+  },
   // 弹窗组件
   dialog: {
     standard: {
