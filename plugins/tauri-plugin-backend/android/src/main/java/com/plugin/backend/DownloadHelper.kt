@@ -13,8 +13,8 @@ private val LOG_TAG = "tauripomodoro:DownloadHelper"
 fun startDownload(context: Context, apkUrl: String, version: String): Long {
     val request =
         DownloadManager.Request(Uri.parse(apkUrl))
-            .setTitle("番茄钟更新") // 通知标题
-            .setDescription("正在下载新版本：$version") // 通知描述
+            .setTitle(context.getString(R.string.upgrade_title)) // 通知标题
+            .setDescription(context.getString(R.string.downloading_new_version) + version) // 通知描述
             .setNotificationVisibility(
                 DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED) // 显示进度并在完成时通知
             .setDestinationInExternalPublicDir(

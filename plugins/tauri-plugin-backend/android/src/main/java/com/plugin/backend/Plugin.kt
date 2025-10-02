@@ -87,9 +87,9 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
     // 显示版本过低对话框
     private fun showLowVersionDialog() {
         AlertDialog.Builder(this.activity)
-            .setTitle("WebView 版本过低")
-            .setMessage("您的设备 WebView 版本过低，不满足运行要求。请更新 WebView 或升级设备系统后重试。")
-            .setPositiveButton("确认") { _, _ ->
+            .setTitle(activity.getString(R.string.webview_outdated_title))
+            .setMessage(activity.getString(R.string.webview_outdated_message))
+            .setPositiveButton(activity.getString(R.string.webview_outdated_confirm)) { _, _ ->
                 // 停止服务
                 val intent = Intent(activity, PomodoroService::class.java)
                 activity.stopService(intent)
@@ -230,7 +230,11 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
             val shouldShowRationale = activity.shouldShowRequestPermissionRationale(permission)
             if (res != android.content.pm.PackageManager.PERMISSION_GRANTED &&
                 !shouldShowRationale) {
-                Toast.makeText(activity, "授予通知权限以显示定时器", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                        activity,
+                        activity.getString(R.string.grant_notification_permission),
+                        Toast.LENGTH_LONG)
+                    .show()
                 activity.requestPermissions(arrayOf(permission), 1)
             }
         }

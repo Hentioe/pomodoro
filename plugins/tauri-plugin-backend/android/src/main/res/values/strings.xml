@@ -1,0 +1,11 @@
+<resources>
+    <string name="upgrade_title">Pomodoro Upgrade</string>
+    <string name="downloading_new_version">Downloading new version: </string>
+    <string name="grant_notification_permission">Grant Notification Permission to Show Timer</string>
+    <string name="webview_outdated_title">WebView Version Outdated</string>
+    <string name="webview_outdated_message">Your WebView version is outdated. Please update it to ensure the normal functionality of the application.</string>
+    <string name="webview_outdated_confirm">OK</string>
+    <string name="start_focus">Start Focusing</string>
+    <string name="start_break">Start Breaking</string>
+    <string name="start_long_break">Start Long Break</string>
+</resources>

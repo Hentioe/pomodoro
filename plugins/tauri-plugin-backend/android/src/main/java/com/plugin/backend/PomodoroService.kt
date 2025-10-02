@@ -263,17 +263,17 @@ class PomodoroService : Service() {
     private suspend fun phaseAlert() {
         when (state.phase) {
             PomodoroPhase.FOCUS -> {
-                showToast("要开始专注了~")
+                showToast(getString(R.string.start_focus))
                 alarmManager.play(AlarmSound.FOCUS_ALERT, settings.promptVolume)
                 delay((AlarmSound.FOCUS_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.SHORT_BREAK -> {
-                showToast("休息一下吧~")
+                showToast(getString(R.string.start_break))
                 alarmManager.play(AlarmSound.SHORT_BREAK_ALERT, settings.promptVolume)
                 delay((AlarmSound.SHORT_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
             PomodoroPhase.LONG_BREAK -> {
-                showToast("多休息一下，放松放松自己~")
+                showToast(getString(R.string.start_long_break))
                 alarmManager.play(AlarmSound.LONG_BREAK_ALERT, settings.promptVolume)
                 delay((AlarmSound.LONG_BREAK_ALERT.durationSeconds * 1000).toLong())
             }
