@@ -15,6 +15,12 @@ export const dict: Dict = {
       confirm: "Confirm",
       cancel: "Cancel",
     },
+    controls: {
+      exit: {
+        title: "Exit Confirmation",
+        message: "The Pomodoro timer is still running. Are you sure you want to exit?",
+      },
+    },
   },
   // 检查更新
   update: {

@@ -13,6 +13,12 @@ export const dict = {
       confirm: "确认",
       cancel: "取消",
     },
+    controls: {
+      exit: {
+        title: "退出确认",
+        message: "番茄钟还在计时中，确定要退出吗？",
+      },
+    },
   },
   // 检查更新
   update: {

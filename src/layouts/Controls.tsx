@@ -4,6 +4,7 @@ import { createSignal } from "solid-js";
 import { PomodoroPhase } from "tauri-plugin-backend-api";
 import { StandardDialog } from "../components";
 import SoundDialog from "../dialogs/SoundDialog";
+import { useTranslator } from "../i18n";
 import icons from "../icons";
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
 }
 
 export default (props: Props) => {
+  const t = useTranslator();
+
   const [soundDialogOpen, setSoundDialogOpen] = createSignal(false);
   const [exitConfirmOpen, setExitConfirmOpen] = createSignal(false);
 
@@ -74,8 +77,13 @@ export default (props: Props) => {
       {/* 声音定制弹窗 */}
       <SoundDialog open={soundDialogOpen} setOpen={setSoundDialogOpen} />
       {/* 退出确认弹窗 */}
-      <StandardDialog title="退出确认" onConfirm={props.onExit} open={exitConfirmOpen} setOpen={setExitConfirmOpen}>
-        番茄钟还在计时中，确定要退出吗？
+      <StandardDialog
+        title={t("dialog.controls.exit.title")}
+        onConfirm={props.onExit}
+        open={exitConfirmOpen}
+        setOpen={setExitConfirmOpen}
+      >
+        {t("dialog.controls.exit.message")}
       </StandardDialog>
     </>
   );
