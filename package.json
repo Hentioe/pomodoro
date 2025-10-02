@@ -14,6 +14,8 @@
   "dependencies": {
     "@ark-ui/solid": "^5.24.1",
     "@iconify-icon/solid": "^3.0.0",
+    "@iconify-icons/codicon": "^1.2.30",
+    "@iconify-icons/fluent-mdl2": "^1.2.1",
     "@iconify-icons/humbleicons": "^1.2.4",
     "@iconify-icons/mingcute": "^1.2.9",
     "@iconify-icons/solar": "^1.2.3",

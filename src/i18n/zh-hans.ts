@@ -31,6 +31,24 @@ export const dict = {
       confirm: "确认",
     },
   },
+  // 设置
+  settings: {
+    title: "设置",
+    timer: "定时器",
+    focus_duration: "专注时长",
+    short_break_duration: "短休息时长",
+    long_break_duration: "长休息时长",
+    minutes: "分钟",
+    volume: "音量",
+    tick_sound: "滴答声",
+    alarm_sound: "闹铃声",
+    prompt_sound: "提示声",
+    background_sound: "背景声",
+    button: {
+      reset: "重置为默认值",
+      save: "保存",
+    },
+  },
   // 发现新版本
   new_version: {
     title: "发现新版本",

@@ -6,11 +6,12 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 [data-scope="slider"][data-part="control"] {
-  --slider-thumb-size: 1.25rem;
-  --slider-track-height: 0.25rem;
+  --slider-thumb-size: 0.65rem;
+  --slider-track-height: 0.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,8 +27,7 @@
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
   border-radius: 50%;
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 4px;
+  background: theme(--color-red-400);
 }
 
 [data-scope="slider"] .control-area {
@@ -41,7 +41,7 @@
 }
 
 [data-scope="slider"][data-part="track"] {
-  background: theme(--color-zinc-300);
+  background: theme(--color-zinc-200);
   border-radius: 9999px;
   box-sizing: border-box;
   position: relative; /* 此定位服务于伪元素 */

@@ -5,18 +5,16 @@ import { createSignal, onMount, Show } from "solid-js";
 import { onWebViewInfoFetched, ping, WebViewInfo } from "tauri-plugin-backend-api";
 import AboutDialog from "../dialogs/AboutDialog";
 import NewVersionDialog from "../dialogs/NewVersionDialog";
-import TimerDialog from "../dialogs/TimerDialog";
-import VolumeDialog from "../dialogs/VolumeDialog";
+import SettingsDialog from "../dialogs/SettingsDialog";
 import { isMobile } from "../helper";
 import icons from "../icons";
 import { globalState } from "../states/global";
 import { UpdateChecker } from "../update-checker";
 
 export default (props: { updateChecker?: UpdateChecker }) => {
-  const [volumeDialogOpen, setVolumeDialogOpen] = createSignal(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = createSignal(false);
   const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
-  const [timerDialogOpen, setTimerDialogOpen] = createSignal(false);
   const [webviewInfo, setWebviewInfo] = createSignal<WebViewInfo | undefined>(undefined);
 
   const { update } = destructure(globalState);
@@ -52,14 +50,11 @@ export default (props: { updateChecker?: UpdateChecker }) => {
           </p>
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
-          <NavIcon icon={icons.Timer} onClick={() => setTimerDialogOpen(true)} />
-          <NavIcon icon={icons.Volume} onClick={() => setVolumeDialogOpen(true)} />
+          <NavIcon icon={icons.Setting} onClick={() => setSettingsDialogOpen(true)} />
         </div>
       </header>
-      {/* 音量设置弹窗 */}
-      <VolumeDialog open={volumeDialogOpen} setOpen={setVolumeDialogOpen} />
-      {/* 定时器设置弹窗 */}
-      <TimerDialog open={timerDialogOpen} setOpen={setTimerDialogOpen} />
+      {/* 设置弹窗 */}
+      <SettingsDialog open={settingsDialogOpen} setOpen={setSettingsDialogOpen} />
       {/* 新版本弹窗 */}
       <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} />
       {/* 关于弹窗 */}

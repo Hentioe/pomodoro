@@ -33,6 +33,24 @@ export const dict: Dict = {
       confirm: "Confirm",
     },
   },
+  // 设置
+  settings: {
+    title: "Settings",
+    timer: "TIMER",
+    focus_duration: "Focus duration",
+    short_break_duration: "Short break duration",
+    long_break_duration: "Long break duration",
+    minutes: "minutes",
+    volume: "VOLUME",
+    tick_sound: "Tick sound",
+    alarm_sound: "Alarm sound",
+    prompt_sound: "Prompt sound",
+    background_sound: "Background sound",
+    button: {
+      reset: "Reset to Default",
+      save: "Save",
+    },
+  },
   // 发现新版本
   new_version: {
     title: "Found New Version",

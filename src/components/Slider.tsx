@@ -1,7 +1,8 @@
 import { Slider } from "@ark-ui/solid/slider";
+import { JSX, Show } from "solid-js";
 
-interface Props {
-  label: string;
+export interface SliderProps {
+  label: string | JSX.Element;
   value: number;
   min?: number;
   max?: number;
@@ -10,7 +11,7 @@ interface Props {
   onValueChangeEnd?: (value: number) => void;
 }
 
-export default (props: Props) => {
+export default (props: SliderProps) => {
   const handleValueChangeEnd = (value: number) => {
     props.onValueChangeEnd?.(value);
   };
@@ -24,7 +25,9 @@ export default (props: Props) => {
       onValueChange={details => props.onValueChange?.(details.value[0])}
       onValueChangeEnd={details => handleValueChangeEnd(details.value[0])}
     >
-      <Slider.Label>{props.label}</Slider.Label>
+      <Show when={typeof props.label !== "string"} fallback={<Slider.Label>{props.label}</Slider.Label>}>
+        {props.label}
+      </Show>
       <Slider.Control>
         <Slider.Track>
           <Slider.Range />
