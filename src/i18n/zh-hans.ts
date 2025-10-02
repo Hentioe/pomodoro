@@ -3,6 +3,13 @@ export const dict = {
     name: "番茄钟",
     description: "高效专注，轻松管理时间",
   },
+  // 弹窗组件
+  dialog: {
+    standard: {
+      confirm: "确认",
+      cancel: "取消",
+    },
+  },
   // 检查更新
   update: {
     checking: "正在检查更新...",
@@ -47,6 +54,31 @@ export const dict = {
     button: {
       reset: "重置为默认值",
       save: "保存",
+    },
+  },
+  // 声音定制
+  sounds: {
+    title: "声音定制",
+    tick_sound: "滴答声",
+    background_music: "背景声",
+    none: "无",
+    // 滴答声
+    tick: {
+      pointer: "指针",
+      tick_tock: "钟摆",
+      mokugyo: "木鱼",
+      ekg: "心电",
+    },
+    // 背景声
+    background: {
+      timer: "定时器",
+      rain: "雨声",
+      rain_thunder: "雷雨",
+      wind_strong: "强风",
+      beach: "海滩",
+      bonfire: "篝火",
+      nature_stream: "自然（溪流）",
+      nature_crickets: "自然（虫鸣）",
     },
   },
   // 发现新版本

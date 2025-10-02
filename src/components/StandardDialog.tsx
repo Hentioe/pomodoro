@@ -1,5 +1,6 @@
 import { Dialog } from "@ark-ui/solid/dialog";
 import { Accessor, JSX, Setter, Show } from "solid-js";
+import { useTranslator } from "../i18n";
 import BasicDialog from "./BasicDialog";
 
 interface ActionButtonsProps {
@@ -57,13 +58,15 @@ export default (props: StandardDialogProps) => {
 };
 
 const ActionButtons = (props: ActionButtonsProps) => {
+  const t = useTranslator();
+
   return (
     <div class="flex justify-end items-center">
       <div class="flex gap-[2rem]">
         <Show when={!props.hiddenCancel}>
-          <DialogButton onClick={props.onCancel}>取消</DialogButton>
+          <DialogButton onClick={props.onCancel}>{t("dialog.standard.cancel")}</DialogButton>
         </Show>
-        <DialogButton onClick={props.onConfirm}>{props.confirmText || "确认"}</DialogButton>
+        <DialogButton onClick={props.onConfirm}>{props.confirmText || t("dialog.standard.confirm")}</DialogButton>
       </div>
     </div>
   );

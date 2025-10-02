@@ -5,6 +5,13 @@ export const dict: Dict = {
     name: "Pomodoro",
     description: "Efficiently focus and easily manage your time",
   },
+  // 弹窗组件
+  dialog: {
+    standard: {
+      confirm: "Confirm",
+      cancel: "Cancel",
+    },
+  },
   // 检查更新
   update: {
     checking: "Checking for updates...",
@@ -49,6 +56,31 @@ export const dict: Dict = {
     button: {
       reset: "Reset to Default",
       save: "Save",
+    },
+  },
+  // 声音定制
+  sounds: {
+    title: "Sound Customization",
+    tick_sound: "Tick sound",
+    background_music: "Background sound",
+    none: "None",
+    // 滴答声
+    tick: {
+      pointer: "Pointer",
+      tick_tock: "Tick Tock",
+      mokugyo: "Mokugyo",
+      ekg: "EKG",
+    },
+    // 背景声
+    background: {
+      timer: "Timer",
+      rain: "Rain",
+      rain_thunder: "Thunderstorm",
+      wind_strong: "Strong wind",
+      beach: "Beach",
+      bonfire: "Bonfire",
+      nature_stream: "Nature (Stream)",
+      nature_crickets: "Nature (Crickets)",
     },
   },
   // 发现新版本

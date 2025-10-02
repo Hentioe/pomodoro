@@ -2,6 +2,7 @@ import { Accessor, createSignal, onMount, Setter } from "solid-js";
 import { MusicName, onSettingsUpdated, ping, previewSound, TickName, writeSettings } from "tauri-plugin-backend-api";
 import { StandardDialog } from "../components";
 import Rodio from "../components/Rodio";
+import { useTranslator } from "../i18n";
 
 interface Props {
   open: Accessor<boolean>;
@@ -11,34 +12,35 @@ interface Props {
 const DEFAULT_TICK_SOUND: TickName = "default_tick";
 const DEFAULT_BACKGROUND_MUSIC: MusicName = "none";
 
-const TickOptions: RodioOption[] = [
-  { label: "无", value: "none" },
-  { label: "指针", value: "default_tick" },
-  { label: "钟摆", value: "tick-tock_tick" },
-  { label: "木鱼", value: "mokugyo_tick" },
-  // { label: "心跳", value: "heartbeat_tick" },
-  { label: "心电", value: "ekg_tick" },
-  // { label: "蔡徐坤", value: "kun_tick" },
-];
-
-const BackgroundOptions: RodioOption[] = [
-  { label: "无", value: "none" },
-  // { label: "白噪音", value: "white-noise_music" },
-  { label: "计时器", value: "timer_music" },
-  { label: "下雨", value: "rain_music" },
-  { label: "雷雨", value: "rain-thunder_music" },
-  { label: "强风", value: "wind-strong_music" },
-  { label: "海滩", value: "beach_music" },
-  { label: "篝火", value: "bonfire_music" },
-  { label: "自然（溪流）", value: "nature-stream_music" },
-  { label: "自然（虫鸣）", value: "nature-crickets_music" },
-];
-
 export default (props: Props) => {
+  const t = useTranslator();
   const [editingTick, setEditingTick] = createSignal<TickName>(DEFAULT_TICK_SOUND);
   const [submittedTick, setSubmittedTick] = createSignal<TickName>(DEFAULT_TICK_SOUND);
   const [editingBackground, setEditingBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
   const [submittedBackground, setSubmittedBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
+
+  const tickOptions: RodioOption[] = [
+    { label: t("sounds.none"), value: "none" },
+    { label: t("sounds.tick.pointer"), value: "default_tick" },
+    { label: t("sounds.tick.tick_tock"), value: "tick-tock_tick" },
+    { label: t("sounds.tick.mokugyo"), value: "mokugyo_tick" },
+    // { label: t("sounds.tick.heartbeat"), value: "heartbeat_tick" },
+    { label: t("sounds.tick.ekg"), value: "ekg_tick" },
+    // { label: t("sounds.tick.kun"), value: "kun_tick" },
+  ];
+
+  const backgroundOptions: RodioOption[] = [
+    { label: t("sounds.none"), value: "none" },
+    // { label: t("sounds.background.white_noise"), value: "white-noise_music" },
+    { label: t("sounds.background.timer"), value: "timer_music" },
+    { label: t("sounds.background.rain"), value: "rain_music" },
+    { label: t("sounds.background.rain_thunder"), value: "rain-thunder_music" },
+    { label: t("sounds.background.wind_strong"), value: "wind-strong_music" },
+    { label: t("sounds.background.beach"), value: "beach_music" },
+    { label: t("sounds.background.bonfire"), value: "bonfire_music" },
+    { label: t("sounds.background.nature_stream"), value: "nature-stream_music" },
+    { label: t("sounds.background.nature_crickets"), value: "nature-crickets_music" },
+  ];
 
   const handleTickChange = async (value: string) => {
     const tick = value as TickName;
@@ -86,7 +88,7 @@ export default (props: Props) => {
 
   return (
     <StandardDialog
-      title="声音定制"
+      title={t("sounds.title")}
       open={props.open}
       setOpen={props.setOpen}
       onConfirm={handleSoundConfirm}
@@ -94,15 +96,15 @@ export default (props: Props) => {
     >
       <div class="flex flex-col gap-[1rem]">
         <Rodio
-          label="滴答音"
+          label={t("sounds.tick_sound")}
           value={editingTick()}
-          options={TickOptions}
+          options={tickOptions}
           onValueChange={handleTickChange}
         />
         <Rodio
-          label="背景音"
+          label={t("sounds.background_music")}
           value={editingBackground()}
-          options={BackgroundOptions}
+          options={backgroundOptions}
           onValueChange={handleBackgroundChange}
         />
       </div>
