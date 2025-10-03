@@ -2,14 +2,22 @@ import { Dialog } from "@ark-ui/solid/dialog";
 import { Accessor, JSX, Setter, Show } from "solid-js";
 import { Portal } from "solid-js/web";
 
-interface Props {
+export interface OpenProps {
   open: Accessor<boolean>;
   setOpen: Setter<boolean>;
+}
+
+interface LayoutProps {
   header?: JSX.Element;
   footer?: JSX.Element;
   children: JSX.Element;
+}
+
+interface EventProps {
   onClosed?: () => void;
 }
+
+type Props = OpenProps & LayoutProps & EventProps;
 
 export default (props: Props) => {
   return (

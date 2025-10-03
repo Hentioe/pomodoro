@@ -4,8 +4,7 @@ export const dict = {
     description: "高效专注，轻松管理时间",
   },
   header: {
-    new_version: "发现新版本",
-    development_version: "开发版",
+    no_target: "无目标",
   },
   // 弹窗组件
   dialog: {
