@@ -13,7 +13,7 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <Dialog.Root lazyMount unmountOnExit open={props.open()}>
+    <Dialog.Root lazyMount unmountOnExit closeOnInteractOutside={false} open={props.open()}>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>

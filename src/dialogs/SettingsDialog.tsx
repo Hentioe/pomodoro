@@ -138,7 +138,7 @@ export default (props: Props) => {
       footer={<Footer />}
     >
       <CategoryTitle>{t.settings.timer()}</CategoryTitle>
-      <div class="flex flex-col gap-[0.25rem]">
+      <div class="flex flex-col gap-[1.5rem]">
         <MySlider
           icon={icons.WorkingSpaceLaptop}
           label={
@@ -184,7 +184,7 @@ export default (props: Props) => {
       </div>
       <div class="mt-[0.75rem]" />
       <CategoryTitle>{t.settings.volume()}</CategoryTitle>
-      <div class="flex flex-col gap-[0.25rem]">
+      <div class="flex flex-col gap-[1.5rem]">
         <MySlider
           icon={icons.Time}
           label={<SliderLabel name={t.settings.tick_sound()} value={editingVolumes.tick_default} />}
@@ -225,7 +225,7 @@ const SliderLabel = (props: { name: string; value: number | string }) => {
 
 const MySlider = (props: SliderProps & { icon: string | IconifyIcon }) => {
   return (
-    <div class="px-[0.5rem] py-[1rem] flex items-center gap-[1rem]">
+    <div class="px-[0.5rem] flex items-center gap-[1rem]">
       <Icon icon={props.icon} class="text-[1.5rem] w-[1.5rem] h-[1.5rem]" />
 
       <div class="flex-1">
