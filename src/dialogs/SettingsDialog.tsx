@@ -1,7 +1,7 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { Accessor, JSX, onMount, Setter } from "solid-js";
 import { createStore } from "solid-js/store";
-import { DefaultName, onSettingsUpdated, ping, previewSound, writeSettings } from "tauri-plugin-backend-api";
+import { DefaultName, onSettingsUpdated, ping, previewSound, Settings, writeSettings } from "tauri-plugin-backend-api";
 import { BasicDialog } from "../components";
 import CloseableTitleBar from "../components/CloseableTitleBar";
 import Slider, { SliderProps } from "../components/Slider";
@@ -57,15 +57,25 @@ export default (props: Props) => {
   };
 
   const handleSave = async () => {
-    await writeSettings({
+    const changeset: Settings = {
       tickVolume: editingVolumes.tick_default,
       alarmVolume: editingVolumes.alarm_default,
       promptVolume: editingVolumes.prompt_default,
       backgroundVolume: editingVolumes.background_default,
-      focusMinutes: editingTimes.focusMinutes,
-      shortBreakMinutes: editingTimes.shortBreakMinutes,
-      longBreakMinutes: editingTimes.longBreakMinutes,
-    });
+    };
+
+    // 仅在时长设置有变更时才更新，避免不必要的计时器重置
+    if (editingTimes.focusMinutes !== submittedTimes.focusMinutes) {
+      changeset.focusMinutes = editingTimes.focusMinutes;
+    }
+    if (editingTimes.shortBreakMinutes !== submittedTimes.shortBreakMinutes) {
+      changeset.shortBreakMinutes = editingTimes.shortBreakMinutes;
+    }
+    if (editingTimes.longBreakMinutes !== submittedTimes.longBreakMinutes) {
+      changeset.longBreakMinutes = editingTimes.longBreakMinutes;
+    }
+
+    await writeSettings(changeset);
 
     props.setOpen(false);
 
