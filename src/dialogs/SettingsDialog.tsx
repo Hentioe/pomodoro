@@ -134,8 +134,7 @@ export default (props: Props) => {
     <BasicDialog
       open={props.open}
       setOpen={props.setOpen}
-      onCancel={handleCancel}
-      header={<CloseableTitleBar title={t.settings.title()} setOpen={props.setOpen} />}
+      header={<CloseableTitleBar title={t.settings.title()} setOpen={props.setOpen} onClose={handleCancel} />}
       footer={<Footer />}
     >
       <CategoryTitle>{t.settings.timer()}</CategoryTitle>

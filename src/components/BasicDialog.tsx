@@ -8,19 +8,12 @@ interface Props {
   header?: JSX.Element;
   footer?: JSX.Element;
   children: JSX.Element;
-  onCancel?: () => void;
+  onClosed?: () => void;
 }
 
 export default (props: Props) => {
-  const handleCancel = () => {
-    if (props.onCancel) {
-      props.onCancel();
-    }
-    props.setOpen(false);
-  };
-
   return (
-    <Dialog.Root lazyMount unmountOnExit open={props.open()} onOpenChange={handleCancel}>
+    <Dialog.Root lazyMount unmountOnExit open={props.open()}>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
