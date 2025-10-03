@@ -40,17 +40,7 @@ class PomodoroService : Service() {
     val soundManager = SoundManager(this) // 声音管理器（封装短音频）
     val alarmManager = AlarmManager(this) // 闹钟管理器（封装提示音）
     val mediaManager = MediaManager(this) // 媒体管理器（封装长音频）
-    private var settings =
-        Settings(
-            tickSound = "default_tick",
-            backgroundMusic = "none",
-            tickVolume = 0.5f,
-            alarmVolume = 0.8f,
-            promptVolume = 0.8f,
-            backgroundVolume = 0.6f,
-            focusMinutes = 25,
-            shortBreakMinutes = 5,
-            longBreakMinutes = 15) // 默认设置
+    private var settings = Settings.DEFAULT.copy() // 用默认设置初始化
     private val binder = LocalBinder()
     private var callback: WeakReference<ServiceCallback>? = null // 使用弱引用持有回调
     private var settingsCallback: WeakReference<SettingsCallback>? = null // 使用弱引用持有设置回调
