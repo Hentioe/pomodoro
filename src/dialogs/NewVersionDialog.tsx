@@ -45,11 +45,11 @@ export default (props: { open: Accessor<boolean>; setOpen: Setter<boolean> }) =>
 
   const ChangelogDetails = (props: { details?: string[] }) => {
     return (
-      <div class="flex flex-col gap-[0.25rem]">
+      <ul class="list-disc pl-[1rem] text-[0.9rem] tracking-wide">
         <For each={props.details}>
-          {(line) => <p>•&nbsp;&nbsp;{line}</p>}
+          {(line) => <li>{line}</li>}
         </For>
-      </div>
+      </ul>
     );
   };
 
