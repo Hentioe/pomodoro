@@ -6,8 +6,8 @@ export const dict: Dict = {
     description: "Efficiently focus and easily manage your time",
   },
   header: {
-    new_version: "Found New Version",
-    development_version: "Development Version",
+    no_target: "No Target",
+    todo_manage: "Todo Management",
   },
   // 弹窗组件
   dialog: {
@@ -102,5 +102,31 @@ export const dict: Dict = {
     downloading_notice_browser: "Check browser downloads",
     no_release_notes: "No release notes available",
     unknown_version: "Unknown",
+  },
+  // 任务
+  todo: {
+    title: "TODO",
+    save: "Save",
+    add: "Add",
+    close: "Close",
+    range: {
+      today: "Today",
+      recent: "Recent",
+      finished: "Finished",
+    },
+    actions: {
+      focus: "Focus",
+      cancel: "Cancel",
+      edit: "Edit",
+      delete: "Delete",
+    },
+    editing: {
+      subject_placeholder: "Enter TODO subject",
+    },
+    initial_todos: {
+      start_a_pomodoro: "Start a Pomodoro",
+      swipe_left_to_operate: "Swipe left to operate this task",
+      this_is_a_finished_todo: "This is a finished task",
+    },
   },
 };

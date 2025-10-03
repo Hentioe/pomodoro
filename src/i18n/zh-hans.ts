@@ -4,8 +4,8 @@ export const dict = {
     description: "高效专注，轻松管理时间",
   },
   header: {
-    new_version: "发现新版本",
-    development_version: "开发版",
+    no_target: "无目标",
+    todo_manage: "任务管理",
   },
   // 弹窗组件
   dialog: {
@@ -100,5 +100,31 @@ export const dict = {
     downloading_notice_browser: "请留意浏览器的下载任务",
     no_release_notes: "暂无更新日志",
     unknown_version: "未知",
+  },
+  // 任务
+  todo: {
+    title: "任务",
+    save: "保存",
+    add: "添加",
+    close: "关闭",
+    range: {
+      today: "今天",
+      recent: "最近",
+      finished: "完成",
+    },
+    actions: {
+      focus: "专注",
+      cancel: "取消",
+      edit: "编辑",
+      delete: "删除",
+    },
+    editing: {
+      subject_placeholder: "输入待办主题",
+    },
+    initial_todos: {
+      start_a_pomodoro: "启动一个番茄钟",
+      swipe_left_to_operate: "向左滑操作本任务",
+      this_is_a_finished_todo: "这是一个已完成的任务",
+    },
   },
 };

@@ -21,6 +21,7 @@ import Controls from "./layouts/Controls";
 import Header from "./layouts/Header";
 import { setUpdate } from "./states/global";
 import { UpdateChecker } from "./update-checker";
+import "swiped-events"; // 手势事件支持
 
 const appWindow = isMobile ? getCurrentWindow() : null;
 

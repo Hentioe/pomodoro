@@ -60,7 +60,7 @@
   &[data-part="description"] {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    /* flex: 1; */
+    flex: 1;
     overflow-y: auto;
   }
 

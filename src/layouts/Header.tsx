@@ -3,8 +3,8 @@ import { destructure } from "@solid-primitives/destructure";
 import { info } from "@tauri-apps/plugin-log";
 import { createSignal, onMount, Show } from "solid-js";
 import { onWebViewInfoFetched, ping, WebViewInfo } from "tauri-plugin-backend-api";
+import { TodoDialog } from "../dialogs";
 import AboutDialog from "../dialogs/AboutDialog";
-import NewVersionDialog from "../dialogs/NewVersionDialog";
 import SettingsDialog from "../dialogs/SettingsDialog";
 import { isMobile } from "../helper";
 import { useTranslator } from "../i18n";
@@ -16,14 +16,18 @@ export default (props: { updateChecker?: UpdateChecker }) => {
   const t = useTranslator();
 
   const [settingsDialogOpen, setSettingsDialogOpen] = createSignal(false);
-  const [newVersionDialogOpen, setNewVersionDialogOpen] = createSignal(false);
+  const [todoDialogOpen, setTodoDialogOpen] = createSignal(false);
   const [aboutNewDialogOpen, setAboutNewDialogOpen] = createSignal(false);
   const [webviewInfo, setWebviewInfo] = createSignal<WebViewInfo | undefined>(undefined);
 
   const { update } = destructure(globalState);
 
-  const Version = () => {
-    return <p class="bg-white text-black text-base rounded-lg px-[0.5rem]">{t("header.development_version")}</p>;
+  const NoTodo = () => {
+    return (
+      <button onClick={() => setTodoDialogOpen(true)} class="bg-white text-black text-base rounded-lg px-[0.5rem]">
+        {t("header.todo_manage")}
+      </button>
+    );
   };
 
   const handleWebViewInfoFetched = (webviewInfo: WebViewInfo) => {
@@ -44,13 +48,8 @@ export default (props: { updateChecker?: UpdateChecker }) => {
         <div class="flex-1">
           <NavIcon icon={update() ? icons.AboutNew : icons.About} onClick={() => setAboutNewDialogOpen(true)} />
         </div>
-        <Show when={update()} fallback={<Version />}>
-          <p
-            onClick={() => setNewVersionDialogOpen(true)}
-            class="bg-red-500 text-zinc-100 text-base rounded-lg px-[0.5rem] cursor-pointer"
-          >
-            {t("header.new_version")}
-          </p>
+        <Show when={false} fallback={<NoTodo />}>
+          Focus on: Todo Item
         </Show>
         <div class="flex-1 flex gap-[1rem] items-center justify-end">
           <NavIcon icon={icons.Setting} onClick={() => setSettingsDialogOpen(true)} />
@@ -58,8 +57,8 @@ export default (props: { updateChecker?: UpdateChecker }) => {
       </header>
       {/* 设置弹窗 */}
       <SettingsDialog open={settingsDialogOpen} setOpen={setSettingsDialogOpen} />
-      {/* 新版本弹窗 */}
-      <NewVersionDialog open={newVersionDialogOpen} setOpen={setNewVersionDialogOpen} />
+      {/* Todo 弹窗 */}
+      <TodoDialog open={todoDialogOpen} setOpen={setTodoDialogOpen} />
       {/* 关于弹窗 */}
       <AboutDialog
         open={aboutNewDialogOpen}

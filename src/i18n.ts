@@ -4,21 +4,20 @@ import { createMemo, createSignal } from "solid-js";
 import * as en from "./i18n/en";
 import * as zhHans from "./i18n/zh-hans";
 
-type Locale = "zh-hans" | "en";
 export type Dict = typeof zhHans.dict;
 
-const dict: Record<Locale, Dict> = {
+export const dict: Record<Locale, Dict> = {
   "zh-hans": zhHans.dict as Dict,
   "en": en.dict as Dict,
 };
 
-function envLocale(): Locale {
+function loadEnvLocale(): Locale {
   return navigator.language.startsWith("zh-") ? "zh-hans" : "en";
 }
 
-const defaultLocale: Locale = envLocale();
+export const envLocale = loadEnvLocale();
 
-info("Detected locale: " + defaultLocale);
+info("Detected locale: " + envLocale);
 
 export function saveLocale(locale: Locale) {
   localStorage.setItem("locale", locale);
@@ -30,10 +29,10 @@ export function clearSavedLocale() {
 
 // 监听语言变化
 window.addEventListener("languagechange", () => {
-  setLocale(envLocale());
+  setLocale(loadEnvLocale());
 });
 
-export const [locale, setLocale] = createSignal<Locale>(defaultLocale);
+export const [locale, setLocale] = createSignal<Locale>(envLocale);
 const getflatDict = createMemo(() => i18n.flatten(dict[locale()]));
 
 export const useTranslator = () => {
