@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/solid";
+import classNames from "classnames";
 import BasicDialog, { OpenProps } from "../components/BasicDialog";
 import CloseableTitleBar from "../components/CloseableTitleBar";
 
@@ -9,9 +10,14 @@ export default (props: Props) => {
     <BasicDialog
       open={props.open}
       setOpen={props.setOpen}
-      header={<CloseableTitleBar title="TODO" setOpen={props.setOpen} />}
+      header={<CloseableTitleBar title="任务" setOpen={props.setOpen} />}
     >
-      <div class="flex flex-col gap-[0.5rem]">
+      <div class="flex items-center gap-[1.25rem]">
+        <Category icon="solar:clipboard-bold" label="今日" colorScheme="red" />
+        <Category icon="material-symbols:work-history-sharp" label="最近" colorScheme="yellow" />
+        <Category icon="lets-icons:done-ring-round-fill" label="完成" colorScheme="green" />
+      </div>
+      <div class="mt-[1rem] flex flex-col gap-[0.5rem]">
         <TodoPreview />
         <TodoPreview />
         <TodoPreview />
@@ -19,6 +25,31 @@ export default (props: Props) => {
         <TodoPreview />
       </div>
     </BasicDialog>
+  );
+};
+
+const Category = (props: { icon: string; label: string; colorScheme: string }) => {
+  return (
+    <div
+      class={classNames([
+        "flex-1 py-[1rem] rounded-[2.5rem] flex flex-col items-center gap-[0.5rem] border border-zinc-200/60",
+        {
+          "bg-red-400": props.colorScheme === "red",
+          "bg-yellow-400": props.colorScheme === "yellow",
+          "bg-green-400": props.colorScheme === "green",
+        },
+      ])}
+    >
+      <div class="w-[3.5rem] h-[3.5rem] bg-white/40 rounded-full flex justify-center items-center">
+        <Icon
+          icon={props.icon}
+          class="text-[1.5rem] w-[1.5rem] h-[1.5rem] text-white"
+        />
+      </div>
+      <p class="text-center font-medium text-white">
+        {props.label}
+      </p>
+    </div>
   );
 };
 
@@ -33,7 +64,7 @@ const TodoPreview = () => {
   };
 
   return (
-    <div class="bg-blue-100/60 rounded-[2rem] px-[1rem] py-[0.5rem] flex items-center">
+    <div class="bg-blue-100 rounded-[2rem] px-[1rem] py-[0.5rem] flex items-center">
       <div class="w-[2.25rem] h-[2.25rem] bg-white rounded-full flex justify-center items-center">
         <div class="w-[1.2rem] h-[1.2rem] rounded-full border-2 border-blue-500" />
       </div>
