@@ -29,6 +29,7 @@
     "@tauri-apps/plugin-opener": "^2.5.0",
     "classnames": "^2.5.1",
     "solid-js": "^1.9.9",
+    "swiped-events": "^1.2.0",
     "tailwindcss": "^4.1.13",
     "tauri-plugin-backend-api": "file:./plugins/tauri-plugin-backend"
   },
