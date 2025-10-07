@@ -38,7 +38,6 @@ export const dict: Dict = {
     this_app_is: "This app is developed by",
     developed_free_product: "a free product based on",
     built_with_framework: "built with the framework.",
-    more_info_refer: "For more information, please refer to",
     refer: {
       // 番茄工作法介绍文章的标题
       intro: "Introduction to Pomodoro Technique",
@@ -47,7 +46,7 @@ export const dict: Dict = {
     },
     // 按钮
     button: {
-      confirm: "Confirm",
+      confirm: "OK",
     },
   },
   // 设置
