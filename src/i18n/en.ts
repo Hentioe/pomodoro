@@ -122,6 +122,11 @@ export const dict: Dict = {
     editing: {
       subject_placeholder: "Enter TODO subject",
     },
+    empty: {
+      no_today_todos: "添加一些任务吧~",
+      no_recent_todos: "没有过时任务哦~",
+      no_finished_todos: "还没有完成任何任务哦~",
+    },
     initial_todos: {
       start_a_pomodoro: "Start a Pomodoro",
       swipe_left_to_operate: "Swipe left to operate this task",

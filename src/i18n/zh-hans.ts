@@ -120,6 +120,11 @@ export const dict = {
     editing: {
       subject_placeholder: "输入待办主题",
     },
+    empty: {
+      no_today_todos: "Let's add some todos!",
+      no_recent_todos: "No overdue tasks here!",
+      no_finished_todos: "Nothing finished yet!",
+    },
     initial_todos: {
       start_a_pomodoro: "启动一个番茄钟",
       swipe_left_to_operate: "向左滑操作本任务",
