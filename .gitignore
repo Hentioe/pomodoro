@@ -1,5 +1,6 @@
 node_modules/
 dist/
 .direnv/
+target/rust-analyzer/
 # In production, please track bun.lock
 bun.lock
