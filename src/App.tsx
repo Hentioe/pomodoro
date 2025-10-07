@@ -80,7 +80,7 @@ function App() {
     const checker = new UpdateChecker({
       appId: await getIdentifier(),
       platform: "android",
-      channel: "dev",
+      channel: "beta",
       version: await getVersion(),
       architecture: "aarch64",
     });
