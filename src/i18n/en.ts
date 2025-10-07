@@ -123,9 +123,9 @@ export const dict: Dict = {
       subject_placeholder: "Enter TODO subject",
     },
     empty: {
-      no_today_todos: "添加一些任务吧~",
-      no_recent_todos: "没有过时任务哦~",
-      no_finished_todos: "还没有完成任何任务哦~",
+      no_today_todos: "Let's add some todos!",
+      no_recent_todos: "No overdue todos here!",
+      no_finished_todos: "Nothing finished yet!",
     },
     initial_todos: {
       start_a_pomodoro: "Start a Pomodoro",

@@ -121,9 +121,9 @@ export const dict = {
       subject_placeholder: "输入待办主题",
     },
     empty: {
-      no_today_todos: "Let's add some todos!",
-      no_recent_todos: "No overdue tasks here!",
-      no_finished_todos: "Nothing finished yet!",
+      no_today_todos: "添加一些任务吧~",
+      no_recent_todos: "没有过时任务哦~",
+      no_finished_todos: "还没有完成任何任务哦~",
     },
     initial_todos: {
       start_a_pomodoro: "启动一个番茄钟",
