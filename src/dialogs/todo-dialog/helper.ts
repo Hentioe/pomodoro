@@ -6,7 +6,7 @@ export function formatTodoDate(date: number) {
   if (isToday(d)) {
     return "Today";
   }
-  return format(d, "MM-dd");
+  return format(d, "yyyy-MM-dd");
 }
 
 export function formatTodoTime(date: number, local: Locale) {

@@ -1,9 +1,9 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import classNames from "classnames";
-import { createSignal, Match, onMount, Show, Switch } from "solid-js";
-import { locale, proxyTranslator } from "../../i18n";
+import { createSignal, Match, onMount, Switch } from "solid-js";
+import { proxyTranslator } from "../../i18n";
 import icons from "../../icons";
-import { formatTodoDate, formatTodoTime } from "./helper";
+import ItemTags from "./ItemTags";
 import { CommonActionsProps } from "./TodoList";
 
 interface Props {
@@ -42,42 +42,6 @@ export default (props: Props & CommonActionsProps) => {
       setIsActionButtonsShow(false);
     });
   });
-
-  const IconTag = (props: { icon: IconifyIcon; label: string }) => {
-    return (
-      <div class="flex justify-center items-center gap-[0.15rem]">
-        <Icon icon={props.icon} class="w-[0.9rem] h-[0.9rem]" />
-        <span>{props.label}</span>
-      </div>
-    );
-  };
-
-  const TimeTag = () => {
-    const { status, createdAt, startedAt } = props.todo;
-
-    let dateTime = createdAt;
-    if (status === "focusing" && startedAt) {
-      dateTime = startedAt;
-    }
-
-    return <IconTag icon={icons.TodoTime} label={formatTodoTime(dateTime, locale())} />;
-  };
-
-  const DateTag = () => {
-    const { status, createdAt, startedAt } = props.todo;
-
-    let dateTime = createdAt;
-    if (status === "focusing" && startedAt) {
-      dateTime = startedAt;
-    }
-
-    let label = formatTodoDate(dateTime);
-    if (label === "Today") {
-      label = t.todo.range.today();
-    }
-
-    return <IconTag icon={icons.CalendarLinear} label={label} />;
-  };
 
   const FinishCircle = () => {
     return (
@@ -148,13 +112,7 @@ export default (props: Props & CommonActionsProps) => {
         <FinishCircle />
         {/* 内容 */}
         <div class="flex-1 px-[1rem]">
-          <div class="text-[0.9rem] text-zinc-500 flex items-center gap-[0.5rem]">
-            <Show when={props.todo.status === "focusing"}>
-              <Icon icon={icons.Pin} class="text-red-400 w-[0.9rem]" />
-            </Show>
-            <DateTag />
-            <TimeTag />
-          </div>
+          <ItemTags todo={props.todo} />
           <p class="line-clamp-1">
             {props.todo.subject}
           </p>

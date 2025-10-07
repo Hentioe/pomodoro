@@ -55,7 +55,7 @@ export default (props: CommonActionsProps) => {
 
   const EmptyHint = (props: { scope: ListScope }) => {
     return (
-      <p class="text-center text-lg text-gray-500 font-medium">
+      <p class="text-center text-lg text-gray-400 font-medium">
         <Switch>
           <Match when={props.scope === ListScope.Today}>
             {t.todo.empty.no_today_todos()}

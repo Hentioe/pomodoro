@@ -47,7 +47,9 @@ export async function getTodoList(scope: ListScope): Promise<Todo[]> {
     case ListScope.Recent:
       // 最近
       // 查询最近的数据时，先按状态过滤，再按创建时间范围过滤，节约性能
-      query = db.todos.where("status").anyOf(UNFINISHED_STATUS).and((todo) => todo.createdAt > endOfToday().getTime());
+      query = db.todos.where("status").anyOf(UNFINISHED_STATUS).and((todo) =>
+        todo.createdAt < startOfToday().getTime()
+      );
       break;
 
     case ListScope.Finished:
