@@ -1,4 +1,5 @@
 import HentioeAvatar from "/src/assets/hentioe.webp";
+import AppLogo from "/src/assets/logo.svg";
 import TauriLogo from "/src/assets/tauri.svg";
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { destructure } from "@solid-primitives/destructure";
@@ -63,11 +64,11 @@ export default (props: Props) => {
     return (
       <div class="flex flex-col justify-center items-center gap-[0.5rem]">
         {/* 图标 */}
-        <div class="w-[4.5rem] h-[4.5rem] bg-green-400 rounded-2xl shadow-md flex justify-center items-center">
-          <Icon
-            icon={icons.Tomato}
-            style={{ filter: "drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.25))" }}
-            class="text-focus text-[3.5rem] w-[3.5rem] h-[3.5rem]"
+        <div class="w-[4.5rem] h-[4.5rem] bg-white rounded-2xl shadow flex justify-center items-center">
+          <img
+            src={AppLogo}
+            style={{ filter: "drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25))" }}
+            class="w-[3.5rem] h-[3.5rem]"
           />
         </div>
         {/* 应用名称 */}
@@ -192,7 +193,7 @@ const IconLink = (props: { text: string; url: string; imgSrc: string }) => {
       href={props.url}
       target="_blank"
       class={classNames([
-        "h-[1.5rem] bg-zinc-100/50 border border-zinc-200 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle",
+        "h-[1.5rem] bg-zinc-100/50 border border-zinc-200/60 text-blue-400 px-2 mx-[0.2rem] rounded-lg inline-flex items-center gap-[0.25rem] align-middle",
         "transition-colors active:bg-blue-200/90 active:border-blue-200",
       ])}
     >
