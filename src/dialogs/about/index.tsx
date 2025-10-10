@@ -64,13 +64,11 @@ export default (props: Props) => {
     return (
       <div class="flex flex-col justify-center items-center gap-[0.5rem]">
         {/* 图标 */}
-        <div class="w-[4.5rem] h-[4.5rem] bg-white rounded-2xl shadow flex justify-center items-center">
-          <img
-            src={AppLogo}
-            style={{ filter: "drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25))" }}
-            class="w-[3.5rem] h-[3.5rem]"
-          />
-        </div>
+        <img
+          src={AppLogo}
+          style={{ filter: "drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))" }}
+          class="w-[3.5rem] h-[3.5rem] rounded-2xl"
+        />
         {/* 应用名称 */}
         <p class="font-bold text-[1.5rem]">{t("app.name")}</p>
         <p class="text-gray-600 text-sm tracking-wide">{t("app.description")}</p>
