@@ -1,9 +1,10 @@
+import { isToday } from "date-fns";
 import { createSignal, Match, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 import BasicDialog, { OpenProps } from "../../components/BasicDialog";
 import DialogDecoration, { ControlButton } from "../../components/DialogDecoration";
 import { proxyTranslator } from "../../i18n";
-import { addTodo, getTodo, updateTodo } from "../../todo";
+import { addTodo, getTodo, ListScope, updateTodo } from "../../todo";
 import TodoEdit from "./TodoEdit";
 import TodoList from "./TodoList";
 
@@ -15,6 +16,7 @@ const EMPTY_EDITING: EditingTodo = { subject: "", status: "created" };
 export default (props: Props) => {
   const t = proxyTranslator();
 
+  const [scope, setScope] = createSignal<ListScope>(ListScope.Today);
   const [isEditing, setIsEditing] = createSignal(false);
   const [editingId, setEditingId] = createSignal<number | null>(null);
   const [editingTodo, setEditingTodo] = createStore<EditingTodo>(structuredClone(EMPTY_EDITING));
@@ -42,8 +44,13 @@ export default (props: Props) => {
     const id = editingId();
     if (id != null) {
       await updateTodo(id, { subject: editingTodo.subject });
+      const created = await getTodo(id);
+      if (created && isToday(created?.createdAt)) {
+        setScope(ListScope.Today); // 如果更新的是今天的任务，切换到今天视图
+      }
     } else {
       await addTodo({ subject: editingTodo.subject, status: "created" });
+      setScope(ListScope.Today);
     }
 
     setIsEditing(false);
@@ -93,7 +100,7 @@ export default (props: Props) => {
           <TodoEdit todo={editingTodo} setTodo={setEditingTodo} />
         </Match>
         <Match when={true}>
-          <TodoList onEdit={handleEdit} />
+          <TodoList scope={scope} setScope={setScope} onEdit={handleEdit} />
         </Match>
       </Switch>
     </BasicDialog>

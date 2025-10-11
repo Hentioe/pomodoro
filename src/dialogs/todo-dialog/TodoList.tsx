@@ -1,21 +1,25 @@
 import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import classNames from "classnames";
-import { createSignal, For, Match, onMount, Show, Switch } from "solid-js";
+import { Accessor, createSignal, For, Match, onMount, Setter, Show, Switch } from "solid-js";
 import { proxyTranslator } from "../../i18n";
 import icons from "../../icons";
 import { deleteTodo, getTodoList, ListScope, updateTodo } from "../../todo";
 import TodoItem from "./TodoItem";
 
+interface Props {
+  scope: Accessor<ListScope>;
+  setScope: Setter<ListScope>;
+}
+
 export interface CommonActionsProps {
   onEdit: (id: number) => void;
 }
 
-export default (props: CommonActionsProps) => {
+export default (props: Props & CommonActionsProps) => {
   const t = proxyTranslator();
 
   const [isLoading, setIsLoading] = createSignal<boolean>(true);
   const [list, setList] = createSignal<Todo[]>([]);
-  const [scope, setScope] = createSignal<ListScope>(ListScope.Today);
 
   const handleDelete = async (id: number) => {
     await deleteTodo(id);
@@ -43,13 +47,13 @@ export default (props: CommonActionsProps) => {
   };
 
   const handleScopeChange = (newScope: ListScope) => {
-    setScope(newScope);
+    props.setScope(newScope);
     refresh();
   };
 
   const refresh = async () => {
     setIsLoading(true);
-    setList(structuredClone(await getTodoList(scope()))); // 由于模拟数据始终访问同一个对象引用，这里必须深克隆
+    setList(structuredClone(await getTodoList(props.scope()))); // 由于模拟数据始终访问同一个对象引用，这里必须深克隆
     setIsLoading(false);
   };
 
@@ -79,21 +83,21 @@ export default (props: CommonActionsProps) => {
     <div class="h-full flex flex-col gap-[1rem]">
       <div class="flex items-center gap-[1.25rem]">
         <Range
-          active={scope() === ListScope.Today}
+          active={props.scope() === ListScope.Today}
           onClick={() => handleScopeChange(ListScope.Today)}
           icon={icons.ClipboardBold}
           label={t.todo.range.today()}
           colorScheme="red"
         />
         <Range
-          active={scope() === ListScope.Recent}
+          active={props.scope() === ListScope.Recent}
           onClick={() => handleScopeChange(ListScope.Recent)}
           icon={icons.WorkHistory}
           label={t.todo.range.recent()}
           colorScheme="yellow"
         />
         <Range
-          active={scope() === ListScope.Finished}
+          active={props.scope() === ListScope.Finished}
           onClick={() => handleScopeChange(ListScope.Finished)}
           icon={icons.Done}
           label={t.todo.range.finished()}
@@ -101,7 +105,7 @@ export default (props: CommonActionsProps) => {
         />
       </div>
       <div class="flex-1 flex flex-col gap-[0.5rem]">
-        <Show when={list().length > 0 || isLoading()} fallback={<EmptyHint scope={scope()} />}>
+        <Show when={list().length > 0 || isLoading()} fallback={<EmptyHint scope={props.scope()} />}>
           <For each={list()}>
             {(todo) => (
               <TodoItem
