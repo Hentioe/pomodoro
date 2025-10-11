@@ -51,7 +51,9 @@ export default (props: Props & CommonActionsProps) => {
       >
         <div
           class={classNames([
-            "w-[0.75rem] h-[0.75rem] rounded-full ring-2 ring-offset-2 ring-blue-500",
+            "w-[0.75rem] h-[0.75rem] rounded-full ring-2 ring-offset-2",
+            { "ring-blue-500": props.todo.status !== "focusing" },
+            { "ring-red-500": props.todo.status === "focusing" }, // 专注时是红色
             { "bg-blue-500": props.todo.status === "finished" },
             { "bg-white": props.todo.status !== "finished" },
           ])}

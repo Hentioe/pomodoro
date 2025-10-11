@@ -59,7 +59,7 @@ export default {
   Done,
   CalendarLinear,
   TodoTime,
-  Pin,
+  Pin, // 暂未使用
   PinOff,
   Edit,
   Delete,
