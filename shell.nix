@@ -14,7 +14,7 @@ let
     buildToolsVersions = [ "36.0.0" ];
     cmakeVersions = [ "4.1.0" ];
     includeNDK = true;
-    ndkVersion = "28.2.13676358"; # 此版本号需要和 build.gradle.kts 中的 ndkVersion 保持一致
+    ndkVersion = "29.0.14206865"; # 此版本号需要和 build.gradle.kts 中的 ndkVersion 保持一致
     abiVersions = [
       "x86_64"
       "arm64-v8a"

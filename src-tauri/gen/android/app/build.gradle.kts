@@ -18,7 +18,7 @@ val tauriProperties =
 
 android {
   buildToolsVersion = "36.0.0"
-  ndkVersion = "28.2.13676358"
+  ndkVersion = "29.0.14206865"
   externalNativeBuild { cmake { version = "4.1.0" } }
   compileSdk = 36
   namespace = "dev.hentioe.tauripomodoro"
