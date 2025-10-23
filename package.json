@@ -12,8 +12,8 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "@ark-ui/solid": "^5.24.1",
-    "@iconify-icon/solid": "^3.0.0",
+    "@ark-ui/solid": "^5.26.2",
+    "@iconify-icon/solid": "^3.0.1",
     "@iconify-icons/codicon": "^1.2.30",
     "@iconify-icons/ep": "^1.2.12",
     "@iconify-icons/fluent": "^1.2.38",
@@ -27,25 +27,25 @@
     "@iconify-icons/tdesign": "^1.2.0",
     "@solid-primitives/destructure": "^0.2.2",
     "@solid-primitives/i18n": "^2.2.1",
-    "@tauri-apps/api": "^2.8.0",
-    "@tauri-apps/plugin-http": "~2",
+    "@tauri-apps/api": "^2.9.0",
+    "@tauri-apps/plugin-http": "~2.5.2",
     "@tauri-apps/plugin-log": "^2.7.0",
     "@tauri-apps/plugin-opener": "^2.5.0",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
-    "dexie": "^4.2.0",
+    "dexie": "^4.2.1",
     "solid-js": "^1.9.9",
     "swiped-events": "^1.2.0",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.1.16",
     "tauri-plugin-backend-api": "file:./plugins/tauri-plugin-backend"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.13",
-    "@tauri-apps/cli": "^2.8.4",
+    "@tailwindcss/vite": "^4.1.16",
+    "@tauri-apps/cli": "^2.9.1",
     "postcss": "^8.5.6",
     "postcss-nesting": "^13.0.2",
     "typescript": "~5.6.3",
-    "vite": "^6.3.6",
-    "vite-plugin-solid": "^2.11.8"
+    "vite": "^6.4.1",
+    "vite-plugin-solid": "^2.11.10"
   }
 }
