@@ -11,9 +11,9 @@ export enum ControlButton {
 // ControlButton 到 Icon 的映射
 const ControlIconMap: Record<ControlButton, IconifyIcon | string> = {
   [ControlButton.None]: "",
-  [ControlButton.Back]: icons.Back,
-  [ControlButton.Close]: icons.CloseLine,
-  [ControlButton.Add]: icons.Add,
+  [ControlButton.Back]: icons.DialogBack,
+  [ControlButton.Close]: icons.DialogClose,
+  [ControlButton.Add]: icons.DialogAdd,
 };
 
 interface Props {

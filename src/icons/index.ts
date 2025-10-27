@@ -24,6 +24,9 @@ import Alarm from "./alarm";
 import Alert from "./alert";
 import CheckFill from "./check-fill";
 import Close from "./close";
+import DialogAdd from "./dialog-add";
+import DialogBack from "./dialog-back";
+import DialogClose from "./dialog-close";
 import Done from "./done";
 import More from "./more";
 import Spa from "./spa";
@@ -64,6 +67,9 @@ export default {
   Edit,
   Delete,
   More,
-  Back,
-  Add,
+  Back, // 暂未使用
+  Add, // 暂未使用
+  DialogAdd,
+  DialogClose,
+  DialogBack,
 };
