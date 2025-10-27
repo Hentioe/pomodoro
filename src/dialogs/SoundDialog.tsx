@@ -20,26 +20,26 @@ export default (props: Props) => {
   const [submittedBackground, setSubmittedBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
 
   const tickOptions: RodioOption[] = [
-    { label: t("sounds.none"), value: "none" },
-    { label: t("sounds.tick.pointer"), value: "default_tick" },
-    { label: t("sounds.tick.tick_tock"), value: "tick-tock_tick" },
-    { label: t("sounds.tick.mokugyo"), value: "mokugyo_tick" },
+    { label: t("sounds.none"), value: "none", icon: "none" },
+    { label: t("sounds.tick.pointer"), value: "default_tick", icon: "clock-hands" },
+    { label: t("sounds.tick.tick_tock"), value: "tick-tock_tick", icon: "tick-tock" },
+    { label: t("sounds.tick.mokugyo"), value: "mokugyo_tick", icon: "mokugyo" },
     // { label: t("sounds.tick.heartbeat"), value: "heartbeat_tick" },
-    { label: t("sounds.tick.ekg"), value: "ekg_tick" },
+    { label: t("sounds.tick.ekg"), value: "ekg_tick", icon: "ekg" },
     // { label: t("sounds.tick.kun"), value: "kun_tick" },
   ];
 
   const backgroundOptions: RodioOption[] = [
-    { label: t("sounds.none"), value: "none" },
+    { label: t("sounds.none"), value: "none", icon: "none" },
     // { label: t("sounds.background.white_noise"), value: "white-noise_music" },
-    { label: t("sounds.background.timer"), value: "timer_music" },
-    { label: t("sounds.background.rain"), value: "rain_music" },
-    { label: t("sounds.background.rain_thunder"), value: "rain-thunder_music" },
-    { label: t("sounds.background.wind_strong"), value: "wind-strong_music" },
-    { label: t("sounds.background.beach"), value: "beach_music" },
-    { label: t("sounds.background.bonfire"), value: "bonfire_music" },
-    { label: t("sounds.background.nature_stream"), value: "nature-stream_music" },
-    { label: t("sounds.background.nature_crickets"), value: "nature-crickets_music" },
+    { label: t("sounds.background.timer"), value: "timer_music", icon: "timer" },
+    { label: t("sounds.background.rain"), value: "rain_music", icon: "rain-strong" },
+    { label: t("sounds.background.rain_thunder"), value: "rain-thunder_music", icon: "rain-thunder" },
+    { label: t("sounds.background.wind_strong"), value: "wind-strong_music", icon: "wind-strong" },
+    { label: t("sounds.background.beach"), value: "beach_music", icon: "beach" },
+    { label: t("sounds.background.bonfire"), value: "bonfire_music", icon: "bonfire" },
+    { label: t("sounds.background.nature_stream"), value: "nature-stream_music", icon: "nature-stream" },
+    { label: t("sounds.background.nature_crickets"), value: "nature-crickets_music", icon: "nature-crickets" },
   ];
 
   const handleTickChange = async (value: string) => {

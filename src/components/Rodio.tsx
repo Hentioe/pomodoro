@@ -1,13 +1,9 @@
 import { RadioGroup } from "@ark-ui/solid/radio-group";
-import { Index } from "solid-js";
+import { Index, Show } from "solid-js";
 
-interface Option {
-  label: string;
-  value: string;
-}
 interface Props {
   label: string;
-  options: Option[];
+  options: RodioOption[];
   value: string;
   onValueChange?: (value: string) => void;
 }
@@ -26,7 +22,12 @@ export default (props: Props) => {
         <Index each={props.options}>
           {(option) => (
             <RadioGroup.Item value={option().value}>
-              <RadioGroup.ItemText>{option().label}</RadioGroup.ItemText>
+              <div class="flex items-center gap-[0.5rem]">
+                <Show when={option().icon}>
+                  <img src={`/assets/remix-icons/${option().icon}.svg`} class="w-[1.5rem] h-[1.5rem]" />
+                </Show>
+                <RadioGroup.ItemText>{option().label}</RadioGroup.ItemText>
+              </div>
               <RadioGroup.ItemControl />
               <RadioGroup.ItemHiddenInput />
             </RadioGroup.Item>

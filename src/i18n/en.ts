@@ -83,7 +83,7 @@ export const dict: Dict = {
     // 背景声
     background: {
       timer: "Timer",
-      rain: "Rain",
+      rain: "Heavy rain",
       rain_thunder: "Thunderstorm",
       wind_strong: "Strong wind",
       beach: "Beach",

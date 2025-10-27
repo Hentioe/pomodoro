@@ -81,7 +81,7 @@ export const dict = {
     // 背景声
     background: {
       timer: "定时器",
-      rain: "雨声",
+      rain: "大雨",
       rain_thunder: "雷雨",
       wind_strong: "强风",
       beach: "海滩",

@@ -37,5 +37,8 @@ run = "cd src-tauri && cargo test"
 [tasks.clean]
 run = ["rm -rf ./dist", "rm -rf ./src-tauri/target"]
 
+[tasks.icon-gen]
+run = "bun run tools/icon-gen.ts"
+
 [tasks.prepare]
 depends = ["plugin-prepare", "format", "lint", "test"]
