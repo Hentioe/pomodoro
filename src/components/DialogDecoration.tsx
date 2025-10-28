@@ -12,7 +12,7 @@ export enum ControlButton {
 const ControlIconMap: Record<ControlButton, IconifyIcon | string> = {
   [ControlButton.None]: "",
   [ControlButton.Back]: icons.DialogBack,
-  [ControlButton.Close]: icons.DialogClose,
+  [ControlButton.Close]: icons.DialogClose2,
   [ControlButton.Add]: icons.DialogAdd,
 };
 
