@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { createSignal } from "solid-js";
 import { PomodoroPhase } from "tauri-plugin-backend-api";
 import { StandardDialog } from "../components";
-import SoundDialog from "../dialogs/SoundDialog";
+import { SoundGridDialog } from "../dialogs";
 import { useTranslator } from "../i18n";
 import icons from "../icons";
 
@@ -75,7 +75,7 @@ export default (props: Props) => {
         </div>
       </div>
       {/* 声音定制弹窗 */}
-      <SoundDialog open={soundDialogOpen} setOpen={setSoundDialogOpen} />
+      <SoundGridDialog open={soundDialogOpen} setOpen={setSoundDialogOpen} />
       {/* 退出确认弹窗 */}
       <StandardDialog
         title={t("dialog.controls.exit.title")}

@@ -5,7 +5,7 @@ import { Index, Show } from "solid-js";
 export interface RodioOption {
   label: string;
   value: string;
-  icon?: string | IconifyIcon;
+  icon?: string | IconifyIcon; // todo: 视后续情况决定是否移除图标支持
 }
 
 interface Props {

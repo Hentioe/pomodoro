@@ -1,7 +1,9 @@
-import { Accessor, createSignal, onMount, Setter } from "solid-js";
+import { Icon, IconifyIcon } from "@iconify-icon/solid";
+import classNames from "classnames";
+import { Accessor, createSignal, For, onMount, Setter } from "solid-js";
 import { MusicName, onSettingsUpdated, ping, previewSound, TickName, writeSettings } from "tauri-plugin-backend-api";
-import { StandardDialog } from "../components";
-import Rodio, { RodioOption } from "../components/Rodio";
+import { BasicDialog } from "../components";
+import DialogDecoration, { ControlButton } from "../components/DialogDecoration";
 import { useTranslator } from "../i18n";
 import icons from "../icons";
 
@@ -10,17 +12,21 @@ interface Props {
   setOpen: Setter<boolean>;
 }
 
+interface SoundOption {
+  label: string;
+  value: string;
+  icon: IconifyIcon | string;
+}
+
 const DEFAULT_TICK_SOUND: TickName = "default_tick";
 const DEFAULT_BACKGROUND_MUSIC: MusicName = "none";
 
 export default (props: Props) => {
   const t = useTranslator();
-  const [editingTick, setEditingTick] = createSignal<TickName>(DEFAULT_TICK_SOUND);
-  const [submittedTick, setSubmittedTick] = createSignal<TickName>(DEFAULT_TICK_SOUND);
-  const [editingBackground, setEditingBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
-  const [submittedBackground, setSubmittedBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
+  const [tick, setTick] = createSignal<TickName>(DEFAULT_TICK_SOUND);
+  const [background, setBackground] = createSignal<MusicName>(DEFAULT_BACKGROUND_MUSIC);
 
-  const tickOptions: RodioOption[] = [
+  const tickOptions: SoundOption[] = [
     { label: t("sounds.none"), value: "none", icon: icons.RemixNone },
     { label: t("sounds.tick.pointer"), value: "default_tick", icon: icons.RemixClockHands },
     { label: t("sounds.tick.tick_tock"), value: "tick-tock_tick", icon: icons.RemixTickTock },
@@ -30,7 +36,7 @@ export default (props: Props) => {
     // { label: t("sounds.tick.kun"), value: "kun_tick" },
   ];
 
-  const backgroundOptions: RodioOption[] = [
+  const backgroundOptions: SoundOption[] = [
     { label: t("sounds.none"), value: "none", icon: icons.RemixNone },
     // { label: t("sounds.background.white_noise"), value: "white-noise_music" },
     { label: t("sounds.background.timer"), value: "timer_music", icon: icons.RemixTimer },
@@ -45,42 +51,24 @@ export default (props: Props) => {
 
   const handleTickChange = async (value: string) => {
     const tick = value as TickName;
-    setEditingTick(tick);
+    await writeSettings({ tickSound: tick });
     await previewSound(tick, 1.0);
   };
 
   const handleBackgroundChange = async (value: string) => {
     const music = value as MusicName;
-    setEditingBackground(music);
+    await writeSettings({ backgroundMusic: music });
     await previewSound(music, 1.0);
-  };
-
-  const handleSoundConfirm = async () => {
-    if (editingTick() !== submittedTick()) {
-      await writeSettings({ tickSound: editingTick() });
-    }
-    if (editingBackground() !== submittedBackground()) {
-      await writeSettings({ backgroundMusic: editingBackground() });
-    }
-
-    return true;
-  };
-
-  const handleSoundCancel = () => {
-    setEditingTick(submittedTick());
-    setEditingBackground(submittedBackground());
   };
 
   onMount(async () => {
     await onSettingsUpdated((settings) => {
       if (settings.tickSound != null) {
-        setEditingTick(settings.tickSound);
-        setSubmittedTick(settings.tickSound);
+        setTick(settings.tickSound);
       }
 
       if (settings.backgroundMusic != null) {
-        setEditingBackground(settings.backgroundMusic);
-        setSubmittedBackground(settings.backgroundMusic);
+        setBackground(settings.backgroundMusic);
       }
     });
 
@@ -88,27 +76,61 @@ export default (props: Props) => {
   });
 
   return (
-    <StandardDialog
-      title={t("sounds.title")}
+    <BasicDialog
+      fullScreen
       open={props.open}
       setOpen={props.setOpen}
-      onConfirm={handleSoundConfirm}
-      onCancel={handleSoundCancel}
+      header={
+        <DialogDecoration
+          title={t("sounds.title")}
+          leftButton={ControlButton.None}
+          rightButton={ControlButton.Close}
+          setOpen={props.setOpen}
+        />
+      }
     >
       <div class="flex flex-col gap-[1rem]">
-        <Rodio
-          label={t("sounds.tick_sound")}
-          value={editingTick()}
+        <SoundListSection
           options={tickOptions}
-          onValueChange={handleTickChange}
+          title={t("sounds.tick_sound")}
+          selected={tick()}
+          onSelect={handleTickChange}
         />
-        <Rodio
-          label={t("sounds.background_music")}
-          value={editingBackground()}
+        <SoundListSection
           options={backgroundOptions}
-          onValueChange={handleBackgroundChange}
+          title={t("sounds.background_music")}
+          selected={background()}
+          onSelect={handleBackgroundChange}
         />
       </div>
-    </StandardDialog>
+    </BasicDialog>
+  );
+};
+
+const SoundListSection = (
+  props: { title: string; options: SoundOption[]; selected: string; onSelect: (value: string) => void },
+) => {
+  return (
+    <div>
+      <p class="font-bold text-gray-500">{props.title}</p>
+      <div class="mt-[1rem] grid grid-cols-3 gap-x-[1rem] gap-y-[1rem]">
+        <For each={props.options}>
+          {(option) => (
+            <div class="flex flex-col justify-center items-center gap-[0.5rem]">
+              <div
+                onClick={() => props.onSelect(option.value)}
+                class={classNames([
+                  "w-full aspect-square text-gray-700 bg-sky-100 hover:bg-sky-200 rounded-3xl cursor-pointer transition-colors duration-300 flex justify-center items-center",
+                  { "bg-blue-500! text-white! shadow": props.selected === option.value },
+                ])}
+              >
+                <Icon icon={option.icon!} class="text-[4rem] w-[4rem] h-[4rem]" />
+              </div>
+              <span>{option.label}</span>
+            </div>
+          )}
+        </For>
+      </div>
+    </div>
   );
 };
