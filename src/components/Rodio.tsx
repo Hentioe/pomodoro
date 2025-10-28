@@ -1,5 +1,12 @@
 import { RadioGroup } from "@ark-ui/solid/radio-group";
+import { Icon, IconifyIcon } from "@iconify-icon/solid";
 import { Index, Show } from "solid-js";
+
+export interface RodioOption {
+  label: string;
+  value: string;
+  icon?: string | IconifyIcon;
+}
 
 interface Props {
   label: string;
@@ -24,7 +31,7 @@ export default (props: Props) => {
             <RadioGroup.Item value={option().value}>
               <div class="flex items-center gap-[0.5rem]">
                 <Show when={option().icon}>
-                  <img src={`/assets/remix-icons/${option().icon}.svg`} class="w-[1.5rem] h-[1.5rem]" />
+                  <Icon icon={option().icon!} class="text-[1.5rem] w-[1.5rem] h-[1.5rem]" />
                 </Show>
                 <RadioGroup.ItemText>{option().label}</RadioGroup.ItemText>
               </div>

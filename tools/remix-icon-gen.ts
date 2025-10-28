@@ -1,9 +1,11 @@
 import { iconGenConfig } from "./config.ts";
-import { genPlainIcon, scanInputs } from "./helpet.ts";
+import { genPlainIcon, scanInputs, writeIconModule } from "./support/helpet.ts";
 
-const remixIconsOutput = "./public/assets/remix-icons";
+const tmpOutputDir = "./dist/tmp/dialog-icons";
 
 const inputs = scanInputs(iconGenConfig.remixInputPath, "svg");
+
 for (const input of inputs) {
-  await genPlainIcon(input, remixIconsOutput);
+  const outPath = await genPlainIcon(input, tmpOutputDir);
+  await writeIconModule(outPath, "remix");
 }

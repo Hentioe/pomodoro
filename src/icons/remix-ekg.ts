@@ -1,0 +1,15 @@
+import { addIcon } from "@iconify-icon/solid";
+
+const RemixEkg = "remix-ekg";
+
+addIcon(
+  RemixEkg,
+  {
+    width: 512,
+    height: 512,
+    body:
+      `<defs id="defs1"/><g id="layer1"><path id="path1-2" style="display:inline;fill:none;stroke:currentColor;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:markers stroke fill" d="M 256,444.92891 C 346.2375,334.9914 510.30104,263.6216 458.7455,133.70763 422.59993,42.625 316.05118,51.846529 256,119.56121 m 0,325.3677 C 165.7625,334.99139 1.6989582,263.62159 53.254498,133.70763 89.40007,42.624999 195.94883,51.846528 256,119.56121"/><path style="display:inline;fill:none;stroke:currentColor;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:markers stroke fill" d="M 43.499999,267.46044 H 148.67366 l 24.48808,-42.52791 61.36174,106.56558 40.35156,-150.99639 72.35156,125.65135 21.12699,-36.69078 H 468.5" id="path1"/></g>`,
+  },
+);
+
+export default RemixEkg;

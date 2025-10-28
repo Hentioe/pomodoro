@@ -1,0 +1,15 @@
+import { addIcon } from "@iconify-icon/solid";
+
+const RemixMokugyo = "remix-mokugyo";
+
+addIcon(
+  RemixMokugyo,
+  {
+    width: 512,
+    height: 512,
+    body:
+      `<defs id="defs1"/><g id="layer1"><path style="fill:none;stroke:currentColor;stroke-width:15.0001;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:markers stroke fill" d="M 62.077093,289.81359 C 256.65581,-158.14919 449.77219,142.87999 440.20721,136.67336 302.45524,161.28713 129.35739,219.04999 153.46554,266.25355 177.57369,313.45711 318.64528,165.98091 456.13732,166.1234 499.90622,285.33037 438.29106,455.07778 100.64469,354.60368 80.479751,361.50662 58.506015,369.4809 47.823849,344.50653 37.141694,319.53217 47.507631,305.35723 62.077093,289.81359 Z" id="path1"/><circle style="fill:none;stroke:currentColor;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:markers stroke fill" id="path2" cx="434.5" cy="434.5" r="34"/><path id="rect2" style="fill:none;stroke:currentColor;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:markers stroke fill" d="M 43.5 420.00195 L 43.5 448.30469 L 403.58789 448.30469 A 34 34 0 0 1 400.50195 434.1543 A 34 34 0 0 1 403.58789 420.00195 L 43.5 420.00195 z "/></g>`,
+  },
+);
+
+export default RemixMokugyo;

@@ -29,6 +29,20 @@ import DialogBack from "./dialog-back";
 import DialogClose from "./dialog-close";
 import Done from "./done";
 import More from "./more";
+import RemixBeach from "./remix-beach";
+import RemixBonfire from "./remix-bonfire";
+import RemixClockHands from "./remix-clock-hands";
+import RemixEkg from "./remix-ekg";
+import RemixMokugyo from "./remix-mokugyo";
+import RemixNatureCrickets from "./remix-nature-crickets";
+import RemixNatureStream from "./remix-nature-stream";
+import RemixNone from "./remix-none";
+import RemixRain from "./remix-rain";
+import RemixRainStrong from "./remix-rain-strong";
+import RemixRainThunder from "./remix-rain-thunder";
+import RemixTickTock from "./remix-tick-tock";
+import RemixTimer from "./remix-timer";
+import RemixWindStrong from "./remix-wind-strong";
 import Spa from "./spa";
 import Time from "./time";
 import Timer from "./timer";
@@ -72,4 +86,18 @@ export default {
   DialogAdd,
   DialogClose,
   DialogBack,
+  RemixBeach,
+  RemixBonfire,
+  RemixClockHands,
+  RemixEkg,
+  RemixMokugyo,
+  RemixNatureCrickets,
+  RemixNatureStream,
+  RemixNone,
+  RemixRainStrong,
+  RemixRainThunder,
+  RemixRain,
+  RemixTickTock,
+  RemixTimer,
+  RemixWindStrong,
 };
