@@ -34,7 +34,7 @@ export async function next(): Promise<void> {
 
 export type TickName =
   | "default_tick"
-  | "tick-tock_tick"
+  | "clock-tick-tock_tick"
   | "mokugyo_tick"
   | "heartbeat_tick"
   | "ekg_tick"
@@ -48,7 +48,7 @@ export type DefaultName =
   | "background_default";
 
 export type MusicName =
-  | "rain_music"
+  | "rain-strong_music"
   | "timer_music"
   | "wind-strong_music"
   | "beach_music"

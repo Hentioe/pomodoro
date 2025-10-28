@@ -19,7 +19,7 @@ enum class LocalMedia(
     val is_seamless: Boolean = false // 是否为（可直接循环的）无缝音频
 ) {
     TIMER("musics/timer.ogg", 0.0f, 0, true), // 计时器，循环音频
-    RAIN("musics/rain.ogg", 0.0f, 0, true), // 雨声，循环音频
+    RAIN("musics/rain-strong.ogg", 0.0f, 0, true), // 大雨，循环音频
     RAIN_THUNDER("musics/rain-thunder.ogg", 0.0f, 0, true), // 雷雨，循环音频
     WIND_STRONG("musics/wind-strong.ogg", 0.0f, 0, true), // 强风，循环音频
     BEACH("musics/beach.ogg", 0.0f, 0, true), // 海滩，循环音频
@@ -31,7 +31,7 @@ enum class LocalMedia(
         fun from_setting_key(key: String?): LocalMedia? {
             return when (key) {
                 "timer_music" -> TIMER
-                "rain_music" -> RAIN
+                "rain-strong_music" -> RAIN
                 "rain-thunder_music" -> RAIN_THUNDER
                 "wind-strong_music" -> WIND_STRONG
                 "beach_music" -> BEACH

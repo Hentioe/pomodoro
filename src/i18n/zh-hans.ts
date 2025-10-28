@@ -73,21 +73,21 @@ export const dict = {
     none: "无",
     // 滴答声
     tick: {
-      pointer: "指针",
-      tick_tock: "钟摆",
+      clock_hand: "指针",
+      clock_tick_tock: "钟摆",
       mokugyo: "木鱼",
       ekg: "心电",
     },
     // 背景声
     background: {
       timer: "定时器",
-      rain: "大雨",
+      rain_strong: "大雨",
       rain_thunder: "雷雨",
       wind_strong: "强风",
       beach: "海滩",
       bonfire: "篝火",
-      nature_stream: "自然（溪流）",
-      nature_crickets: "自然（虫鸣）",
+      nature_stream: "溪流",
+      nature_crickets: "虫鸣",
     },
   },
   // 发现新版本

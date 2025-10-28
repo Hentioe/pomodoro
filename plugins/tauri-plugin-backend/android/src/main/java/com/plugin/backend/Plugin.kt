@@ -326,7 +326,7 @@ class Plugin(private val activity: Activity) : Plugin(activity), ServiceCallback
         val sound: Any? =
             when (args.name) {
                 "default_tick",
-                "tick-tock_tick",
+                "clock-tick-tock_tick",
                 "mokugyo_tick",
                 "heartbeat_tick",
                 "ekg_tick" -> SoundType.from_setting_key(args.name)

@@ -75,21 +75,21 @@ export const dict: Dict = {
     none: "None",
     // 滴答声
     tick: {
-      pointer: "Pointer",
-      tick_tock: "Tick Tock",
+      clock_hand: "Clock hand",
+      clock_tick_tock: "Pendulum",
       mokugyo: "Mokugyo",
       ekg: "EKG",
     },
     // 背景声
     background: {
       timer: "Timer",
-      rain: "Heavy rain",
+      rain_strong: "Heavy rain",
       rain_thunder: "Thunderstorm",
       wind_strong: "Strong wind",
       beach: "Beach",
       bonfire: "Bonfire",
-      nature_stream: "Nature (Stream)",
-      nature_crickets: "Nature (Crickets)",
+      nature_stream: "Stream",
+      nature_crickets: "Crickets",
     },
   },
   // 发现新版本

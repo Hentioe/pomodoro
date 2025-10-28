@@ -36,7 +36,7 @@ addIcon(
   {
     width: ${width},
     height: ${height},
-    body: \`${innerBody}\`
+    body: \`${innerBody}\`,
   },
 );
 

@@ -28,8 +28,8 @@ export default (props: Props) => {
 
   const tickOptions: SoundOption[] = [
     { label: t("sounds.none"), value: "none", icon: icons.RemixNone },
-    { label: t("sounds.tick.pointer"), value: "default_tick", icon: icons.RemixClockHands },
-    { label: t("sounds.tick.tick_tock"), value: "tick-tock_tick", icon: icons.RemixTickTock },
+    { label: t("sounds.tick.clock_hand"), value: "default_tick", icon: icons.RemixClockHand },
+    { label: t("sounds.tick.clock_tick_tock"), value: "clock-tick-tock_tick", icon: icons.RemixTickTock },
     { label: t("sounds.tick.mokugyo"), value: "mokugyo_tick", icon: icons.RemixMokugyo },
     // { label: t("sounds.tick.heartbeat"), value: "heartbeat_tick" },
     { label: t("sounds.tick.ekg"), value: "ekg_tick", icon: icons.RemixEkg },
@@ -40,7 +40,7 @@ export default (props: Props) => {
     { label: t("sounds.none"), value: "none", icon: icons.RemixNone },
     // { label: t("sounds.background.white_noise"), value: "white-noise_music" },
     { label: t("sounds.background.timer"), value: "timer_music", icon: icons.RemixTimer },
-    { label: t("sounds.background.rain"), value: "rain_music", icon: icons.RemixRainStrong },
+    { label: t("sounds.background.rain_strong"), value: "rain-strong_music", icon: icons.RemixRainStrong },
     { label: t("sounds.background.rain_thunder"), value: "rain-thunder_music", icon: icons.RemixRainThunder },
     { label: t("sounds.background.wind_strong"), value: "wind-strong_music", icon: icons.RemixWindStrong },
     { label: t("sounds.background.beach"), value: "beach_music", icon: icons.RemixBeach },

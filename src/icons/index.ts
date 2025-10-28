@@ -32,7 +32,8 @@ import Done from "./done";
 import More from "./more";
 import RemixBeach from "./remix-beach";
 import RemixBonfire from "./remix-bonfire";
-import RemixClockHands from "./remix-clock-hands";
+import RemixClockHand from "./remix-clock-hand";
+import RemixTickTock from "./remix-clock-tick-tock";
 import RemixEkg from "./remix-ekg";
 import RemixMokugyo from "./remix-mokugyo";
 import RemixNatureCrickets from "./remix-nature-crickets";
@@ -41,7 +42,6 @@ import RemixNone from "./remix-none";
 import RemixRain from "./remix-rain";
 import RemixRainStrong from "./remix-rain-strong";
 import RemixRainThunder from "./remix-rain-thunder";
-import RemixTickTock from "./remix-tick-tock";
 import RemixTimer from "./remix-timer";
 import RemixWindStrong from "./remix-wind-strong";
 import Spa from "./spa";
@@ -85,17 +85,12 @@ export default {
   Back, // 暂未使用
   Add, // 暂未使用
   DialogAdd,
-<<<<<<< Updated upstream
-  DialogClose,
-  DialogClose2, // 视觉一致性修复的版本（缩小尺寸）
-=======
   DialogClose, // 暂未使用
   DialogCloseCircle, // 保持圆周相同的关闭图标
->>>>>>> Stashed changes
   DialogBack,
   RemixBeach,
   RemixBonfire,
-  RemixClockHands,
+  RemixClockHand,
   RemixEkg,
   RemixMokugyo,
   RemixNatureCrickets,
@@ -103,7 +98,7 @@ export default {
   RemixNone,
   RemixRainStrong,
   RemixRainThunder,
-  RemixRain,
+  RemixRain, // 暂未使用（可能会被小雨取代）
   RemixTickTock,
   RemixTimer,
   RemixWindStrong,

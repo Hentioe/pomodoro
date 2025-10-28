@@ -6,8 +6,8 @@ import android.media.SoundPool
 
 // 音频枚举
 enum class SoundType(val path: String, val durationSeconds: Float) {
-    TICK("sounds/ticks/pointer.ogg", 0.0f),
-    TICK_TOCK("sounds/ticks/tick-tock-1.ogg", 0.0f),
+    TICK("sounds/ticks/clock-hand.ogg", 0.0f),
+    TICK_TOCK("sounds/ticks/clock-tick.ogg", 0.0f),
     TICK_MOKUGYO("sounds/ticks/mokugyo.ogg", 0.0f),
     // TICK_HEARTBEAT("sounds/ticks/heartbeat.ogg", 0.0f),
     TICK_EKG("sounds/ticks/ekg.ogg", 0.0f);
@@ -17,7 +17,7 @@ enum class SoundType(val path: String, val durationSeconds: Float) {
         fun from_setting_key(key: String?): SoundType? {
             return when (key) {
                 "default_tick" -> TICK
-                "tick-tock_tick" -> TICK_TOCK
+                "clock-tick-tock_tick" -> TICK_TOCK
                 "mokugyo_tick" -> TICK_MOKUGYO
                 // "heartbeat_tick" -> TICK_HEARTBEAT
                 "ekg_tick" -> TICK_EKG

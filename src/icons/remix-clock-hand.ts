@@ -1,9 +1,9 @@
 import { addIcon } from "@iconify-icon/solid";
 
-const RemixClockHands = "remix-clock-hands";
+const RemixClockHand = "remix-clock-hand";
 
 addIcon(
-  RemixClockHands,
+  RemixClockHand,
   {
     width: 512,
     height: 512,
@@ -12,4 +12,4 @@ addIcon(
   },
 );
 
-export default RemixClockHands;
+export default RemixClockHand;
