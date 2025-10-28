@@ -27,7 +27,7 @@ import Close from "./close";
 import DialogAdd from "./dialog-add";
 import DialogBack from "./dialog-back";
 import DialogClose from "./dialog-close";
-import DialogClose2 from "./dialog-close2";
+import DialogCloseCircle from "./dialog-close-circle";
 import Done from "./done";
 import More from "./more";
 import RemixBeach from "./remix-beach";
@@ -85,8 +85,13 @@ export default {
   Back, // 暂未使用
   Add, // 暂未使用
   DialogAdd,
+<<<<<<< Updated upstream
   DialogClose,
   DialogClose2, // 视觉一致性修复的版本（缩小尺寸）
+=======
+  DialogClose, // 暂未使用
+  DialogCloseCircle, // 保持圆周相同的关闭图标
+>>>>>>> Stashed changes
   DialogBack,
   RemixBeach,
   RemixBonfire,

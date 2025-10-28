@@ -12,7 +12,7 @@ export enum ControlButton {
 const ControlIconMap: Record<ControlButton, IconifyIcon | string> = {
   [ControlButton.None]: "",
   [ControlButton.Back]: icons.DialogBack,
-  [ControlButton.Close]: icons.DialogClose2,
+  [ControlButton.Close]: icons.DialogCloseCircle,
   [ControlButton.Add]: icons.DialogAdd,
 };
 
@@ -64,7 +64,7 @@ const IconBox = (props: { button: ControlButton; onClick: (icon: ControlButton) 
       <Match when={true}>
         <div
           onClick={() => props.onClick(props.button)}
-          class="w-[1.5rem] h-[1.5rem] bg-zinc-300/50 rounded-full flex justify-center items-center"
+          class="w-[1.75rem] h-[1.75rem] bg-zinc-300/50 active:bg-zinc-300 rounded-full flex justify-center items-center"
         >
           <Icon
             icon={ControlIconMap[props.button]}
