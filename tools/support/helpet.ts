@@ -44,7 +44,7 @@ export default ${moduleName};
 `;
 }
 
-export async function writeIconModule(input: string, prefix: string) {
+export async function writeIconModule(input: string, prefix?: string) {
   const content = await Bun.file(input).text();
   const $ = cheerio.load(content, { xmlMode: true });
   const rootNode = $("svg");
@@ -52,8 +52,11 @@ export async function writeIconModule(input: string, prefix: string) {
   const height = rootNode.attr("height")!;
   const innerBody = rootNode.html()!;
 
-  const fileName = path.basename(input).replace(".svg", "");
-  const code = renderIconCode(`${prefix}-${fileName}`, width, height, innerBody);
+  let name = path.basename(input).replace(".svg", "");
+  if (prefix) {
+    name = `${prefix}-${name}`;
+  }
+  const code = renderIconCode(name, width, height, innerBody);
 
-  Bun.write(`./src/icons/${prefix}-${fileName}.ts`, code);
+  Bun.write(`./src/icons/${name}.ts`, code);
 }

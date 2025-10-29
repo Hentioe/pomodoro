@@ -18,8 +18,6 @@ import DocumentTextBold from "@iconify-icons/solar/document-text-bold";
 import Music from "@iconify-icons/tabler/music";
 import Setting from "@iconify-icons/tdesign/setting";
 import TodoTime from "@iconify-icons/tdesign/time";
-import About from "./about";
-import AboutNew from "./about-new";
 import Alarm from "./alarm";
 import Alert from "./alert";
 import CheckFill from "./check-fill";
@@ -29,6 +27,8 @@ import DialogBack from "./dialog-back";
 import DialogClose from "./dialog-close";
 import DialogCloseCircle from "./dialog-close-circle";
 import Done from "./done";
+import HeaderAbout from "./header-about";
+import HeaderAboutNew from "./header-about-new";
 import More from "./more";
 import RemixBeach from "./remix-beach";
 import RemixBonfire from "./remix-bonfire";
@@ -60,8 +60,8 @@ export default {
   Volume, // 暂未使用
   Music,
   Setting,
-  About,
-  AboutNew,
+  HeaderAbout,
+  HeaderAboutNew,
   CheckFill,
   DocumentTextBold,
   Timer, // 暂未使用

@@ -45,7 +45,10 @@ export default (props: { updateChecker?: UpdateChecker }) => {
     <>
       <header class="absolute top-[1rem] left-[1rem] right-[1rem] text-zinc-200 flex justify-between items-center">
         <div class="flex-1">
-          <NavIcon icon={update() ? icons.AboutNew : icons.About} onClick={() => setAboutNewDialogOpen(true)} />
+          <NavIcon
+            icon={update() ? icons.HeaderAboutNew : icons.HeaderAbout}
+            onClick={() => setAboutNewDialogOpen(true)}
+          />
         </div>
         <Show when={false} fallback={<NoTodo />}>
           Focus on: Todo Item
