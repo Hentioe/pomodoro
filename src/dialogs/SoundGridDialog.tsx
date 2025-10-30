@@ -120,13 +120,13 @@ const SoundListSection = (
               <div
                 onClick={() => props.onSelect(option.value)}
                 class={classNames([
-                  "w-full aspect-square text-gray-700 bg-sky-100 hover:bg-sky-200 rounded-3xl cursor-pointer transition-colors duration-300 flex justify-center items-center",
-                  { "bg-blue-500! text-white! shadow": props.selected === option.value },
+                  "w-full aspect-square text-zinc-700 hover:bg-sky-200 rounded-full cursor-pointer transition-colors flex justify-center items-center",
+                  { "bg-blue-200/70 text-blue-600!": props.selected === option.value },
                 ])}
               >
                 <Icon icon={option.icon!} class="text-[4rem] w-[4rem] h-[4rem]" />
               </div>
-              <span>{option.label}</span>
+              <span class="text-zinc-600">{option.label}</span>
             </div>
           )}
         </For>
