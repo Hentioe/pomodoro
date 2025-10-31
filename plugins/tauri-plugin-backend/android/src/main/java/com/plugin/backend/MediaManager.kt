@@ -25,7 +25,7 @@ enum class LocalMedia(
     BEACH("musics/beach.ogg", 0.0f, 0, true), // 海滩，循环音频
     BONFIRE("musics/bonfire.ogg", 0.0f, 0, true), // 篝火，循环音频
     NATURE_STREAM("musics/nature-stream.ogg", 29f), // 自然（溪流），29 秒位置重叠
-    NATURE_CRICKETS("musics/nature-crickets.ogg", 40f); // 自然（虫鸣），40 秒位置重叠
+    NATURE_CRICKETS("musics/nature-crickets.ogg", 0.0f); // 虫鸣，循环音频
 
     companion object {
         fun from_setting_key(key: String?): LocalMedia? {
